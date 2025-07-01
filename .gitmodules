@@ -1,0 +1,3 @@
+[submodule "byeboo-properties"]
+	path = byeboo-properties
+	url = https://github.com/ssangbaam/byeboo-properties.git
