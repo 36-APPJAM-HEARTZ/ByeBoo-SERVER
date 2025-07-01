@@ -7,6 +7,10 @@ plugins {
 group = 'com.heartz'
 version = '0.0.1-SNAPSHOT'
 
+bootJar {
+	archiveFileName = "byeboo.jar"
+}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
@@ -32,6 +36,14 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+task copyGitSubmodule(type: Copy) {
+	copy {
+		from './byeboo-properties'
+		include '*.yml'
+		into './src/main/resources'
+	}
 }
 
 tasks.named('test') {

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app-blue:
+    image: heartzbyeboo/byeboo:latest
+    container_name: app-blue
+    ports:
+      - "8080:8080"
+    restart: always
+
+  app-green:
+    image: heartzbyeboo/byeboo:latest
+    container_name: app-green
+    ports:
+      - "8081:8080"
+    restart: always
