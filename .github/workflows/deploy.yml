@@ -1,4 +1,4 @@
-name: CICD- DockerHub Build & Push
+name: CICD - DockerHub Build & Push
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
       - name: Build JAR
         run: |
           chmod +x ./gradlew
-          ./gradlew clean build
+          ./gradlew clean bootJar
 
       - name: DockerHub 로그인
         uses: docker/login-action@v2
@@ -31,10 +31,15 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Docker 이미지 빌드 및 푸시
+      - name: Docker Buildx 설치 및 멀티 플랫폼 빌드
         run: |
-          docker build -t $DOCKER_IMAGE:latest .
-          docker push $DOCKER_IMAGE:latest
+          docker buildx create --use --name byeboo-builder || docker buildx use byeboo-builder
+          docker buildx inspect --bootstrap
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            --build-arg JAR_FILE=build/libs/byeboo.jar \
+            -t $DOCKER_IMAGE:latest \
+            --push .
 
   cd:
     needs: [ci]
