@@ -1,9 +1,9 @@
-package com.heartz.byeboo.domain.entity;
+package com.heartz.byeboo.adapter.out.persistence.entity;
 
-import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.type.EQuestStyle;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,8 +27,15 @@ public class UserEntity {
     @Column(name = "current_number")
     private Long currentNumber;
 
-    public User toModel() {
-        return User.builder()
+    @Builder
+    public UserEntity(String name, EQuestStyle questStyle, Long currentNumber) {
+        this.name = name;
+        this.questStyle = questStyle;
+        this.currentNumber = currentNumber;
+    }
+
+    public static UserEntity create(String name, EQuestStyle questStyle, Long currentNumber) {
+        return UserEntity.builder()
                 .name(name)
                 .questStyle(questStyle)
                 .currentNumber(currentNumber)

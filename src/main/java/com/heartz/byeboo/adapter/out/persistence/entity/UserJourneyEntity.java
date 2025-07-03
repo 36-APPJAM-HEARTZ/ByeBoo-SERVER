@@ -1,10 +1,10 @@
-package com.heartz.byeboo.domain.entity;
+package com.heartz.byeboo.adapter.out.persistence.entity;
 
-import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.type.EJourney;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -41,13 +41,22 @@ public class UserJourneyEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity user;
 
-    public UserJourney toModel() {
-        return UserJourney.builder()
+    @Builder
+    public UserJourneyEntity(LocalDate journeyStart, LocalDate journeyEnd, EJourney journey, EJourneyStatus journeyStatus, UserEntity user) {
+        this.journeyStart = journeyStart;
+        this.journeyEnd = journeyEnd;
+        this.journey = journey;
+        this.journeyStatus = journeyStatus;
+        this.user = user;
+    }
+
+    public static UserJourneyEntity create(LocalDate journeyStart, LocalDate journeyEnd, EJourney journey, EJourneyStatus journeyStatus, UserEntity user) {
+        return UserJourneyEntity.builder()
                 .journeyStart(journeyStart)
                 .journeyEnd(journeyEnd)
                 .journey(journey)
                 .journeyStatus(journeyStatus)
-                .user(user.toModel())
+                .user(user)
                 .build();
     }
 }

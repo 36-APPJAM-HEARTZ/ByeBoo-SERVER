@@ -1,9 +1,9 @@
-package com.heartz.byeboo.domain.entity;
+package com.heartz.byeboo.adapter.out.persistence.entity;
 
-import com.heartz.byeboo.domain.model.UserQuest;
 import com.heartz.byeboo.domain.type.EQuestEmotionState;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -39,14 +39,22 @@ public class UserQuestEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private QuestEntity quest;
 
-    public UserQuest toModel() {
-        return UserQuest.builder()
-                .id(id)
+    @Builder
+    public UserQuestEntity(String answer, String imageUrl, EQuestEmotionState questEmotionState, UserEntity user, QuestEntity quest) {
+        this.answer = answer;
+        this.imageUrl = imageUrl;
+        this.questEmotionState = questEmotionState;
+        this.user = user;
+        this.quest = quest;
+    }
+
+    public static UserQuestEntity create(String answer, String imageUrl, EQuestEmotionState questEmotionState, UserEntity user, QuestEntity quest) {
+        return UserQuestEntity.builder()
                 .answer(answer)
                 .imageUrl(imageUrl)
                 .questEmotionState(questEmotionState)
-                .user(user.toModel())
-                .quest(quest.toModel())
+                .user(user)
+                .quest(quest)
                 .build();
     }
 }

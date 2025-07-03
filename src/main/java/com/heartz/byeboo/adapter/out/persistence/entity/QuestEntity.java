@@ -1,10 +1,10 @@
-package com.heartz.byeboo.domain.entity;
+package com.heartz.byeboo.adapter.out.persistence.entity;
 
-import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.type.EJourney;
 import com.heartz.byeboo.domain.type.EStep;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,8 +35,17 @@ public class QuestEntity {
     @Column(name = "journey", nullable = false, length = 50)
     private EJourney journey;
 
-    public Quest toModel() {
-        return Quest.builder()
+    @Builder
+    public QuestEntity(EStep step, Long stepNumber, Long questNumber, String question, EJourney journey) {
+        this.step = step;
+        this.stepNumber = stepNumber;
+        this.questNumber = questNumber;
+        this.question = question;
+        this.journey = journey;
+    }
+
+    public static QuestEntity create(EStep step, Long stepNumber, Long questNumber, String question, EJourney journey) {
+        return QuestEntity.builder()
                 .step(step)
                 .stepNumber(stepNumber)
                 .questNumber(questNumber)

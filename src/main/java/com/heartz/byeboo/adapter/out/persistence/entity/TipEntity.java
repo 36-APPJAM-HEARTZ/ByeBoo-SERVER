@@ -1,8 +1,8 @@
-package com.heartz.byeboo.domain.entity;
+package com.heartz.byeboo.adapter.out.persistence.entity;
 
-import com.heartz.byeboo.domain.model.Tip;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -32,12 +32,20 @@ public class TipEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private QuestEntity quest;
 
-    public Tip toModel() {
-        return Tip.builder()
+    @Builder
+    public TipEntity(Integer tipStep, String tipQuestion, String tipAnswer, QuestEntity quest) {
+        this.tipStep = tipStep;
+        this.tipQuestion = tipQuestion;
+        this.tipAnswer = tipAnswer;
+        this.quest = quest;
+    }
+
+    public static TipEntity create(Integer tipStep, String tipQuestion, String tipAnswer, QuestEntity quest) {
+        return TipEntity.builder()
                 .tipStep(tipStep)
                 .tipQuestion(tipQuestion)
                 .tipAnswer(tipAnswer)
-                .quest(quest.toModel())
+                .quest(quest)
                 .build();
     }
 }
