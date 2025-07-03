@@ -5,8 +5,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -27,25 +25,23 @@ public class TipEntity {
     @Column(name = "tip_answer", nullable = false)
     private String tipAnswer;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "quest_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private QuestEntity quest;
+    private Long questId;
 
     @Builder
-    public TipEntity(Integer tipStep, String tipQuestion, String tipAnswer, QuestEntity quest) {
+    public TipEntity(Integer tipStep, String tipQuestion, String tipAnswer, Long questId) {
         this.tipStep = tipStep;
         this.tipQuestion = tipQuestion;
         this.tipAnswer = tipAnswer;
-        this.quest = quest;
+        this.questId = questId;
     }
 
-    public static TipEntity create(Integer tipStep, String tipQuestion, String tipAnswer, QuestEntity quest) {
+    public static TipEntity create(Integer tipStep, String tipQuestion, String tipAnswer, Long questId) {
         return TipEntity.builder()
                 .tipStep(tipStep)
                 .tipQuestion(tipQuestion)
                 .tipAnswer(tipAnswer)
-                .quest(quest)
+                .questId(questId)
                 .build();
     }
 }

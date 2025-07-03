@@ -6,8 +6,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -29,32 +27,40 @@ public class UserQuestEntity {
     @Column(name = "quest_emotion_state", nullable = false, length = 50)
     private EQuestEmotionState questEmotionState;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private UserEntity user;
+    private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "quest_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private QuestEntity quest;
+    private Long questId;
 
     @Builder
-    public UserQuestEntity(String answer, String imageUrl, EQuestEmotionState questEmotionState, UserEntity user, QuestEntity quest) {
+    public UserQuestEntity(
+            String answer,
+            String imageUrl,
+            EQuestEmotionState questEmotionState,
+            Long userId,
+            Long questId
+    ) {
         this.answer = answer;
         this.imageUrl = imageUrl;
         this.questEmotionState = questEmotionState;
-        this.user = user;
-        this.quest = quest;
+        this.userId = userId;
+        this.questId = questId;
     }
 
-    public static UserQuestEntity create(String answer, String imageUrl, EQuestEmotionState questEmotionState, UserEntity user, QuestEntity quest) {
+    public static UserQuestEntity create(
+            String answer,
+            String imageUrl,
+            EQuestEmotionState questEmotionState,
+            Long userId,
+            Long questId
+    ) {
         return UserQuestEntity.builder()
                 .answer(answer)
                 .imageUrl(imageUrl)
                 .questEmotionState(questEmotionState)
-                .user(user)
-                .quest(quest)
+                .userId(userId)
+                .questId(questId)
                 .build();
     }
 }

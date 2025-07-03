@@ -7,8 +7,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -36,27 +34,37 @@ public class UserJourneyEntity {
     @Column(name = "journey_status", nullable = false, length = 50)
     private EJourneyStatus journeyStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private UserEntity user;
+    private Long userId;
 
     @Builder
-    public UserJourneyEntity(LocalDate journeyStart, LocalDate journeyEnd, EJourney journey, EJourneyStatus journeyStatus, UserEntity user) {
+    public UserJourneyEntity(
+            LocalDate journeyStart,
+            LocalDate journeyEnd,
+            EJourney journey,
+            EJourneyStatus journeyStatus,
+            Long userId
+    ) {
         this.journeyStart = journeyStart;
         this.journeyEnd = journeyEnd;
         this.journey = journey;
         this.journeyStatus = journeyStatus;
-        this.user = user;
+        this.userId = userId;
     }
 
-    public static UserJourneyEntity create(LocalDate journeyStart, LocalDate journeyEnd, EJourney journey, EJourneyStatus journeyStatus, UserEntity user) {
+    public static UserJourneyEntity create(
+            LocalDate journeyStart,
+            LocalDate journeyEnd,
+            EJourney journey,
+            EJourneyStatus journeyStatus,
+            Long userId
+    ) {
         return UserJourneyEntity.builder()
                 .journeyStart(journeyStart)
                 .journeyEnd(journeyEnd)
                 .journey(journey)
                 .journeyStatus(journeyStatus)
-                .user(user)
+                .userId(userId)
                 .build();
     }
 }
