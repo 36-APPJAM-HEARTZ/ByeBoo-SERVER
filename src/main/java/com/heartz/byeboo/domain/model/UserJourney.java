@@ -15,5 +15,5 @@ public class UserJourney {
     private LocalDate journeyEnd;
     private EJourney journey;
     private EJourneyStatus journeyStatus;
-    private Long userId;
+    private User user;
 }

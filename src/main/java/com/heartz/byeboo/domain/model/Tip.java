@@ -10,5 +10,5 @@ public class Tip {
     private Integer tipStep;
     private String tipQuestion;
     private String tipAnswer;
-    private Long questId;
+    private Quest quest;
 }
