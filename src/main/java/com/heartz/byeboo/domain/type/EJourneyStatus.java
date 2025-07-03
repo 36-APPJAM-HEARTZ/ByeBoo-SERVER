@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum EJourneyStatus {
-    BEFORE("진행 전"),
+    NOT_COMPLETED("미완료"),
+    BEFORE_START("진행 직전"),
     IN_PROGRESS("진행 중"),
     COMPLETED("진행 완료");
 
