@@ -6,8 +6,9 @@ import lombok.Getter;
 @Getter
 @Builder
 public class Tip {
+    private Long id;
     private Integer tipStep;
     private String tipQuestion;
     private String tipAnswer;
-    private Quest quest;
+    private Long questId;
 }

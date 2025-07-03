@@ -11,6 +11,6 @@ public class UserQuest {
     private String answer;
     private String imageUrl;
     private EQuestEmotionState questEmotionState;
-    private User user;
-    private Quest quest;
+    private Long userId;
+    private Long questId;
 }

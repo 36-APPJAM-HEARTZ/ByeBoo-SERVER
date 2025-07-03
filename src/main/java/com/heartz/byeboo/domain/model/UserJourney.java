@@ -10,9 +10,10 @@ import java.time.LocalDate;
 @Getter
 @Builder
 public class UserJourney {
+    private Long id;
     private LocalDate journeyStart;
     private LocalDate journeyEnd;
     private EJourney journey;
     private EJourneyStatus journeyStatus;
-    private User user;
+    private Long userId;
 }

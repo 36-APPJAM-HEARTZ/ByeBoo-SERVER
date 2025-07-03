@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class Quest {
+    private Long id;
     private EStep step;
     private Long stepNumber;
     private Long questNumber;
