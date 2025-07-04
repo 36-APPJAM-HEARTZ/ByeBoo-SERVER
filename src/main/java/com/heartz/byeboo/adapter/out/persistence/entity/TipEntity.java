@@ -25,7 +25,7 @@ public class TipEntity {
     @Column(name = "tip_answer", nullable = false)
     private String tipAnswer;
 
-    @JoinColumn(name = "quest_id", nullable = false)
+    @Column(name = "quest_id", nullable = false)
     private Long questId;
 
     @Builder

@@ -27,10 +27,10 @@ public class UserQuestEntity {
     @Column(name = "quest_emotion_state", nullable = false, length = 50)
     private EQuestEmotionState questEmotionState;
 
-    @JoinColumn(name = "user_id", nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @JoinColumn(name = "quest_id", nullable = false)
+    @Column(name = "quest_id", nullable = false)
     private Long questId;
 
     @Builder

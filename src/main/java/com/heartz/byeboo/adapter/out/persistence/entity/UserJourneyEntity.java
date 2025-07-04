@@ -34,7 +34,7 @@ public class UserJourneyEntity {
     @Column(name = "journey_status", nullable = false, length = 50)
     private EJourneyStatus journeyStatus;
 
-    @JoinColumn(name = "user_id", nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
     @Builder
