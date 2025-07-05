@@ -11,4 +11,17 @@ public class User {
     private String name;
     private EQuestStyle questStyle;
     private Long currentNumber;
+
+    public static User of(Long id, String name, EQuestStyle questStyle, Long currentNumber) {
+        return User.builder()
+                .id(id)
+                .name(name)
+                .questStyle(questStyle)
+                .currentNumber(currentNumber)
+                .build();
+    }
+
+    public void initializeCurrentNumber() {
+        this.currentNumber = 0L;
+    }
 }
