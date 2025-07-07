@@ -2,14 +2,15 @@ package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.adapter.in.web.dto.UserCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.UserCreateResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.UserJourneyResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.UserNameResponseDto;
 import com.heartz.byeboo.application.command.UserCreateCommand;
+import com.heartz.byeboo.application.command.UserJourneyCommand;
+import com.heartz.byeboo.application.command.UserNameCommand;
 import com.heartz.byeboo.application.port.in.UserUseCase;
 import com.heartz.byeboo.core.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +24,17 @@ public class UserController {
     ) {
         UserCreateCommand userCreateCommand = UserCreateCommand.from(userCreateRequestDto);
         return BaseResponse.success(userUseCase.createUser(userCreateCommand));
+    }
+
+    @GetMapping("/users")
+    public BaseResponse<UserNameResponseDto> getUserName(@RequestHeader Long userId) {
+        UserNameCommand userNameCommand = UserNameCommand.of(userId);
+        return BaseResponse.success(userUseCase.getUserName(userNameCommand));
+    }
+
+    @GetMapping("/users/journey")
+    public BaseResponse<UserJourneyResponseDto> getUserJourney(@RequestHeader Long userId) {
+        UserJourneyCommand userJourneyCommand = UserJourneyCommand.of(userId);
+        return BaseResponse.success(userUseCase.getUserJourney(userJourneyCommand));
     }
 }
