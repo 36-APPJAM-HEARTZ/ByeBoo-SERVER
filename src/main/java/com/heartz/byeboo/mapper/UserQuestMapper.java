@@ -1,6 +1,7 @@
 package com.heartz.byeboo.mapper;
 
 import com.heartz.byeboo.adapter.out.persistence.entity.UserQuestEntity;
+import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
 import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
@@ -18,11 +19,19 @@ public class UserQuestMapper {
         );
     }
 
-    public static UserQuest commandToDomain(RecordingQuestCreateCommand recordingQuestCreateCommand, User user, Quest quest) {
+    public static UserQuest commandToDomainRecording(RecordingQuestCreateCommand command, User user, Quest quest) {
         return UserQuest.builder()
-                .answer(recordingQuestCreateCommand.getAnswer())
-                .imageUrl(null)
-                .questEmotionState(EQuestEmotionState.valueOf(recordingQuestCreateCommand.getQuestEmotionState()))
+                .answer(command.getAnswer())
+                .questEmotionState(command.getQuestEmotionState())
+                .user(user)
+                .quest(quest)
+                .build();
+    }
+
+    public static UserQuest commandToDomainActive(ActiveQuestCreateCommand command, User user, Quest quest){
+        return UserQuest.builder()
+                .answer(command.getAnswer())
+                .questEmotionState(command.getQuestEmotionState())
                 .user(user)
                 .quest(quest)
                 .build();
