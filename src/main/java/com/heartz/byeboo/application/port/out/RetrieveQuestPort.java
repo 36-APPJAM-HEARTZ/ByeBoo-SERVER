@@ -1,7 +1,7 @@
 package com.heartz.byeboo.application.port.out;
 
-import com.heartz.byeboo.domain.model.Quest;
+import com.heartz.byeboo.adapter.out.persistence.entity.QuestEntity;
 
 public interface RetrieveQuestPort {
-    Quest findById(Long questId);
+    QuestEntity findById(Long questId);
 }

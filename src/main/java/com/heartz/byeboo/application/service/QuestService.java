@@ -1,5 +1,6 @@
 package com.heartz.byeboo.application.service;
 
+import com.heartz.byeboo.adapter.out.persistence.entity.QuestEntity;
 import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
 import com.heartz.byeboo.application.port.out.CreateUserQuestPort;
@@ -10,6 +11,7 @@ import com.heartz.byeboo.domain.exception.QuestErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserQuest;
+import com.heartz.byeboo.mapper.QuestMapper;
 import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,8 @@ public class QuestService implements QuestUseCase {
         User findUser = retrieveUserPort.findById(recordingQuestCreateCommand.getUserId());
         validateQuest(findUser, recordingQuestCreateCommand);
 
-        Quest findQuest = retrieveQuestPort.findById(recordingQuestCreateCommand.getQuestId());
+        QuestEntity questEntity = retrieveQuestPort.findById(recordingQuestCreateCommand.getQuestId());
+        Quest findQuest = QuestMapper.toDomain(questEntity);
         UserQuest userQuest = UserQuestMapper.commandToDomain(recordingQuestCreateCommand, findUser, findQuest);
         createUserQuestPort.createUserQuest(userQuest);
 

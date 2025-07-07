@@ -1,6 +1,8 @@
 package com.heartz.byeboo.application.command;
 
 import com.heartz.byeboo.adapter.in.web.dto.RecordingQuestRequestDto;
+import com.heartz.byeboo.core.exception.CustomException;
+import com.heartz.byeboo.domain.exception.QuestErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,11 +15,15 @@ public class RecordingQuestCreateCommand {
     Long userId;
 
     public static RecordingQuestCreateCommand from(RecordingQuestRequestDto recordingQuestRequestDto, Long questId, Long userId) {
-        return RecordingQuestCreateCommand.builder()
-                .answer(recordingQuestRequestDto.answer())
-                .questEmotionState(recordingQuestRequestDto.questEmotionState())
-                .questId(questId)
-                .userId(userId)
-                .build();
+        try {
+            return RecordingQuestCreateCommand.builder()
+                    .answer(recordingQuestRequestDto.answer())
+                    .questEmotionState(recordingQuestRequestDto.questEmotionState())
+                    .questId(questId)
+                    .userId(userId)
+                    .build();
+        } catch (IllegalArgumentException e){
+            throw new CustomException(QuestErrorCode.INVALID_QUEST);
+        }
     }
 }

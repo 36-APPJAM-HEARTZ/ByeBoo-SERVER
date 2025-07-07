@@ -1,5 +1,6 @@
 package com.heartz.byeboo.adapter.out;
 
+import com.heartz.byeboo.adapter.out.persistence.entity.QuestEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.QuestRepository;
 import com.heartz.byeboo.application.port.out.RetrieveQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
@@ -15,7 +16,7 @@ public class QuestPersistenceAdapter implements RetrieveQuestPort {
     private final QuestRepository questRepository;
 
     @Override
-    public Quest findById(Long questId) {
+    public QuestEntity findById(Long questId) {
         return questRepository.findById(questId)
                 .orElseThrow(() -> new CustomException(QuestErrorCode.QUEST_NOT_FOUND));
     }
