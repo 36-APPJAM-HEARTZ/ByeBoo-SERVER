@@ -4,5 +4,5 @@ import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
 
 public interface RetrieveUserJourneyPort {
-    UserJourney getUserJourney(User user);
+    UserJourney getUserJourneyByUser(User user);
 }

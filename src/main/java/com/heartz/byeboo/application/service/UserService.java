@@ -54,8 +54,12 @@ public class UserService implements UserUseCase {
     @Transactional(readOnly = true)
     public UserJourneyResponseDto getUserJourney(UserJourneyCommand userJourneyCommand) {
         User currentUser = retrieveUserPort.getUserById(userJourneyCommand.getId());
-        UserJourney userJourney = retrieveUserJourneyPort.getUserJourney(currentUser);
+        UserJourney userJourney = retrieveUserJourneyPort.getUserJourneyByUser(currentUser);
 
+        return getUseJourneyResponseDto(userJourney);
+    }
+
+    private UserJourneyResponseDto getUseJourneyResponseDto(UserJourney userJourney) {
         if(userJourney.getJourneyStatus().equals(EJourneyStatus.BEFORE_START))
             return UserJourneyResponseDto.of(
                     userJourney.getJourney().getLabel(),
