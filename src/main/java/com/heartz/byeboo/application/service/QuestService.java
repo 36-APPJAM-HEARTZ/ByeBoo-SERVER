@@ -32,7 +32,7 @@ public class QuestService implements QuestUseCase {
     public void createRecordingQuest(RecordingQuestCreateCommand recordingQuestCreateCommand) {
 
         User findUser = retrieveUserPort.findById(recordingQuestCreateCommand.getUserId());
-        validateQuest(findUser, recordingQuestCreateCommand);
+        validateUserQuest(findUser, recordingQuestCreateCommand);
 
         QuestEntity questEntity = retrieveQuestPort.findById(recordingQuestCreateCommand.getQuestId());
         Quest findQuest = QuestMapper.toDomain(questEntity);
@@ -42,9 +42,13 @@ public class QuestService implements QuestUseCase {
         updateUserPort.updateCurrentNumber(findUser.getId());
     }
 
-    private void validateQuest(User user, RecordingQuestCreateCommand command){
+    private void validateUserQuest(User user, RecordingQuestCreateCommand command){
         if (!user.getCurrentNumber().equals(command.getQuestId())) {
             throw new CustomException(QuestErrorCode.INVALID_QUEST_PROGRESS);
+        }
+
+        if (user.getCurrentNumber() >= 30){
+            throw new CustomException(QuestErrorCode.CURRENT_NUMBER_OVER_MAX);
         }
     }
 }
