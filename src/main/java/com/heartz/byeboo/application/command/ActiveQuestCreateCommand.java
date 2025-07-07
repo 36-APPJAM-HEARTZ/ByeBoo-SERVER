@@ -9,11 +9,14 @@ import com.heartz.byeboo.utils.TextUtil;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Builder
 @Getter
 public class ActiveQuestCreateCommand {
     String answer;
     EQuestEmotionState questEmotionState;
+    UUID imageKey;
     Long questId;
     Long userId;
 
@@ -23,6 +26,7 @@ public class ActiveQuestCreateCommand {
             return ActiveQuestCreateCommand.builder()
                     .answer(activeQuestRequestDto.answer())
                     .questEmotionState(EQuestEmotionState.valueOf(activeQuestRequestDto.questEmotionState()))
+                    .imageKey(activeQuestRequestDto.imageKey())
                     .questId(questId)
                     .userId(userId)
                     .build();

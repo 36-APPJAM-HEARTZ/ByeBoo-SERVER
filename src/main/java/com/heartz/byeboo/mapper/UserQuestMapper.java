@@ -6,13 +6,12 @@ import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserQuest;
-import com.heartz.byeboo.domain.type.EQuestEmotionState;
 
 public class UserQuestMapper {
     public static UserQuestEntity toEntity(UserQuest userQuest) {
         return UserQuestEntity.create(
                 userQuest.getAnswer(),
-                userQuest.getImageUrl(),
+                userQuest.getImageKey(),
                 userQuest.getQuestEmotionState(),
                 userQuest.getUser().getId(),
                 userQuest.getQuest().getId()
@@ -34,6 +33,7 @@ public class UserQuestMapper {
                 .questEmotionState(command.getQuestEmotionState())
                 .user(user)
                 .quest(quest)
+                .imageKey(command.getImageKey())
                 .build();
     }
 }
