@@ -1,6 +1,6 @@
 package com.heartz.byeboo.application.command;
 
-import com.heartz.byeboo.adapter.in.web.dto.ActiveQuestRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.ActiveQuestRequestDto;
 import com.heartz.byeboo.constants.TextConstant;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.QuestErrorCode;

@@ -1,8 +1,8 @@
 package com.heartz.byeboo.application.port.in;
 
-import com.heartz.byeboo.adapter.in.web.dto.UserCreateResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.UserJourneyResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.UserNameResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.UserCreateResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.UserJourneyResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.UserNameResponseDto;
 import com.heartz.byeboo.application.command.UserCreateCommand;
 import com.heartz.byeboo.application.command.UserJourneyCommand;
 import com.heartz.byeboo.application.command.UserNameCommand;
