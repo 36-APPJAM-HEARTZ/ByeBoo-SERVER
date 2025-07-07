@@ -10,11 +10,12 @@ public class SignedUrlCreateCommand {
     String imageKey;
     String contentType;
     Long userId;
-    Long questId;
 
-    public static SignedUrlCreateCommand from(SignedUrlRequestDto signedUrlRequestDto, Long questId, Long userId){
+    public static SignedUrlCreateCommand from(SignedUrlRequestDto signedUrlRequestDto, Long userId){
         return SignedUrlCreateCommand.builder()
-                .imageKey(signedUrlRequestDto.imageKey())
+                .imageKey(signedUrlRequestDto.imageKey().toString())
                 .contentType(signedUrlRequestDto.contentType())
+                .userId(userId)
+                .build();
     }
 }
