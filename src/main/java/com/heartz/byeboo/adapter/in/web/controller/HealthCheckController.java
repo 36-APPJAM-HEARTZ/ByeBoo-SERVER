@@ -1,4 +1,4 @@
-package com.heartz.byeboo.controller;
+package com.heartz.byeboo.adapter.in.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
