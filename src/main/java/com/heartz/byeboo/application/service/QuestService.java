@@ -15,6 +15,7 @@ import com.heartz.byeboo.mapper.QuestMapper;
 import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class QuestService implements QuestUseCase {
     private final CreateUserQuestPort createUserQuestPort;
 
     @Override
+    @Transactional
     public void createRecordingQuest(RecordingQuestCreateCommand recordingQuestCreateCommand) {
 
         User findUser = retrieveUserPort.findById(recordingQuestCreateCommand.getUserId());
@@ -34,7 +36,8 @@ public class QuestService implements QuestUseCase {
         Quest findQuest = QuestMapper.toDomain(questEntity);
         UserQuest userQuest = UserQuestMapper.commandToDomain(recordingQuestCreateCommand, findUser, findQuest);
         createUserQuestPort.createUserQuest(userQuest);
-
+        findUser.updateCurrentNumber();
+        
     }
 
     private void validateQuest(User user, RecordingQuestCreateCommand command){

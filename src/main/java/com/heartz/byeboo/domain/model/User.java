@@ -24,4 +24,8 @@ public class User {
     public void initializeCurrentNumber() {
         this.currentNumber = 0L;
     }
+
+    public void updateCurrentNumber(){
+        this.currentNumber++;
+    }
 }

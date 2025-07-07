@@ -3,6 +3,7 @@ package com.heartz.byeboo.application.command;
 import com.heartz.byeboo.adapter.in.web.dto.RecordingQuestRequestDto;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.QuestErrorCode;
+import com.heartz.byeboo.utils.TextUtil;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,6 +16,7 @@ public class RecordingQuestCreateCommand {
     Long userId;
 
     public static RecordingQuestCreateCommand from(RecordingQuestRequestDto recordingQuestRequestDto, Long questId, Long userId) {
+        validateAnswerLength(recordingQuestRequestDto.answer());
         try {
             return RecordingQuestCreateCommand.builder()
                     .answer(recordingQuestRequestDto.answer())
@@ -22,8 +24,18 @@ public class RecordingQuestCreateCommand {
                     .questId(questId)
                     .userId(userId)
                     .build();
-        } catch (IllegalArgumentException e){
+        } catch(IllegalArgumentException e){
             throw new CustomException(QuestErrorCode.INVALID_QUEST);
+        }
+    }
+
+    private static void validateAnswerLength(String answer){
+        if (TextUtil.lengthTitleWithEmoji(answer) > 500){
+            throw new CustomException(QuestErrorCode.RECORDING_ANSWER_TOO_LONG);
+        }
+
+        if (TextUtil.lengthTitleWithEmoji(answer) < 10){
+            throw new CustomException(QuestErrorCode.RECORDING_ANSWER_TOO_SHORT);
         }
     }
 }
