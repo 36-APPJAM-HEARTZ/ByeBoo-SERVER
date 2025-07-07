@@ -6,6 +6,7 @@ import com.heartz.byeboo.application.port.in.QuestUseCase;
 import com.heartz.byeboo.application.port.out.CreateUserQuestPort;
 import com.heartz.byeboo.application.port.out.RetrieveQuestPort;
 import com.heartz.byeboo.application.port.out.RetrieveUserPort;
+import com.heartz.byeboo.application.port.out.UpdateUserPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.QuestErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
@@ -24,6 +25,7 @@ public class QuestService implements QuestUseCase {
     private final RetrieveUserPort retrieveUserPort;
     private final RetrieveQuestPort retrieveQuestPort;
     private final CreateUserQuestPort createUserQuestPort;
+    private final UpdateUserPort updateUserPort;
 
     @Override
     @Transactional
@@ -37,7 +39,7 @@ public class QuestService implements QuestUseCase {
         UserQuest userQuest = UserQuestMapper.commandToDomain(recordingQuestCreateCommand, findUser, findQuest);
         createUserQuestPort.createUserQuest(userQuest);
         findUser.updateCurrentNumber();
-        
+        updateUserPort.updateCurrentNumber(findUser.getId());
     }
 
     private void validateQuest(User user, RecordingQuestCreateCommand command){
