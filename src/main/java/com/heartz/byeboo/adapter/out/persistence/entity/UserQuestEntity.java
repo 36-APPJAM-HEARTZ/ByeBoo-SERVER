@@ -17,7 +17,7 @@ public class UserQuestEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "answer", nullable = false)
+    @Column(name = "answer")
     private String answer;
 
     @Column(name = "image_url")

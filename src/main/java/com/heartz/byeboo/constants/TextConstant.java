@@ -4,5 +4,5 @@ public class TextConstant {
 
     public static final int RECORDING_QUEST_ANSWER_MAX = 500;
     public static final int RECORDING_QUEST_ANSWER_MIN = 10;
-
+    public static final int ACTIVE_QUEST_ANSWER_MAX = 200;
 }
