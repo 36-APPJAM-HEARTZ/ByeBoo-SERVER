@@ -1,7 +1,5 @@
 package com.heartz.byeboo.utils;
 
-import org.springframework.stereotype.Component;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

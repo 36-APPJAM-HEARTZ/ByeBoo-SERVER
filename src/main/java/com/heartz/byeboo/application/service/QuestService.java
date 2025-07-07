@@ -1,6 +1,5 @@
 package com.heartz.byeboo.application.service;
 
-import com.heartz.byeboo.adapter.out.persistence.entity.QuestEntity;
 import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
 import com.heartz.byeboo.application.port.out.CreateUserQuestPort;
@@ -12,7 +11,6 @@ import com.heartz.byeboo.domain.exception.QuestErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserQuest;
-import com.heartz.byeboo.mapper.QuestMapper;
 import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
