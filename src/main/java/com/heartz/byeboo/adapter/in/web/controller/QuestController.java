@@ -17,10 +17,11 @@ public class QuestController {
 
     @PostMapping("/quests/{questId}/recording")
     public BaseResponse<Void> createRecordingQuest(
+            @RequestHeader final Long userId,
             @Valid @RequestBody final RecordingQuestRequestDto recordingQuestRequestDto,
             @Valid @PathVariable final Long questId){
-        RecordingQuestCreateCommand command = RecordingQuestCreateCommand.from(recordingQuestRequestDto);
-        questUseCase.createRecordingQuest(command, questId);
+        RecordingQuestCreateCommand command = RecordingQuestCreateCommand.from(recordingQuestRequestDto, questId, userId);
+        questUseCase.createRecordingQuest(command);
         return BaseResponse.success(null);
     }
 }
