@@ -31,7 +31,7 @@ public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort,
 
 
     @Override
-    public User findById(Long userId) {
+    public User getUserById(Long userId) {
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
 

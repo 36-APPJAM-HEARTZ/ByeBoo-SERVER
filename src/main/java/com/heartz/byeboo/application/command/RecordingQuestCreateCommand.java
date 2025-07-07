@@ -1,6 +1,7 @@
 package com.heartz.byeboo.application.command;
 
 import com.heartz.byeboo.adapter.in.web.dto.RecordingQuestRequestDto;
+import com.heartz.byeboo.constants.TextConstant;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.QuestErrorCode;
 import com.heartz.byeboo.utils.TextUtil;
@@ -30,11 +31,11 @@ public class RecordingQuestCreateCommand {
     }
 
     private static void validateAnswerLength(String answer){
-        if (TextUtil.lengthTitleWithEmoji(answer) > 500){
+        if (TextUtil.lengthWithEmoji(answer) > TextConstant.RECORDING_QUEST_ANSWER_MAX){
             throw new CustomException(QuestErrorCode.RECORDING_ANSWER_TOO_LONG);
         }
 
-        if (TextUtil.lengthTitleWithEmoji(answer) < 10){
+        if (TextUtil.lengthWithEmoji(answer) < TextConstant.RECORDING_QUEST_ANSWER_MIN){
             throw new CustomException(QuestErrorCode.RECORDING_ANSWER_TOO_SHORT);
         }
     }

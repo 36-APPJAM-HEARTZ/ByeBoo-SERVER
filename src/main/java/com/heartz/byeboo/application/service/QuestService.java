@@ -31,11 +31,10 @@ public class QuestService implements QuestUseCase {
     @Transactional
     public void createRecordingQuest(RecordingQuestCreateCommand recordingQuestCreateCommand) {
 
-        User findUser = retrieveUserPort.findById(recordingQuestCreateCommand.getUserId());
+        User findUser = retrieveUserPort.getUserById(recordingQuestCreateCommand.getUserId());
         validateUserQuest(findUser, recordingQuestCreateCommand);
 
-        QuestEntity questEntity = retrieveQuestPort.findById(recordingQuestCreateCommand.getQuestId());
-        Quest findQuest = QuestMapper.toDomain(questEntity);
+        Quest findQuest = retrieveQuestPort.getQuestById(recordingQuestCreateCommand.getQuestId());
         UserQuest userQuest = UserQuestMapper.commandToDomain(recordingQuestCreateCommand, findUser, findQuest);
         createUserQuestPort.createUserQuest(userQuest);
         findUser.updateCurrentNumber();
