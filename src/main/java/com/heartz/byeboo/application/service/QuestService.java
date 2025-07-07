@@ -1,5 +1,6 @@
 package com.heartz.byeboo.application.service;
 
+import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
 import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
 import com.heartz.byeboo.application.port.out.CreateUserQuestPort;
@@ -27,20 +28,33 @@ public class QuestService implements QuestUseCase {
 
     @Override
     @Transactional
-    public void createRecordingQuest(RecordingQuestCreateCommand recordingQuestCreateCommand) {
+    public void createRecordingQuest(RecordingQuestCreateCommand command) {
 
-        User findUser = retrieveUserPort.getUserById(recordingQuestCreateCommand.getUserId());
-        validateUserQuest(findUser, recordingQuestCreateCommand);
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
+        validateUserQuest(findUser, command.getQuestId());
 
-        Quest findQuest = retrieveQuestPort.getQuestById(recordingQuestCreateCommand.getQuestId());
-        UserQuest userQuest = UserQuestMapper.commandToDomain(recordingQuestCreateCommand, findUser, findQuest);
+        Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
+        UserQuest userQuest = UserQuestMapper.commandToDomainRecording(command, findUser, findQuest);
         createUserQuestPort.createUserQuest(userQuest);
         findUser.updateCurrentNumber();
         updateUserPort.updateCurrentNumber(findUser.getId());
     }
 
-    private void validateUserQuest(User user, RecordingQuestCreateCommand command){
-        if (!user.getCurrentNumber().equals(command.getQuestId())) {
+    @Override
+    @Transactional
+    public void createActiveQuest(ActiveQuestCreateCommand command) {
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
+        validateUserQuest(findUser, command.getQuestId());
+
+        Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
+        UserQuest userQuest = UserQuestMapper.commandToDomainActive(command, findUser, findQuest);
+        createUserQuestPort.createUserQuest(userQuest);
+        findUser.updateCurrentNumber();
+        updateUserPort.updateCurrentNumber(findUser.getId());
+    }
+
+    private void validateUserQuest(User user, Long questId){
+        if (!user.getCurrentNumber().equals(questId)) {
             throw new CustomException(QuestErrorCode.INVALID_QUEST_PROGRESS);
         }
 

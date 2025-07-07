@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,11 +19,11 @@ public class UserQuestEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "answer", nullable = false)
+    @Column(name = "answer")
     private String answer;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column(name = "image_key", unique = true)
+    private UUID imageKey;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "quest_emotion_state", nullable = false, length = 50)
@@ -36,13 +38,13 @@ public class UserQuestEntity {
     @Builder
     public UserQuestEntity(
             String answer,
-            String imageUrl,
+            UUID imageKey,
             EQuestEmotionState questEmotionState,
             Long userId,
             Long questId
     ) {
         this.answer = answer;
-        this.imageUrl = imageUrl;
+        this.imageKey = imageKey;
         this.questEmotionState = questEmotionState;
         this.userId = userId;
         this.questId = questId;
@@ -50,14 +52,14 @@ public class UserQuestEntity {
 
     public static UserQuestEntity create(
             String answer,
-            String imageUrl,
+            UUID imageKey,
             EQuestEmotionState questEmotionState,
             Long userId,
             Long questId
     ) {
         return UserQuestEntity.builder()
                 .answer(answer)
-                .imageUrl(imageUrl)
+                .imageKey(imageKey)
                 .questEmotionState(questEmotionState)
                 .userId(userId)
                 .questId(questId)

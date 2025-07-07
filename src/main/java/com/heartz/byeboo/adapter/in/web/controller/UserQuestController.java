@@ -1,6 +1,8 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
+import com.heartz.byeboo.adapter.in.web.dto.ActiveQuestRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.RecordingQuestRequestDto;
+import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
 import com.heartz.byeboo.adapter.in.web.dto.SignedUrlRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.SignedUrlResponseDto;
 import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
@@ -23,6 +25,16 @@ public class UserQuestController {
             @PathVariable final Long questId){
         RecordingQuestCreateCommand command = RecordingQuestCreateCommand.from(recordingQuestRequestDto, questId, userId);
         questUseCase.createRecordingQuest(command);
+        return BaseResponse.success(null);
+    }
+
+    @PostMapping("/quests/{questId}/active")
+    public BaseResponse<Void> createActiveQuest(
+            @RequestHeader final Long userId,
+            @RequestBody final ActiveQuestRequestDto activeQuestRequestDto,
+            @PathVariable final Long questId){
+        ActiveQuestCreateCommand command = ActiveQuestCreateCommand.from(activeQuestRequestDto, questId, userId);
+        questUseCase.createActiveQuest(command);
         return BaseResponse.success(null);
     }
 
