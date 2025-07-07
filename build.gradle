@@ -46,7 +46,7 @@ dependencies {
 task copyGitSubmodule(type: Copy) {
 	copy {
 		from './byeboo-properties'
-		include '*.yml'
+		include '*'
 		into './src/main/resources'
 	}
 }
