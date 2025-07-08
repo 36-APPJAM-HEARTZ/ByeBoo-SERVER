@@ -7,7 +7,6 @@ import com.heartz.byeboo.adapter.in.web.dto.SignedUrlRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.SignedUrlResponseDto;
 import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
 import com.heartz.byeboo.application.command.SignedUrlCreateCommand;
-import com.heartz.byeboo.application.port.in.GcsUseCase;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
 import com.heartz.byeboo.core.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserQuestController {
 
     private final QuestUseCase questUseCase;
-    private final GcsUseCase gcsUseCase;
 
     @PostMapping("/quests/{questId}/recording")
     public BaseResponse<Void> createRecordingQuest(
@@ -47,7 +45,7 @@ public class UserQuestController {
             @RequestBody final SignedUrlRequestDto signedUrlRequestDto
             ){
         SignedUrlCreateCommand command = SignedUrlCreateCommand.from(signedUrlRequestDto, userId);
-        SignedUrlResponseDto response = gcsUseCase.createSignedUrl(command);
+        SignedUrlResponseDto response = questUseCase.getSignedUrl(command);
         return BaseResponse.success(response);
     }
 }

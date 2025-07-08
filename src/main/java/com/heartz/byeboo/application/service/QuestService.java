@@ -1,12 +1,11 @@
 package com.heartz.byeboo.application.service;
 
+import com.heartz.byeboo.adapter.in.web.dto.SignedUrlResponseDto;
 import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
 import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
+import com.heartz.byeboo.application.command.SignedUrlCreateCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
-import com.heartz.byeboo.application.port.out.CreateUserQuestPort;
-import com.heartz.byeboo.application.port.out.RetrieveQuestPort;
-import com.heartz.byeboo.application.port.out.RetrieveUserPort;
-import com.heartz.byeboo.application.port.out.UpdateUserPort;
+import com.heartz.byeboo.application.port.out.*;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.QuestErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
@@ -25,6 +24,7 @@ public class QuestService implements QuestUseCase {
     private final RetrieveQuestPort retrieveQuestPort;
     private final CreateUserQuestPort createUserQuestPort;
     private final UpdateUserPort updateUserPort;
+    private final CreateGcsPort createGcsPort;
 
     @Override
     @Transactional
@@ -51,6 +51,13 @@ public class QuestService implements QuestUseCase {
         createUserQuestPort.createUserQuest(userQuest);
         findUser.updateCurrentNumber();
         updateUserPort.updateCurrentNumber(findUser.getId());
+    }
+
+    @Override
+    public SignedUrlResponseDto getSignedUrl(SignedUrlCreateCommand command) {
+        retrieveUserPort.getUserById(command.getUserId());
+        String signedUrl = createGcsPort.createSignedUrl(command.getImageKey(), command.getContentType());
+        return SignedUrlResponseDto.of(signedUrl);
     }
 
     private void validateUserQuest(User user, Long questId){
