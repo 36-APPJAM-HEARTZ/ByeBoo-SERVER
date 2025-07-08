@@ -10,6 +10,6 @@ public interface UserUseCase {
     UserCreateResponseDto createUser(UserCreateCommand userCreateCommand);
     UserNameResponseDto getUserName(UserNameCommand userNameCommand);
     UserJourneyResponseDto getUserJourney(UserJourneyCommand userJourneyCommand);
-    HomeCountResponseDto getHomeCount(HomeCountCommand homeCountCommand);
+    HomeCountResponseDto getCompletedCount(CompletedCountCommand completedCountCommand);
     Void updateInitialUserJourney(UserJourneyUpdateCommand userJourneyUpdateCommand);
 }

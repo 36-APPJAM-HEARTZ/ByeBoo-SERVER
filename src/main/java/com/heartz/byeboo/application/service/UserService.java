@@ -80,8 +80,8 @@ public class UserService implements UserUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public HomeCountResponseDto getHomeCount(HomeCountCommand homeCountCommand) {
-        User currentUser = retrieveUserPort.getUserById(homeCountCommand.getId());
+    public HomeCountResponseDto getCompletedCount(CompletedCountCommand completedCountCommand) {
+        User currentUser = retrieveUserPort.getUserById(completedCountCommand.getId());
         Boolean todayCompleted = Boolean.FALSE;
 
         if(currentUser.getCurrentNumber() == 0)

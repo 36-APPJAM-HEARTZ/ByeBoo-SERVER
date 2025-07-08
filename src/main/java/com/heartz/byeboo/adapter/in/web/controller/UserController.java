@@ -37,10 +37,10 @@ public class UserController {
         return BaseResponse.success(userUseCase.getUserJourney(userJourneyCommand));
     }
 
-    @GetMapping("/home/count")
-    public BaseResponse<HomeCountResponseDto> getHomeCount(@RequestHeader Long userId) {
-        HomeCountCommand homeCountCommand = HomeCountCommand.of(userId);
-        return BaseResponse.success(userUseCase.getHomeCount(homeCountCommand));
+    @GetMapping("/users/count")
+    public BaseResponse<HomeCountResponseDto> getCompletedCount(@RequestHeader Long userId) {
+        CompletedCountCommand completedCountCommand = CompletedCountCommand.of(userId);
+        return BaseResponse.success(userUseCase.getCompletedCount(completedCountCommand));
     }
 
     @PatchMapping("/home")

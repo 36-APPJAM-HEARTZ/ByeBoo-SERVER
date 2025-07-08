@@ -6,11 +6,11 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class HomeCountCommand {
+public class CompletedCountCommand {
     private Long id;
 
-    public static HomeCountCommand of(Long id){
-        return HomeCountCommand.builder()
+    public static CompletedCountCommand of(Long id){
+        return CompletedCountCommand.builder()
                 .id(id)
                 .build();
     }
