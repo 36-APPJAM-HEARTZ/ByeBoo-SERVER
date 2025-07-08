@@ -6,16 +6,12 @@ import com.heartz.byeboo.application.port.out.CreateUserQuestPort;
 import com.heartz.byeboo.application.port.out.RetrieveUserQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
-import com.heartz.byeboo.application.port.out.RetrieveUserQuestPort;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserQuest;
-import com.heartz.byeboo.mapper.UserMapper;
 import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
@@ -29,10 +25,9 @@ public class UserQuestPersistenceAdapter implements CreateUserQuestPort, Retriev
         userQuestRepository.save(userQuestEntity);
     }
 
-
     @Override
-    public UserQuest getUserQuestByUserIdAndQuestId(Long userId, Long questId, User user, Quest quest) {
-        UserQuestEntity userQuestEntity = userQuestRepository.getByQuestIdAndUserId(questId, userId)
+    public UserQuest getUserQuestByUserAndQuest( User user, Quest quest) {
+        UserQuestEntity userQuestEntity = userQuestRepository.findByUserIdAndQuestId(user.getId(), quest.getId())
                 .orElseThrow(() -> new CustomException(UserQuestErrorCode.USER_QUEST_NOT_FOUND));
 
         return UserQuestMapper.toDomain(userQuestEntity, user, quest);

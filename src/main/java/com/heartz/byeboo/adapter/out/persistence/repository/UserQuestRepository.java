@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface UserQuestRepository extends JpaRepository<UserQuestEntity, Long> {
     List<UserQuestEntity> findAllByUserIdAndQuestIdOrderByCreatedDateDesc(Long userId, Long questId);
-    Optional<UserQuestEntity> getByQuestIdAndUserId(Long questId, Long userId);
+    Optional<UserQuestEntity> findByUserIdAndQuestId(Long userId, Long questId);
 }
