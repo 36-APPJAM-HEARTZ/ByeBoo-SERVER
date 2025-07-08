@@ -43,7 +43,7 @@ public class UserController {
         return BaseResponse.success(userUseCase.getCompletedCount(completedCountCommand));
     }
 
-    @PatchMapping("/home")
+    @PatchMapping("/users/journey/start")
     public BaseResponse<Void> updateInitialUserJourney(@RequestHeader Long userId) {
         UserJourneyUpdateCommand userJourneyUpdateCommand = UserJourneyUpdateCommand.of(userId);
         return BaseResponse.success(userUseCase.updateInitialUserJourney(userJourneyUpdateCommand));
