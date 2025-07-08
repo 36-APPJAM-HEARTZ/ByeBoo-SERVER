@@ -2,9 +2,10 @@ package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.adapter.in.web.dto.request.ActiveQuestRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.*;
+import com.heartz.byeboo.adapter.in.web.dto.response.QuestDetailResponseDto;
 import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
-import com.heartz.byeboo.adapter.in.web.dto.SignedUrlRequestDto;
-import com.heartz.byeboo.adapter.in.web.dto.SignedUrlResponseDto;
+import com.heartz.byeboo.application.command.QuestDetailCommand;
 import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
 import com.heartz.byeboo.application.command.SignedUrlCreateCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
@@ -14,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/quests")
 public class UserQuestController {
 
     private final QuestUseCase questUseCase;
 
-    @PostMapping("/quests/{questId}/recording")
+    @PostMapping("/{questId}/recording")
     public BaseResponse<Void> createRecordingQuest(
             @RequestHeader final Long userId,
             @RequestBody final RecordingQuestRequestDto recordingQuestRequestDto,
@@ -29,7 +30,7 @@ public class UserQuestController {
         return BaseResponse.success(null);
     }
 
-    @PostMapping("/quests/{questId}/active")
+    @PostMapping("/{questId}/active")
     public BaseResponse<Void> createActiveQuest(
             @RequestHeader final Long userId,
             @RequestBody final ActiveQuestRequestDto activeQuestRequestDto,
@@ -39,13 +40,22 @@ public class UserQuestController {
         return BaseResponse.success(null);
     }
 
-    @PostMapping("/quests/images/signed-url")
+    @PostMapping("/images/signed-url")
     public BaseResponse<SignedUrlResponseDto> createSignedUrl(
             @RequestHeader final Long userId,
             @RequestBody final SignedUrlRequestDto signedUrlRequestDto
             ){
         SignedUrlCreateCommand command = SignedUrlCreateCommand.of(signedUrlRequestDto, userId);
-        SignedUrlResponseDto response = questUseCase.getSignedUrl(command);
-        return BaseResponse.success(response);
+        return BaseResponse.success(questUseCase.getSignedUrl(command));
+    }
+
+    @GetMapping("/{questId}")
+    public BaseResponse<QuestDetailResponseDto> getDetailQuest(
+            @RequestHeader final Long userId,
+            @PathVariable final Long questId
+    ){
+        QuestDetailCommand command = QuestDetailCommand.of(questId, userId);
+
+        return BaseResponse.success(questUseCase.getDetailQuest(command));
     }
 }

@@ -1,7 +1,9 @@
 package com.heartz.byeboo.application.service;
 
 import com.heartz.byeboo.adapter.in.web.dto.SignedUrlResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.QuestDetailResponseDto;
 import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
+import com.heartz.byeboo.application.command.QuestDetailCommand;
 import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
 import com.heartz.byeboo.application.command.SignedUrlCreateCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
@@ -26,6 +28,8 @@ public class QuestService implements QuestUseCase {
     private final CreateUserQuestPort createUserQuestPort;
     private final UpdateUserPort updateUserPort;
     private final CreateGcsPort createGcsPort;
+    private final ValidateGcsPort validateGcsPort;
+    private final RetrieveUserQuestPort retrieveUserQuestPort;
     private final RetrieveGcsPort retrieveGcsPort;
 
     @Override
@@ -62,6 +66,17 @@ public class QuestService implements QuestUseCase {
         return SignedUrlResponseDto.of(signedUrl);
     }
 
+    @Override
+    public QuestDetailResponseDto getDetailQuest(QuestDetailCommand command) {
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
+        Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
+
+        UserQuest userQuest = retrieveUserQuestPort.getUserQuestByUserAndQuest(findUser, findQuest);
+        String signedUrl = retrieveGcsPort.getSignedUrl(userQuest.getImageKey().toString());
+
+        return QuestDetailResponseDto.of(userQuest, findQuest, signedUrl);
+    }
+
     private void validateUserQuest(User user, Long questId){
         if (!user.getCurrentNumber().equals(questId)) {
             throw new CustomException(UserQuestErrorCode.INVALID_QUEST_PROGRESS);
@@ -73,7 +88,7 @@ public class QuestService implements QuestUseCase {
     }
 
     private void validateObjectExist(String imageKey){
-        if (!retrieveGcsPort.isObjectExists(imageKey)){
+        if (!validateGcsPort.isObjectExists(imageKey)){
             throw new CustomException(UserQuestErrorCode.IMAGE_NOT_UPLOADED);
         }
     }

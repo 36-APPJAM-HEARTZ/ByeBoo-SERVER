@@ -16,11 +16,11 @@ import java.util.UUID;
 @Builder
 @Getter
 public class ActiveQuestCreateCommand {
-    String answer;
-    EQuestEmotionState questEmotionState;
-    UUID imageKey;
-    Long questId;
-    Long userId;
+    private String answer;
+    private EQuestEmotionState questEmotionState;
+    private UUID imageKey;
+    private Long questId;
+    private Long userId;
 
     public static ActiveQuestCreateCommand from(ActiveQuestRequestDto activeQuestRequestDto, Long questId, Long userId) {
         validateAnswerLength(activeQuestRequestDto.answer());

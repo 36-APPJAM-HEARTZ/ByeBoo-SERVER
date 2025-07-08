@@ -7,9 +7,9 @@ import lombok.Getter;
 @Builder
 @Getter
 public class SignedUrlCreateCommand {
-    String imageKey;
-    String contentType;
-    Long userId;
+    private String imageKey;
+    private String contentType;
+    private Long userId;
 
     public static SignedUrlCreateCommand of(SignedUrlRequestDto signedUrlRequestDto, Long userId){
         return SignedUrlCreateCommand.builder()
