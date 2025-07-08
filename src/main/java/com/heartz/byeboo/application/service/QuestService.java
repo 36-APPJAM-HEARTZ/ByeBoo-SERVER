@@ -25,6 +25,7 @@ public class QuestService implements QuestUseCase {
     private final CreateUserQuestPort createUserQuestPort;
     private final UpdateUserPort updateUserPort;
     private final CreateGcsPort createGcsPort;
+    private final RetrieveGcsPort retrieveGcsPort;
 
     @Override
     @Transactional
@@ -45,7 +46,7 @@ public class QuestService implements QuestUseCase {
     public void createActiveQuest(ActiveQuestCreateCommand command) {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
         validateUserQuest(findUser, command.getQuestId());
-
+        validateObjectExist(command.getImageKey().toString());
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
         UserQuest userQuest = UserQuestMapper.commandToDomainActive(command, findUser, findQuest);
         createUserQuestPort.createUserQuest(userQuest);
@@ -67,6 +68,12 @@ public class QuestService implements QuestUseCase {
 
         if (user.getCurrentNumber() >= 30){
             throw new CustomException(QuestErrorCode.CURRENT_NUMBER_OVER_MAX);
+        }
+    }
+
+    private void validateObjectExist(String imageKey){
+        if (!retrieveGcsPort.isObjectExists(imageKey)){
+            throw new CustomException(QuestErrorCode.IMAGE_NOT_UPLOADED);
         }
     }
 }
