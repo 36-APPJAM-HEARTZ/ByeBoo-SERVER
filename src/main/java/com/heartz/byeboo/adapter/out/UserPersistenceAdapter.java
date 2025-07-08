@@ -14,6 +14,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor
 @Component
 public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort, UpdateUserPort {
@@ -40,13 +42,14 @@ public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort,
 
 
     @Override
-    public void updateCurrentNumber(Long userId) {
-        QUserEntity user = QUserEntity.userEntity;
+    public void updateCurrentNumber(User user) {
+        QUserEntity userEntity = QUserEntity.userEntity;
 
         queryFactory
-                .update(user)
-                .set(user.currentNumber, user.currentNumber.add(1))
-                .where(user.id.eq(userId))
+                .update(userEntity)
+                .set(userEntity.currentNumber, user.getCurrentNumber())
+                .set(userEntity.modifiedDate, LocalDateTime.now())
+                .where(userEntity.id.eq(user.getId()))
                 .execute();
     }
 }

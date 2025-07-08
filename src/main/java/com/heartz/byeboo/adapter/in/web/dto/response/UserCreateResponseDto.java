@@ -1,4 +1,4 @@
-package com.heartz.byeboo.adapter.in.web.dto;
+package com.heartz.byeboo.adapter.in.web.dto.response;
 
 public record UserCreateResponseDto(
         Long id,

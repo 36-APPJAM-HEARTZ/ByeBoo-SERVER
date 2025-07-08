@@ -1,24 +1,29 @@
 package com.heartz.byeboo.adapter.out;
 
+import com.heartz.byeboo.adapter.out.persistence.entity.QUserJourneyEntity;
 import com.heartz.byeboo.adapter.out.persistence.entity.UserJourneyEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.UserJourneyRepository;
 import com.heartz.byeboo.application.port.out.CreateUserJourneyPort;
 import com.heartz.byeboo.application.port.out.RetrieveUserJourneyPort;
+import com.heartz.byeboo.application.port.out.UpdateUserJourneyPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserJourneyErrorCode;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
 import com.heartz.byeboo.mapper.UserJourneyMapper;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, RetrieveUserJourneyPort {
+public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, RetrieveUserJourneyPort, UpdateUserJourneyPort {
     private final UserJourneyRepository userJourneyRepository;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public void createUserJourney(List<UserJourney> userJourneyList) {
@@ -30,7 +35,7 @@ public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, Ret
     }
 
     @Override
-    public UserJourney getUserJourneyByUser(User user) {
+    public UserJourney getOngoingUserJourneyByUser(User user) {
         return userJourneyRepository.findAllByUserId(user.getId()).stream()
                 .map(userJourneyEntity ->  UserJourneyMapper.toDomain(userJourneyEntity, user))
                 .filter(userJourney -> userJourney.getJourneyStatus().equals(EJourneyStatus.BEFORE_START) ||
@@ -38,5 +43,17 @@ public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, Ret
                 .findFirst()
                 .orElseThrow(() -> new CustomException(UserJourneyErrorCode.NOT_FOUND_ONGOING_USER_JOURNEY));
 
+    }
+
+    @Override
+    public void updateUserJourney(UserJourney userJourney) {
+        QUserJourneyEntity userJourneyEntity = QUserJourneyEntity.userJourneyEntity;
+
+        queryFactory
+                .update(userJourneyEntity)
+                .set(userJourneyEntity.journeyStatus, userJourney.getJourneyStatus())
+                .set(userJourneyEntity.modifiedDate, LocalDateTime.now())
+                .where(userJourneyEntity.id.eq(userJourney.getId()))
+                .execute();
     }
 }
