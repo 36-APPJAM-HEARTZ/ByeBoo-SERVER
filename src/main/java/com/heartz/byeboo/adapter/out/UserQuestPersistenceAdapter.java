@@ -24,7 +24,7 @@ public class UserQuestPersistenceAdapter implements CreateUserQuestPort, Retriev
     }
 
     @Override
-    public UserQuest getUserQuestByUserAndQuest(User user, Quest quest) {
+    public UserQuest getRecentUserQuestByUserAndQuest(User user, Quest quest) {
         UserQuestEntity userQuestEntity = userQuestRepository
                 .findAllByUserIdAndQuestIdOrderByCreatedDateDesc(user.getId(), quest.getId())
                 .stream()

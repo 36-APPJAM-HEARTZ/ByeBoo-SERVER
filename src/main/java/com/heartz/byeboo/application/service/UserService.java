@@ -91,7 +91,7 @@ public class UserService implements UserUseCase {
                 ongoingUserJourney.getJourney(),
                 currentUser.getCurrentNumber()
         );
-        UserQuest recentUserQuest = retrieveUserQuestPort.getUserQuestByUserAndQuest(currentUser, quest);
+        UserQuest recentUserQuest = retrieveUserQuestPort.getRecentUserQuestByUserAndQuest(currentUser, quest);
         Boolean todayCompleted = Boolean.FALSE;
 
         if(recentUserQuest == null)
