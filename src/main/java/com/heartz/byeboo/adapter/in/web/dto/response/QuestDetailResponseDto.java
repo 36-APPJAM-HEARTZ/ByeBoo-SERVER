@@ -3,12 +3,13 @@ package com.heartz.byeboo.adapter.in.web.dto.response;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.UserQuest;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record QuestDetailResponseDto(
         Long stepNumber,
         Long questNumber,
-        LocalDateTime createdAt,
+        LocalDate createdAt,
         String question,
         String answer,
         String questEmotionState,
@@ -18,10 +19,10 @@ public record QuestDetailResponseDto(
         return new QuestDetailResponseDto(
                 quest.getStepNumber(),
                 quest.getQuestNumber(),
-                userQuest.getCreatedDate(),
+                userQuest.getCreatedDate().toLocalDate(),
                 quest.getQuestion(),
                 userQuest.getAnswer(),
-                userQuest.getQuestEmotionState().toString(),
+                userQuest.getQuestEmotionState().getLabel(),
                 signedUrl
                 );
     }
