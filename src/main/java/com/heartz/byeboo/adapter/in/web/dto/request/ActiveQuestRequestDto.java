@@ -1,4 +1,4 @@
-package com.heartz.byeboo.adapter.in.web.dto;
+package com.heartz.byeboo.adapter.in.web.dto.request;
 
 import java.util.UUID;
 

@@ -1,9 +1,11 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
-import com.heartz.byeboo.adapter.in.web.dto.UserCreateRequestDto;
-import com.heartz.byeboo.adapter.in.web.dto.UserCreateResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.UserJourneyResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.UserNameResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.UserCreateRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.HomeCountResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.UserCreateResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.UserJourneyResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.UserNameResponseDto;
+import com.heartz.byeboo.application.command.HomeCountCommand;
 import com.heartz.byeboo.application.command.UserCreateCommand;
 import com.heartz.byeboo.application.command.UserJourneyCommand;
 import com.heartz.byeboo.application.command.UserNameCommand;
@@ -36,5 +38,11 @@ public class UserController {
     public BaseResponse<UserJourneyResponseDto> getUserJourney(@RequestHeader Long userId) {
         UserJourneyCommand userJourneyCommand = UserJourneyCommand.of(userId);
         return BaseResponse.success(userUseCase.getUserJourney(userJourneyCommand));
+    }
+
+    @GetMapping("/home/count")
+    public BaseResponse<HomeCountResponseDto> getHomeCount(@RequestHeader Long userId) {
+        HomeCountCommand homeCountCommand = HomeCountCommand.of(userId);
+        return BaseResponse.success(userUseCase.getHomeCount(homeCountCommand));
     }
 }

@@ -14,7 +14,8 @@ public enum UserQuestErrorCode implements ErrorCode {
     RECORDING_ANSWER_TOO_LONG(HttpStatus.BAD_REQUEST, "질문형 퀘스트 답변 길이는 500자 이내입니다. "),
     RECORDING_ANSWER_TOO_SHORT(HttpStatus.BAD_REQUEST, "질문형 퀘스트 답변 길이는 10자 이상 입니다."),
     ACTIVE_ANSWER_TOO_LONG(HttpStatus.BAD_REQUEST, "행동형 퀘스트 답변 길이는 200자 이내입니다. "),
-    IMAGE_NOT_UPLOADED(HttpStatus.NOT_FOUND, "버킷에 이미지가 업로드되지 않았습니다.")
+    IMAGE_NOT_UPLOADED(HttpStatus.NOT_FOUND, "버킷에 이미지가 업로드되지 않았습니다."),
+    NOT_FOUND_ONGOING_USER_QUEST(HttpStatus.NOT_FOUND, "현재 진행중인 퀘스트가 없습니다."),
     ;
     private final HttpStatus status;
     private final String message;
