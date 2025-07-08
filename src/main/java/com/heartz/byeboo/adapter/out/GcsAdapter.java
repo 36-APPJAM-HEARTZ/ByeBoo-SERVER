@@ -3,7 +3,6 @@ package com.heartz.byeboo.adapter.out;
 import com.google.cloud.storage.*;
 import com.heartz.byeboo.application.port.out.CreateGcsPort;
 import com.heartz.byeboo.application.port.out.RetrieveGcsPort;
-import com.heartz.byeboo.application.port.out.RetrieveUserPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Component
-public class GcsPersistenceAdapter implements RetrieveGcsPort, CreateGcsPort {
+public class GcsAdapter implements RetrieveGcsPort, CreateGcsPort {
 
     private final Storage storage;
 

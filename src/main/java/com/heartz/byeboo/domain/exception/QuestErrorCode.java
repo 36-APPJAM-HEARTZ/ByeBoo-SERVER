@@ -9,14 +9,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum QuestErrorCode implements ErrorCode {
 
-    INVALID_QUEST_PROGRESS(HttpStatus.BAD_REQUEST, "현재 진행 중인 퀘스트가 아닙니다."),
     QUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "퀘스트를 찾을 수 없습니다."),
-    INVALID_QUEST(HttpStatus.BAD_REQUEST, "퀘스트 형식이 올바르지 않습니다."),
-    RECORDING_ANSWER_TOO_LONG(HttpStatus.BAD_REQUEST, "질문형 퀘스트 답변 길이는 500자 이내입니다. "),
-    RECORDING_ANSWER_TOO_SHORT(HttpStatus.BAD_REQUEST, "질문형 퀘스트 답변 길이는 10자 이상 입니다."),
-    CURRENT_NUMBER_OVER_MAX(HttpStatus.BAD_REQUEST, "퀘스트는 최대 30번까지만 존재합니다."),
-    ACTIVE_ANSWER_TOO_LONG(HttpStatus.BAD_REQUEST, "행동형 퀘스트 답변 길이는 200자 이내입니다. "),
-    IMAGE_NOT_UPLOADED(HttpStatus.NOT_FOUND, "이미지를 찾을 수 없습니다.")
+    CURRENT_NUMBER_OVER_MAX(HttpStatus.BAD_REQUEST, "퀘스트는 최대 30번까지만 존재합니다.")
     ;
     private final HttpStatus status;
     private final String message;

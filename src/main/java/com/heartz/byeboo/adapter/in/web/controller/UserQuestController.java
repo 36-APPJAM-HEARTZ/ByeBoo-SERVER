@@ -44,7 +44,7 @@ public class UserQuestController {
             @RequestHeader final Long userId,
             @RequestBody final SignedUrlRequestDto signedUrlRequestDto
             ){
-        SignedUrlCreateCommand command = SignedUrlCreateCommand.from(signedUrlRequestDto, userId);
+        SignedUrlCreateCommand command = SignedUrlCreateCommand.of(signedUrlRequestDto, userId);
         SignedUrlResponseDto response = questUseCase.getSignedUrl(command);
         return BaseResponse.success(response);
     }

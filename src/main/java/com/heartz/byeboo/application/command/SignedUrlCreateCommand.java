@@ -11,7 +11,7 @@ public class SignedUrlCreateCommand {
     String contentType;
     Long userId;
 
-    public static SignedUrlCreateCommand from(SignedUrlRequestDto signedUrlRequestDto, Long userId){
+    public static SignedUrlCreateCommand of(SignedUrlRequestDto signedUrlRequestDto, Long userId){
         return SignedUrlCreateCommand.builder()
                 .imageKey(signedUrlRequestDto.imageKey().toString())
                 .contentType(signedUrlRequestDto.contentType())

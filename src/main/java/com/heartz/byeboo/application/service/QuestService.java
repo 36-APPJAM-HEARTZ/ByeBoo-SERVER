@@ -8,6 +8,7 @@ import com.heartz.byeboo.application.port.in.QuestUseCase;
 import com.heartz.byeboo.application.port.out.*;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.QuestErrorCode;
+import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserQuest;
@@ -63,17 +64,17 @@ public class QuestService implements QuestUseCase {
 
     private void validateUserQuest(User user, Long questId){
         if (!user.getCurrentNumber().equals(questId)) {
-            throw new CustomException(QuestErrorCode.INVALID_QUEST_PROGRESS);
+            throw new CustomException(UserQuestErrorCode.INVALID_QUEST_PROGRESS);
         }
 
-        if (user.getCurrentNumber() >= 30){
+        if (user.getCurrentNumber() > 30){
             throw new CustomException(QuestErrorCode.CURRENT_NUMBER_OVER_MAX);
         }
     }
 
     private void validateObjectExist(String imageKey){
         if (!retrieveGcsPort.isObjectExists(imageKey)){
-            throw new CustomException(QuestErrorCode.IMAGE_NOT_UPLOADED);
+            throw new CustomException(UserQuestErrorCode.IMAGE_NOT_UPLOADED);
         }
     }
 }
