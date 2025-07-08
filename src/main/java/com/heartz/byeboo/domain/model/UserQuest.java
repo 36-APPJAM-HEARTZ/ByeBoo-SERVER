@@ -4,6 +4,7 @@ import com.heartz.byeboo.domain.type.EQuestEmotionState;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -15,4 +16,5 @@ public class UserQuest {
     private EQuestEmotionState questEmotionState;
     private User user;
     private Quest quest;
+    private LocalDateTime createdDate;
 }
