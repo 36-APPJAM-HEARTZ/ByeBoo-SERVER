@@ -1,5 +1,7 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
+import com.heartz.byeboo.adapter.in.web.dto.request.ActiveQuestRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.*;
 import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
 import com.heartz.byeboo.application.command.QuestDetailCommand;

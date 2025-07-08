@@ -1,6 +1,6 @@
 package com.heartz.byeboo.application.command;
 
-import com.heartz.byeboo.adapter.in.web.dto.UserCreateRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.UserCreateRequestDto;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserErrorCode;
 import com.heartz.byeboo.domain.type.EQuestStyle;

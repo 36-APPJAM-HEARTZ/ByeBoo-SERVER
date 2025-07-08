@@ -4,6 +4,7 @@ import com.heartz.byeboo.domain.type.EQuestEmotionState;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -15,4 +16,25 @@ public class UserQuest {
     private EQuestEmotionState questEmotionState;
     private User user;
     private Quest quest;
+    private LocalDateTime createdDate;
+
+    public static UserQuest of(
+            Long id,
+            String answer,
+            UUID imageKey,
+            EQuestEmotionState questEmotionState,
+            User user,
+            Quest quest,
+            LocalDateTime createdDate
+    ){
+        return UserQuest.builder()
+                .id(id)
+                .answer(answer)
+                .imageKey(imageKey)
+                .questEmotionState(questEmotionState)
+                .user(user)
+                .quest(quest)
+                .createdDate(createdDate)
+                .build();
+    }
 }

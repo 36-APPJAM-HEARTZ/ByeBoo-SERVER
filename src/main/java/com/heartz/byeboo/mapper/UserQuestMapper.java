@@ -36,4 +36,16 @@ public class UserQuestMapper {
                 .imageKey(command.getImageKey())
                 .build();
     }
+
+    public static UserQuest toDomain(UserQuestEntity userQuestEntity, User user, Quest quest) {
+        return UserQuest.of(
+                userQuestEntity.getId(),
+                userQuestEntity.getAnswer(),
+                userQuestEntity.getImageKey(),
+                userQuestEntity.getQuestEmotionState(),
+                user,
+                quest,
+                userQuestEntity.getCreatedDate()
+        );
+    }
 }
