@@ -3,7 +3,10 @@ package com.heartz.byeboo.adapter.in.web.controller;
 import com.heartz.byeboo.adapter.in.web.dto.ActiveQuestRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.RecordingQuestRequestDto;
 import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
+import com.heartz.byeboo.adapter.in.web.dto.SignedUrlRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.SignedUrlResponseDto;
 import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
+import com.heartz.byeboo.application.command.SignedUrlCreateCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
 import com.heartz.byeboo.core.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +37,15 @@ public class UserQuestController {
         ActiveQuestCreateCommand command = ActiveQuestCreateCommand.from(activeQuestRequestDto, questId, userId);
         questUseCase.createActiveQuest(command);
         return BaseResponse.success(null);
+    }
+
+    @PostMapping("/quests/images/signed-url")
+    public BaseResponse<SignedUrlResponseDto> createSignedUrl(
+            @RequestHeader final Long userId,
+            @RequestBody final SignedUrlRequestDto signedUrlRequestDto
+            ){
+        SignedUrlCreateCommand command = SignedUrlCreateCommand.of(signedUrlRequestDto, userId);
+        SignedUrlResponseDto response = questUseCase.getSignedUrl(command);
+        return BaseResponse.success(response);
     }
 }
