@@ -39,7 +39,7 @@ public class QuestService implements QuestUseCase {
         UserQuest userQuest = UserQuestMapper.commandToDomainRecording(command, findUser, findQuest);
         createUserQuestPort.createUserQuest(userQuest);
         findUser.updateCurrentNumber();
-        updateUserPort.updateCurrentNumber(findUser.getId());
+        updateUserPort.updateCurrentNumber(findUser);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class QuestService implements QuestUseCase {
         UserQuest userQuest = UserQuestMapper.commandToDomainActive(command, findUser, findQuest);
         createUserQuestPort.createUserQuest(userQuest);
         findUser.updateCurrentNumber();
-        updateUserPort.updateCurrentNumber(findUser.getId());
+        updateUserPort.updateCurrentNumber(findUser);
     }
 
     @Override

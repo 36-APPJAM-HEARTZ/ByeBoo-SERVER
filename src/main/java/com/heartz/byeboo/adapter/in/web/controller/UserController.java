@@ -5,10 +5,7 @@ import com.heartz.byeboo.adapter.in.web.dto.response.HomeCountResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.UserCreateResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.UserJourneyResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.UserNameResponseDto;
-import com.heartz.byeboo.application.command.HomeCountCommand;
-import com.heartz.byeboo.application.command.UserCreateCommand;
-import com.heartz.byeboo.application.command.UserJourneyCommand;
-import com.heartz.byeboo.application.command.UserNameCommand;
+import com.heartz.byeboo.application.command.*;
 import com.heartz.byeboo.application.port.in.UserUseCase;
 import com.heartz.byeboo.core.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -40,9 +37,15 @@ public class UserController {
         return BaseResponse.success(userUseCase.getUserJourney(userJourneyCommand));
     }
 
-    @GetMapping("/home/count")
-    public BaseResponse<HomeCountResponseDto> getHomeCount(@RequestHeader Long userId) {
-        HomeCountCommand homeCountCommand = HomeCountCommand.of(userId);
-        return BaseResponse.success(userUseCase.getHomeCount(homeCountCommand));
+    @GetMapping("/users/count")
+    public BaseResponse<HomeCountResponseDto> getCompletedCount(@RequestHeader Long userId) {
+        CompletedCountCommand completedCountCommand = CompletedCountCommand.of(userId);
+        return BaseResponse.success(userUseCase.getCompletedCount(completedCountCommand));
+    }
+
+    @PatchMapping("/users/journey/start")
+    public BaseResponse<Void> updateInitialUserJourney(@RequestHeader Long userId) {
+        UserJourneyUpdateCommand userJourneyUpdateCommand = UserJourneyUpdateCommand.of(userId);
+        return BaseResponse.success(userUseCase.updateInitialUserJourney(userJourneyUpdateCommand));
     }
 }

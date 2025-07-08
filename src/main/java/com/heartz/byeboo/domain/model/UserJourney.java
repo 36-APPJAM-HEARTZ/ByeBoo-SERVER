@@ -70,4 +70,8 @@ public class UserJourney {
 
         return userJourneyList;
     }
+
+    public void updateInitialUserJourney() {
+        this.journeyStatus = EJourneyStatus.IN_PROGRESS;
+    }
 }

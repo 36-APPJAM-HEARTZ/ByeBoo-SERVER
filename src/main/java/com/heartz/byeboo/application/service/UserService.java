@@ -4,13 +4,11 @@ import com.heartz.byeboo.adapter.in.web.dto.response.HomeCountResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.UserCreateResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.UserJourneyResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.UserNameResponseDto;
-import com.heartz.byeboo.application.command.HomeCountCommand;
-import com.heartz.byeboo.application.command.UserCreateCommand;
-import com.heartz.byeboo.application.command.UserJourneyCommand;
-import com.heartz.byeboo.application.command.UserNameCommand;
+import com.heartz.byeboo.application.command.*;
 import com.heartz.byeboo.application.port.in.UserUseCase;
 import com.heartz.byeboo.application.port.out.*;
 import com.heartz.byeboo.core.exception.CustomException;
+import com.heartz.byeboo.domain.exception.UserJourneyErrorCode;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
@@ -34,6 +32,8 @@ public class UserService implements UserUseCase {
     private final RetrieveUserJourneyPort retrieveUserJourneyPort;
     private final RetrieveQuestPort retrieveQuestPort;
     private final RetrieveUserQuestPort retrieveUserQuestPort;
+    private final UpdateUserPort updateUserPort;
+    private final UpdateUserJourneyPort updateUserJourneyPort;
 
     @Override
     @Transactional
@@ -60,7 +60,7 @@ public class UserService implements UserUseCase {
     @Transactional(readOnly = true)
     public UserJourneyResponseDto getUserJourney(UserJourneyCommand userJourneyCommand) {
         User currentUser = retrieveUserPort.getUserById(userJourneyCommand.getId());
-        UserJourney userJourney = retrieveUserJourneyPort.getUserJourneyByUser(currentUser);
+        UserJourney userJourney = retrieveUserJourneyPort.getOngoingUserJourneyByUser(currentUser);
 
         return getUseJourneyResponseDto(userJourney);
     }
@@ -80,8 +80,8 @@ public class UserService implements UserUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public HomeCountResponseDto getHomeCount(HomeCountCommand homeCountCommand) {
-        User currentUser = retrieveUserPort.getUserById(homeCountCommand.getId());
+    public HomeCountResponseDto getCompletedCount(CompletedCountCommand completedCountCommand) {
+        User currentUser = retrieveUserPort.getUserById(completedCountCommand.getId());
         Boolean todayCompleted = Boolean.FALSE;
 
         if(currentUser.getCurrentNumber() == 0)
@@ -99,11 +99,28 @@ public class UserService implements UserUseCase {
     }
 
     private UserQuest getRecentUserQuestByUser(User currentUser) {
-        UserJourney ongoingUserJourney = retrieveUserJourneyPort.getUserJourneyByUser(currentUser);
+        UserJourney ongoingUserJourney = retrieveUserJourneyPort.getOngoingUserJourneyByUser(currentUser);
         Quest quest = retrieveQuestPort.getQuestByJourneyAndStepNumber(
                 ongoingUserJourney.getJourney(),
                 currentUser.getCurrentNumber() - 1
         );
         return retrieveUserQuestPort.getRecentUserQuestByUserAndQuest(currentUser, quest);
+    }
+
+    @Override
+    @Transactional
+    public Void updateInitialUserJourney(UserJourneyUpdateCommand userJourneyUpdateCommand) {
+        User currentUser = retrieveUserPort.getUserById(userJourneyUpdateCommand.getId());
+        UserJourney ongoingUserJourney = retrieveUserJourneyPort.getOngoingUserJourneyByUser(currentUser);
+
+        if(!ongoingUserJourney.getJourneyStatus().equals(EJourneyStatus.BEFORE_START))
+            throw new CustomException(UserJourneyErrorCode.CONFLICT_USER_JOURNEY_STATUS);
+
+        ongoingUserJourney.updateInitialUserJourney();
+        updateUserJourneyPort.updateUserJourney(ongoingUserJourney);
+        currentUser.updateCurrentNumber();
+        updateUserPort.updateCurrentNumber(currentUser);
+
+        return null;
     }
 }
