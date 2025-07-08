@@ -82,24 +82,28 @@ public class UserService implements UserUseCase {
     @Transactional(readOnly = true)
     public HomeCountResponseDto getHomeCount(HomeCountCommand homeCountCommand) {
         User currentUser = retrieveUserPort.getUserById(homeCountCommand.getId());
-        UserJourney ongoingUserJourney = retrieveUserJourneyPort.getUserJourneyByUser(currentUser);
+        Boolean todayCompleted = Boolean.FALSE;
 
         if(currentUser.getCurrentNumber() == 0)
             throw new CustomException(UserQuestErrorCode.NOT_FOUND_ONGOING_USER_QUEST);
 
-        Quest quest = retrieveQuestPort.getQuestByJourneyAndStepNumber(
-                ongoingUserJourney.getJourney(),
-                currentUser.getCurrentNumber()
-        );
-        UserQuest recentUserQuest = retrieveUserQuestPort.getRecentUserQuestByUserAndQuest(currentUser, quest);
-        Boolean todayCompleted = Boolean.FALSE;
-
-        if(recentUserQuest == null)
+        if(currentUser.getCurrentNumber() == 1)
             return HomeCountResponseDto.of(todayCompleted, 0L);
+
+        UserQuest recentUserQuest = getRecentUserQuestByUser(currentUser);
 
         if(recentUserQuest.getCreatedDate().plusDays(1).isAfter(LocalDateTime.now()))
             todayCompleted = Boolean.TRUE;
 
         return HomeCountResponseDto.of(todayCompleted, currentUser.getCurrentNumber() - 1);
+    }
+
+    private UserQuest getRecentUserQuestByUser(User currentUser) {
+        UserJourney ongoingUserJourney = retrieveUserJourneyPort.getUserJourneyByUser(currentUser);
+        Quest quest = retrieveQuestPort.getQuestByJourneyAndStepNumber(
+                ongoingUserJourney.getJourney(),
+                currentUser.getCurrentNumber() - 1
+        );
+        return retrieveUserQuestPort.getRecentUserQuestByUserAndQuest(currentUser, quest);
     }
 }
