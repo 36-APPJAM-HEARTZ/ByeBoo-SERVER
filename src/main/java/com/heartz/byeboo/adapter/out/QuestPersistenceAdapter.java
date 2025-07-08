@@ -26,7 +26,7 @@ public class QuestPersistenceAdapter implements RetrieveQuestPort {
 
     @Override
     public Quest getQuestByJourneyAndStepNumber(EJourney journey, Long stepNumber) {
-        QuestEntity questEntity = questRepository.findByJourneyAndAndStepNumber(journey, stepNumber)
+        QuestEntity questEntity = questRepository.findByJourneyAndStepNumber(journey, stepNumber)
                 .orElseThrow(() -> new CustomException(QuestErrorCode.QUEST_NOT_FOUND));
 
         return QuestMapper.toDomain(questEntity);
