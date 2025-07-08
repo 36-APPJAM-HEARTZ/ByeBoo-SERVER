@@ -14,10 +14,10 @@ import lombok.Getter;
 @Builder
 @Getter
 public class RecordingQuestCreateCommand {
-    String answer;
-    EQuestEmotionState questEmotionState;
-    Long questId;
-    Long userId;
+    private String answer;
+    private EQuestEmotionState questEmotionState;
+    private Long questId;
+    private Long userId;
 
     public static RecordingQuestCreateCommand from(RecordingQuestRequestDto recordingQuestRequestDto, Long questId, Long userId) {
         validateAnswerLength(recordingQuestRequestDto.answer());
