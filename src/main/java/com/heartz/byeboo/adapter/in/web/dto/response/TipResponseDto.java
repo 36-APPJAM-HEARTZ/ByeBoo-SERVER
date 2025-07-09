@@ -7,7 +7,7 @@ public record TipResponseDto(
         String tipQuestion,
         String tipAnswer
 ) {
-    public static TipResponseDto of(Tip tip){
+    public static TipResponseDto from(Tip tip){
         return new TipResponseDto(tip.getTipStep(), tip.getTipQuestion(), tip.getTipAnswer());
     }
 }

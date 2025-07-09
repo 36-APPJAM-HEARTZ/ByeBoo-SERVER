@@ -25,7 +25,7 @@ public class QuestService implements QuestUseCase {
     public TipListResponseDto getQuestTip(QuestTipCommand command) {
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
         List<TipResponseDto> tips = retrieveTipPort.getTipsByQuestId(command.getQuestId(), findQuest)
-                .stream().map(TipResponseDto::of).toList();
+                .stream().map(TipResponseDto::from).toList();
 
         return TipListResponseDto.of(findQuest, tips);
     }
