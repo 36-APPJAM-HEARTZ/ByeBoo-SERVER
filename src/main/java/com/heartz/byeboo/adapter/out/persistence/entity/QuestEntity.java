@@ -1,6 +1,7 @@
 package com.heartz.byeboo.adapter.out.persistence.entity;
 
 import com.heartz.byeboo.domain.type.EJourney;
+import com.heartz.byeboo.domain.type.EQuestStyle;
 import com.heartz.byeboo.domain.type.EStep;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -22,9 +23,6 @@ public class QuestEntity {
     @Column(name = "step", nullable = false, length = 50)
     private EStep step;
 
-    @Column(name = "step_number", nullable = false)
-    private Long stepNumber;
-
     @Column(name = "quest_number", nullable = false)
     private Long questNumber;
 
@@ -35,22 +33,26 @@ public class QuestEntity {
     @Column(name = "journey", nullable = false, length = 50)
     private EJourney journey;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "quest_style", nullable = false, length = 50)
+    private EQuestStyle questStyle;
+
     @Builder
-    public QuestEntity(EStep step, Long stepNumber, Long questNumber, String question, EJourney journey) {
+    public QuestEntity(EStep step, Long questNumber, String question, EJourney journey, EQuestStyle questStyle) {
         this.step = step;
-        this.stepNumber = stepNumber;
         this.questNumber = questNumber;
         this.question = question;
         this.journey = journey;
+        this.questStyle = questStyle;
     }
 
-    public static QuestEntity create(EStep step, Long stepNumber, Long questNumber, String question, EJourney journey) {
+    public static QuestEntity create(EStep step, Long questNumber, String question, EJourney journey, EQuestStyle questStyle) {
         return QuestEntity.builder()
                 .step(step)
-                .stepNumber(stepNumber)
                 .questNumber(questNumber)
                 .question(question)
                 .journey(journey)
+                .questStyle(questStyle)
                 .build();
     }
 }

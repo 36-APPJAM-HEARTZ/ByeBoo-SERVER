@@ -1,15 +1,14 @@
 package com.heartz.byeboo.application.port.in;
 
-import com.heartz.byeboo.adapter.in.web.dto.SignedUrlResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.QuestDetailResponseDto;
-import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
-import com.heartz.byeboo.application.command.QuestDetailCommand;
-import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
-import com.heartz.byeboo.application.command.SignedUrlCreateCommand;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.AllQuestResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.QuestDetailResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.TipListResponseDto;
+import com.heartz.byeboo.application.command.quest.AllQuestCommand;
+import com.heartz.byeboo.application.command.quest.QuestDetailCommand;
+import com.heartz.byeboo.application.command.quest.QuestTipCommand;
 
 public interface QuestUseCase {
-    void createRecordingQuest(RecordingQuestCreateCommand command);
-    void createActiveQuest(ActiveQuestCreateCommand command);
-    SignedUrlResponseDto getSignedUrl(SignedUrlCreateCommand command);
-    QuestDetailResponseDto getDetailQuest(QuestDetailCommand command);
+    TipListResponseDto getQuestTip(QuestTipCommand command);
+    AllQuestResponseDto getAllQuest(AllQuestCommand allQuestCommand);
+    QuestDetailResponseDto getQuestDetail(QuestDetailCommand questDetailCommand);
 }

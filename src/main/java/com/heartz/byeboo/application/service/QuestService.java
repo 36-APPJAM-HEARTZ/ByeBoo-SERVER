@@ -1,95 +1,108 @@
 package com.heartz.byeboo.application.service;
 
-import com.heartz.byeboo.adapter.in.web.dto.SignedUrlResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.QuestDetailResponseDto;
-import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
-import com.heartz.byeboo.application.command.QuestDetailCommand;
-import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
-import com.heartz.byeboo.application.command.SignedUrlCreateCommand;
+import com.heartz.byeboo.adapter.in.web.dto.response.*;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.*;
+import com.heartz.byeboo.application.command.quest.AllQuestCommand;
+import com.heartz.byeboo.application.command.quest.QuestDetailCommand;
+import com.heartz.byeboo.application.command.quest.QuestTipCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
-import com.heartz.byeboo.application.port.out.*;
-import com.heartz.byeboo.core.exception.CustomException;
-import com.heartz.byeboo.domain.exception.QuestErrorCode;
-import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
+import com.heartz.byeboo.application.port.out.quest.RetrieveQuestPort;
+import com.heartz.byeboo.application.port.out.quest.RetrieveTipPort;
+import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
+import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
-import com.heartz.byeboo.domain.model.UserQuest;
-import com.heartz.byeboo.mapper.UserQuestMapper;
+import com.heartz.byeboo.domain.model.UserJourney;
+import com.heartz.byeboo.domain.type.EJourneyStatus;
+import com.heartz.byeboo.domain.type.EStep;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class QuestService implements QuestUseCase {
 
-    private final RetrieveUserPort retrieveUserPort;
+    private final RetrieveTipPort retrieveTipPort;
     private final RetrieveQuestPort retrieveQuestPort;
-    private final CreateUserQuestPort createUserQuestPort;
-    private final UpdateUserPort updateUserPort;
-    private final CreateGcsPort createGcsPort;
-    private final ValidateGcsPort validateGcsPort;
-    private final RetrieveUserQuestPort retrieveUserQuestPort;
-    private final RetrieveGcsPort retrieveGcsPort;
+    private final RetrieveUserPort retrieveUserPort;
+    private final RetrieveUserJourneyPort retrieveUserJourneyPort;
 
     @Override
-    @Transactional
-    public void createRecordingQuest(RecordingQuestCreateCommand command) {
-
-        User findUser = retrieveUserPort.getUserById(command.getUserId());
-        validateUserQuest(findUser, command.getQuestId());
-
+    @Transactional(readOnly = true)
+    public TipListResponseDto getQuestTip(QuestTipCommand command) {
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
-        UserQuest userQuest = UserQuestMapper.commandToDomainRecording(command, findUser, findQuest);
-        createUserQuestPort.createUserQuest(userQuest);
-        findUser.updateCurrentNumber();
-        updateUserPort.updateCurrentNumber(findUser);
+        List<TipResponseDto> tips = retrieveTipPort.getTipsByQuestId(command.getQuestId(), findQuest)
+                .stream().map(TipResponseDto::from).toList();
+
+        return TipListResponseDto.of(findQuest, tips);
     }
 
     @Override
-    @Transactional
-    public void createActiveQuest(ActiveQuestCreateCommand command) {
-        User findUser = retrieveUserPort.getUserById(command.getUserId());
-        validateUserQuest(findUser, command.getQuestId());
-        validateObjectExist(command.getImageKey().toString());
-        Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
-        UserQuest userQuest = UserQuestMapper.commandToDomainActive(command, findUser, findQuest);
-        createUserQuestPort.createUserQuest(userQuest);
-        findUser.updateCurrentNumber();
-        updateUserPort.updateCurrentNumber(findUser);
+    @Transactional(readOnly = true)
+    public AllQuestResponseDto getAllQuest(AllQuestCommand allQuestCommand) {
+        User currentUser = retrieveUserPort.getUserById(allQuestCommand.getUserId());
+        UserJourney userJourney = retrieveUserJourneyPort.getUserJourneyByUserAndJourney(
+                currentUser,
+                allQuestCommand.getJourney()
+        );
+        List<Quest> quests = retrieveQuestPort.getALlQuestByJourney(allQuestCommand.getJourney());
+        Map<EStep, List<Quest>> stepGroupQuests = geteStepGroupQuest(quests);
+        List<StepResponseDto> stepResponses = getStepResponseByMap(stepGroupQuests);
+
+        if(userJourney.getJourneyStatus().equals(EJourneyStatus.COMPLETED))
+            return AllQuestResponseDto.of(
+                    userJourney.getJourneyStart().toString() + " ~ " + userJourney.getJourneyEnd().toString(),
+                    null,
+                    true,
+                    stepResponses
+            );
+
+        return AllQuestResponseDto.of(
+                Long.toString(getProgressPeriod(userJourney)),
+                currentUser.getCurrentNumber(),
+                false,
+                stepResponses
+        );
     }
 
     @Override
-    public SignedUrlResponseDto getSignedUrl(SignedUrlCreateCommand command) {
-        retrieveUserPort.getUserById(command.getUserId());
-        String signedUrl = createGcsPort.createSignedUrl(command.getImageKey(), command.getContentType());
-        return SignedUrlResponseDto.of(signedUrl);
+    @Transactional(readOnly = true)
+    public QuestDetailResponseDto getQuestDetail(QuestDetailCommand questDetailCommand){
+        retrieveUserPort.getUserById(questDetailCommand.getUserId());
+        Quest currentQuest = retrieveQuestPort.getQuestById(questDetailCommand.getQuestId());
+
+        return QuestDetailResponseDto.from(currentQuest);
     }
 
-    @Override
-    public QuestDetailResponseDto getDetailQuest(QuestDetailCommand command) {
-        User findUser = retrieveUserPort.getUserById(command.getUserId());
-        Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
-
-        UserQuest userQuest = retrieveUserQuestPort.getUserQuestByUserAndQuest(findUser, findQuest);
-        String signedUrl = retrieveGcsPort.getSignedUrl(userQuest.getImageKey().toString());
-
-        return QuestDetailResponseDto.of(userQuest, findQuest, signedUrl);
+    private Long getProgressPeriod(UserJourney userJourney) {
+        return LocalDate.now().toEpochDay() - userJourney.getJourneyStart().toEpochDay() + 1;
     }
 
-    private void validateUserQuest(User user, Long questId){
-        if (!user.getCurrentNumber().equals(questId)) {
-            throw new CustomException(UserQuestErrorCode.INVALID_QUEST_PROGRESS);
-        }
-
-        if (user.getCurrentNumber() > 30){
-            throw new CustomException(QuestErrorCode.CURRENT_NUMBER_OVER_MAX);
-        }
+    private Map<EStep, List<Quest>> geteStepGroupQuest(List<Quest> quests) {
+        return quests.stream()
+                .collect(Collectors.groupingBy(Quest::getStep));
     }
 
-    private void validateObjectExist(String imageKey){
-        if (!validateGcsPort.isObjectExists(imageKey)){
-            throw new CustomException(UserQuestErrorCode.IMAGE_NOT_UPLOADED);
-        }
+    private List<StepResponseDto> getStepResponseByMap(Map<EStep, List<Quest>> stepGroupQuests) {
+        return stepGroupQuests.entrySet().stream()
+                .sorted(Comparator.comparingInt(
+                        stepGroupQuest -> stepGroupQuest.getKey().getStepNumber())
+                )
+                .map(stepListEntry -> StepResponseDto.of(
+                        stepListEntry.getKey().getStepNumber(),
+                        stepListEntry.getKey(),
+                        stepListEntry.getValue().stream()
+                                .map(AllQuestDetailResponseDto::from)
+                                .toList())
+                )
+                .toList();
+
     }
 }

@@ -9,10 +9,10 @@ public class QuestMapper {
         return Quest.of(
                 questEntity.getId(),
                 questEntity.getStep(),
-                questEntity.getStepNumber(),
                 questEntity.getQuestNumber(),
                 questEntity.getQuestion(),
-                questEntity.getJourney()
+                questEntity.getJourney(),
+                questEntity.getQuestStyle()
         );
     }
 }

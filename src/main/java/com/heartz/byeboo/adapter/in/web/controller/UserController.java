@@ -1,11 +1,9 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.adapter.in.web.dto.request.UserCreateRequestDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.HomeCountResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.UserCreateResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.UserJourneyResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.UserNameResponseDto;
-import com.heartz.byeboo.application.command.*;
+import com.heartz.byeboo.adapter.in.web.dto.response.user.*;
+import com.heartz.byeboo.application.command.user.*;
+import com.heartz.byeboo.application.command.userquest.CompletedCountCommand;
 import com.heartz.byeboo.application.port.in.UserUseCase;
 import com.heartz.byeboo.core.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -47,5 +45,11 @@ public class UserController {
     public BaseResponse<Void> updateInitialUserJourney(@RequestHeader Long userId) {
         UserJourneyUpdateCommand userJourneyUpdateCommand = UserJourneyUpdateCommand.of(userId);
         return BaseResponse.success(userUseCase.updateInitialUserJourney(userJourneyUpdateCommand));
+    }
+
+    @GetMapping("/users/character")
+    public BaseResponse<UserCharacterResponseDto> getCharacterDialogue(@RequestHeader Long userId) {
+        UserCharacterDialogueCommand userCharacterDialogueCommand = UserCharacterDialogueCommand.of(userId);
+        return BaseResponse.success(userUseCase.getCharacterDialogue(userCharacterDialogueCommand));
     }
 }
