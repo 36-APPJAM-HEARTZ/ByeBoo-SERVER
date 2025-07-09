@@ -47,6 +47,13 @@ public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, Ret
     }
 
     @Override
+    public List<UserJourney> getJourneysByUser(User user) {
+        return userJourneyRepository.findAllByUserId(user.getId()).stream().map(
+                userJourneyEntity -> UserJourneyMapper.toDomain(userJourneyEntity, user)
+        ).toList();
+    }
+
+    @Override
     public void updateUserJourney(UserJourney userJourney) {
         QUserJourneyEntity userJourneyEntity = QUserJourneyEntity.userJourneyEntity;
 
