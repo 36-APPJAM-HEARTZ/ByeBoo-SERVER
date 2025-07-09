@@ -1,12 +1,20 @@
 package com.heartz.byeboo.application.service;
 
-import com.heartz.byeboo.adapter.in.web.dto.SignedUrlResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.JourneyListResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.JourneyResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.QuestDetailResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.SignedUrlResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.userquest.JourneyListResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.userquest.JourneyResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.userquest.QuestDetailResponseDto;
 import com.heartz.byeboo.application.command.*;
+import com.heartz.byeboo.application.command.userquest.*;
 import com.heartz.byeboo.application.port.in.UserQuestUseCase;
 import com.heartz.byeboo.application.port.out.*;
+import com.heartz.byeboo.application.port.out.quest.RetrieveQuestPort;
+import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
+import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
+import com.heartz.byeboo.application.port.out.user.UpdateUserJourneyPort;
+import com.heartz.byeboo.application.port.out.user.UpdateUserPort;
+import com.heartz.byeboo.application.port.out.userquest.CreateUserQuestPort;
+import com.heartz.byeboo.application.port.out.userquest.RetrieveUserQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.QuestErrorCode;
 import com.heartz.byeboo.domain.exception.UserJourneyErrorCode;

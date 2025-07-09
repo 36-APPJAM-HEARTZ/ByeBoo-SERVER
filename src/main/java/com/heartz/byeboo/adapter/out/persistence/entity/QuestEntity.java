@@ -23,9 +23,6 @@ public class QuestEntity {
     @Column(name = "step", nullable = false, length = 50)
     private EStep step;
 
-    @Column(name = "step_number", nullable = false)
-    private Long stepNumber;
-
     @Column(name = "quest_number", nullable = false)
     private Long questNumber;
 
@@ -41,19 +38,17 @@ public class QuestEntity {
     private EQuestStyle questStyle;
 
     @Builder
-    public QuestEntity(EStep step, Long stepNumber, Long questNumber, String question, EJourney journey, EQuestStyle questStyle) {
+    public QuestEntity(EStep step, Long questNumber, String question, EJourney journey, EQuestStyle questStyle) {
         this.step = step;
-        this.stepNumber = stepNumber;
         this.questNumber = questNumber;
         this.question = question;
         this.journey = journey;
         this.questStyle = questStyle;
     }
 
-    public static QuestEntity create(EStep step, Long stepNumber, Long questNumber, String question, EJourney journey, EQuestStyle questStyle) {
+    public static QuestEntity create(EStep step, Long questNumber, String question, EJourney journey, EQuestStyle questStyle) {
         return QuestEntity.builder()
                 .step(step)
-                .stepNumber(stepNumber)
                 .questNumber(questNumber)
                 .question(question)
                 .journey(journey)

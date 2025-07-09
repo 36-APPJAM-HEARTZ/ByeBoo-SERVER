@@ -1,9 +1,9 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
-import com.heartz.byeboo.adapter.in.web.dto.response.AllQuestResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.TipListResponseDto;
-import com.heartz.byeboo.application.command.AllQuestCommand;
-import com.heartz.byeboo.application.command.QuestTipCommand;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.AllQuestResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.TipListResponseDto;
+import com.heartz.byeboo.application.command.quest.AllQuestCommand;
+import com.heartz.byeboo.application.command.quest.QuestTipCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
 import com.heartz.byeboo.core.common.BaseResponse;
 import lombok.RequiredArgsConstructor;

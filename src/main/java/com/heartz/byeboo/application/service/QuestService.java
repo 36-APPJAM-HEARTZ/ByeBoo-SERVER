@@ -1,13 +1,17 @@
 package com.heartz.byeboo.application.service;
 
 import com.heartz.byeboo.adapter.in.web.dto.response.*;
-import com.heartz.byeboo.application.command.AllQuestCommand;
-import com.heartz.byeboo.application.command.QuestTipCommand;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.TipListResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.TipResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.AllQuestDetailResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.AllQuestResponseDto;
+import com.heartz.byeboo.application.command.quest.AllQuestCommand;
+import com.heartz.byeboo.application.command.quest.QuestTipCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
-import com.heartz.byeboo.application.port.out.RetrieveQuestPort;
-import com.heartz.byeboo.application.port.out.RetrieveTipPort;
-import com.heartz.byeboo.application.port.out.RetrieveUserJourneyPort;
-import com.heartz.byeboo.application.port.out.RetrieveUserPort;
+import com.heartz.byeboo.application.port.out.quest.RetrieveQuestPort;
+import com.heartz.byeboo.application.port.out.quest.RetrieveTipPort;
+import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
+import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;

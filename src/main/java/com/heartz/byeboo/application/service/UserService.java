@@ -1,9 +1,12 @@
 package com.heartz.byeboo.application.service;
 
-import com.heartz.byeboo.adapter.in.web.dto.response.*;
-import com.heartz.byeboo.application.command.*;
+import com.heartz.byeboo.adapter.in.web.dto.response.user.*;
+import com.heartz.byeboo.application.command.user.*;
+import com.heartz.byeboo.application.command.userquest.CompletedCountCommand;
 import com.heartz.byeboo.application.port.in.UserUseCase;
-import com.heartz.byeboo.application.port.out.*;
+import com.heartz.byeboo.application.port.out.quest.RetrieveQuestPort;
+import com.heartz.byeboo.application.port.out.user.*;
+import com.heartz.byeboo.application.port.out.userquest.RetrieveUserQuestPort;
 import com.heartz.byeboo.constants.QuestConstants;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserJourneyErrorCode;

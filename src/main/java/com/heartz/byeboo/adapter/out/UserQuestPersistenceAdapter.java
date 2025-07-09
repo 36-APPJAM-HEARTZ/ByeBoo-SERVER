@@ -2,8 +2,8 @@ package com.heartz.byeboo.adapter.out;
 
 import com.heartz.byeboo.adapter.out.persistence.entity.UserQuestEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.UserQuestRepository;
-import com.heartz.byeboo.application.port.out.CreateUserQuestPort;
-import com.heartz.byeboo.application.port.out.RetrieveUserQuestPort;
+import com.heartz.byeboo.application.port.out.userquest.CreateUserQuestPort;
+import com.heartz.byeboo.application.port.out.userquest.RetrieveUserQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
 import com.heartz.byeboo.domain.model.Quest;

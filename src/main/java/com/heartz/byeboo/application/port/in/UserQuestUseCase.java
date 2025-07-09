@@ -1,9 +1,10 @@
 package com.heartz.byeboo.application.port.in;
 
-import com.heartz.byeboo.adapter.in.web.dto.SignedUrlResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.JourneyListResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.QuestDetailResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.SignedUrlResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.userquest.JourneyListResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.userquest.QuestDetailResponseDto;
 import com.heartz.byeboo.application.command.*;
+import com.heartz.byeboo.application.command.userquest.*;
 
 public interface UserQuestUseCase {
     void createRecordingQuest(RecordingQuestCreateCommand command);

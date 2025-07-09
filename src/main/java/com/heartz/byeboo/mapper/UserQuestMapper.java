@@ -1,8 +1,8 @@
 package com.heartz.byeboo.mapper;
 
 import com.heartz.byeboo.adapter.out.persistence.entity.UserQuestEntity;
-import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
-import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
+import com.heartz.byeboo.application.command.userquest.ActiveQuestCreateCommand;
+import com.heartz.byeboo.application.command.userquest.RecordingQuestCreateCommand;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserQuest;

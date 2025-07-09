@@ -2,10 +2,12 @@ package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.adapter.in.web.dto.request.ActiveQuestRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestRequestDto;
-import com.heartz.byeboo.adapter.in.web.dto.*;
-import com.heartz.byeboo.adapter.in.web.dto.response.JourneyListResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.QuestDetailResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.SignedUrlRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.userquest.JourneyListResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.userquest.QuestDetailResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.SignedUrlResponseDto;
 import com.heartz.byeboo.application.command.*;
+import com.heartz.byeboo.application.command.userquest.*;
 import com.heartz.byeboo.application.port.in.UserQuestUseCase;
 import com.heartz.byeboo.core.common.BaseResponse;
 import lombok.RequiredArgsConstructor;

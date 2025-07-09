@@ -11,17 +11,15 @@ import lombok.Getter;
 public class Quest {
     private Long id;
     private EStep step;
-    private Long stepNumber;
     private Long questNumber;
     private String question;
     private EJourney journey;
     private EQuestStyle questStyle;
 
-    public static Quest of(Long id, EStep step, Long stepNumber, Long questNumber, String question, EJourney journey, EQuestStyle questStyle) {
+    public static Quest of(Long id, EStep step, Long questNumber, String question, EJourney journey, EQuestStyle questStyle) {
         return Quest.builder()
                 .id(id)
                 .step(step)
-                .stepNumber(stepNumber)
                 .questNumber(questNumber)
                 .question(question)
                 .journey(journey)

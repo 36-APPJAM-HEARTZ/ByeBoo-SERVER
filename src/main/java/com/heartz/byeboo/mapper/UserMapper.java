@@ -1,7 +1,7 @@
 package com.heartz.byeboo.mapper;
 
 import com.heartz.byeboo.adapter.out.persistence.entity.UserEntity;
-import com.heartz.byeboo.application.command.UserCreateCommand;
+import com.heartz.byeboo.application.command.user.UserCreateCommand;
 import com.heartz.byeboo.domain.model.User;
 
 public class UserMapper {

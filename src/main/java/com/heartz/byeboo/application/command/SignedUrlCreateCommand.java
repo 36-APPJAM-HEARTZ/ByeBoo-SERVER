@@ -1,6 +1,6 @@
 package com.heartz.byeboo.application.command;
 
-import com.heartz.byeboo.adapter.in.web.dto.SignedUrlRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.SignedUrlRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 

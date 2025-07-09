@@ -1,7 +1,7 @@
 package com.heartz.byeboo.adapter.out;
 
 import com.heartz.byeboo.adapter.out.persistence.repository.TipRepository;
-import com.heartz.byeboo.application.port.out.RetrieveTipPort;
+import com.heartz.byeboo.application.port.out.quest.RetrieveTipPort;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.Tip;
 import com.heartz.byeboo.mapper.TipMapper;
