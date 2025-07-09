@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.heartz.byeboo.constants.TextConstant.QUEST_COUNT_MAX;
+import static com.heartz.byeboo.constants.QuestConstants.QUEST_COUNT_MAX;
 
 @Service
 @RequiredArgsConstructor
