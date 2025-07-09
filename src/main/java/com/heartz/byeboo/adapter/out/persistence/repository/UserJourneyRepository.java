@@ -5,8 +5,9 @@ import com.heartz.byeboo.domain.type.EJourney;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserJourneyRepository extends JpaRepository<UserJourneyEntity, Long> {
     List<UserJourneyEntity> findAllByUserId(Long userId);
-    UserJourneyEntity findByUserIdAndJourney(Long userId, EJourney journey);
+    Optional<UserJourneyEntity> findByUserIdAndJourney(Long userId, EJourney journey);
 }

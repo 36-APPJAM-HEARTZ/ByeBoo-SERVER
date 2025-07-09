@@ -97,7 +97,7 @@ public class UserService implements UserUseCase {
 
     private UserQuest getRecentUserQuestByUser(User currentUser) {
         UserJourney ongoingUserJourney = retrieveUserJourneyPort.getOngoingUserJourneyByUser(currentUser);
-        Quest quest = retrieveQuestPort.getQuestByJourneyAndStepNumber(
+        Quest quest = retrieveQuestPort.getQuestByJourneyAndQuestNumber(
                 ongoingUserJourney.getJourney(),
                 currentUser.getCurrentNumber() - 1
         );

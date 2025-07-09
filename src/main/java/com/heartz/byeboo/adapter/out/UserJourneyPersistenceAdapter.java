@@ -55,9 +55,10 @@ public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, Ret
 
     @Override
     public UserJourney getUserJourneyByUserAndJourney(User user, EJourney journey) {
-        return UserJourneyMapper.toDomain(
-                userJourneyRepository.findByUserIdAndJourney(user.getId(), journey), user
-        );
+        UserJourneyEntity userJourneyEntity = userJourneyRepository.findByUserIdAndJourney(user.getId(), journey)
+                .orElseThrow(() -> new CustomException(UserJourneyErrorCode.NOT_FOUND_USER_JOURNEY));
+
+        return UserJourneyMapper.toDomain(userJourneyEntity, user);
     }
 
     @Override

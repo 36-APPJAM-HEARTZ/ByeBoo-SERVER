@@ -12,7 +12,8 @@ public class QuestMapper {
                 questEntity.getStepNumber(),
                 questEntity.getQuestNumber(),
                 questEntity.getQuestion(),
-                questEntity.getJourney()
+                questEntity.getJourney(),
+                questEntity.getQuestStyle()
         );
     }
 }

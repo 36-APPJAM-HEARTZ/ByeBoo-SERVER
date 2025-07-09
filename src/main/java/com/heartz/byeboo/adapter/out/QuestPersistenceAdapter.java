@@ -11,6 +11,8 @@ import com.heartz.byeboo.mapper.QuestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Component
 public class QuestPersistenceAdapter implements RetrieveQuestPort {
@@ -25,10 +27,18 @@ public class QuestPersistenceAdapter implements RetrieveQuestPort {
     }
 
     @Override
-    public Quest getQuestByJourneyAndStepNumber(EJourney journey, Long stepNumber) {
-        QuestEntity questEntity = questRepository.findByJourneyAndStepNumber(journey, stepNumber)
+    public Quest getQuestByJourneyAndQuestNumber(EJourney journey, Long questNumber) {
+        QuestEntity questEntity = questRepository.findByJourneyAndQuestNumber(journey, questNumber)
                 .orElseThrow(() -> new CustomException(QuestErrorCode.QUEST_NOT_FOUND));
 
         return QuestMapper.toDomain(questEntity);
+    }
+
+    @Override
+    public List<Quest> getALlQuestByJourney(EJourney journey) {
+        return questRepository.findAllByJourneyOrderByQuestNumber(journey)
+                .stream()
+                .map(QuestMapper::toDomain)
+                .toList();
     }
 }
