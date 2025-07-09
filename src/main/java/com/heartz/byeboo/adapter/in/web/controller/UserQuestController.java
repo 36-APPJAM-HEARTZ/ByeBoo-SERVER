@@ -8,7 +8,7 @@ import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
 import com.heartz.byeboo.application.command.QuestDetailCommand;
 import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
 import com.heartz.byeboo.application.command.SignedUrlCreateCommand;
-import com.heartz.byeboo.application.port.in.QuestUseCase;
+import com.heartz.byeboo.application.port.in.UserQuestUseCase;
 import com.heartz.byeboo.core.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/quests")
 public class UserQuestController {
 
-    private final QuestUseCase questUseCase;
+    private final UserQuestUseCase userQuestUseCase;
 
     @PostMapping("/{questId}/recording")
     public BaseResponse<Void> createRecordingQuest(
@@ -26,7 +26,7 @@ public class UserQuestController {
             @RequestBody final RecordingQuestRequestDto recordingQuestRequestDto,
             @PathVariable final Long questId){
         RecordingQuestCreateCommand command = RecordingQuestCreateCommand.from(recordingQuestRequestDto, questId, userId);
-        questUseCase.createRecordingQuest(command);
+        userQuestUseCase.createRecordingQuest(command);
         return BaseResponse.success(null);
     }
 
@@ -36,7 +36,7 @@ public class UserQuestController {
             @RequestBody final ActiveQuestRequestDto activeQuestRequestDto,
             @PathVariable final Long questId){
         ActiveQuestCreateCommand command = ActiveQuestCreateCommand.from(activeQuestRequestDto, questId, userId);
-        questUseCase.createActiveQuest(command);
+        userQuestUseCase.createActiveQuest(command);
         return BaseResponse.success(null);
     }
 
@@ -46,7 +46,7 @@ public class UserQuestController {
             @RequestBody final SignedUrlRequestDto signedUrlRequestDto
             ){
         SignedUrlCreateCommand command = SignedUrlCreateCommand.of(signedUrlRequestDto, userId);
-        return BaseResponse.success(questUseCase.getSignedUrl(command));
+        return BaseResponse.success(userQuestUseCase.getSignedUrl(command));
     }
 
     @GetMapping("/{questId}")
@@ -56,6 +56,7 @@ public class UserQuestController {
     ){
         QuestDetailCommand command = QuestDetailCommand.of(questId, userId);
 
-        return BaseResponse.success(questUseCase.getDetailQuest(command));
+        return BaseResponse.success(userQuestUseCase.getDetailQuest(command));
     }
+
 }
