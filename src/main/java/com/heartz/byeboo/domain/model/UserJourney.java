@@ -74,4 +74,8 @@ public class UserJourney {
     public void updateInitialUserJourney() {
         this.journeyStatus = EJourneyStatus.IN_PROGRESS;
     }
+
+    public void updateUserJourneyCompleted(){
+        this.journeyStatus = EJourneyStatus.COMPLETED;
+    }
 }

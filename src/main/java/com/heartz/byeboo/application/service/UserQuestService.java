@@ -13,6 +13,7 @@ import com.heartz.byeboo.domain.exception.QuestErrorCode;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
+import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
 import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,8 @@ public class UserQuestService implements UserQuestUseCase {
     private final ValidateGcsPort validateGcsPort;
     private final RetrieveUserQuestPort retrieveUserQuestPort;
     private final RetrieveGcsPort retrieveGcsPort;
+    private final RetrieveUserJourneyPort retrieveUserJourneyPort;
+    private final UpdateUserJourneyPort updateUserJourneyPort;
 
     @Override
     @Transactional
@@ -55,8 +58,16 @@ public class UserQuestService implements UserQuestUseCase {
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
         UserQuest userQuest = UserQuestMapper.commandToDomainActive(command, findUser, findQuest);
         createUserQuestPort.createUserQuest(userQuest);
+
         findUser.updateCurrentNumber();
         updateUserPort.updateCurrentNumber(findUser);
+
+        //퀘스트 번호 31일때 여정 완료 상태로 변경
+        if (findUser.getCurrentNumber() == 31){
+            UserJourney ongoingUserJourney = retrieveUserJourneyPort.getOngoingUserJourneyByUser(findUser);
+            ongoingUserJourney.updateUserJourneyCompleted();
+            updateUserJourneyPort.updateUserJourney(ongoingUserJourney);
+        }
     }
 
     @Override
