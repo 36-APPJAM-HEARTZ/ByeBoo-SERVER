@@ -4,6 +4,7 @@ import com.heartz.byeboo.adapter.in.web.dto.response.*;
 import com.heartz.byeboo.application.command.*;
 import com.heartz.byeboo.application.port.in.UserUseCase;
 import com.heartz.byeboo.application.port.out.*;
+import com.heartz.byeboo.constants.QuestConstants;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserJourneyErrorCode;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
@@ -149,15 +150,15 @@ public class UserService implements UserUseCase {
     }
 
     private Boolean isBeforeStart(User user) {
-        return user.getCurrentNumber() == 0;
+        return user.getCurrentNumber() == QuestConstants.QUEST_BEFORE_START_COUNT;
     }
 
     private Boolean isInitialStart(User user) {
-        return user.getCurrentNumber() == 1;
+        return user.getCurrentNumber() == QuestConstants.QUEST_INITIAL_START_COUNT;
     }
 
     private Boolean isCompleted(User user) {
-        return user.getCurrentNumber() == 31;
+        return user.getCurrentNumber() == QuestConstants.QUEST_COUNT_MAX;
     }
 
     private Boolean isTodayCompleted(UserQuest recentUserQuest) {
