@@ -1,11 +1,9 @@
 package com.heartz.byeboo.application.service;
 
 import com.heartz.byeboo.adapter.in.web.dto.response.*;
-import com.heartz.byeboo.adapter.in.web.dto.response.quest.TipListResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.quest.TipResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.quest.AllQuestDetailResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.quest.AllQuestResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.*;
 import com.heartz.byeboo.application.command.quest.AllQuestCommand;
+import com.heartz.byeboo.application.command.quest.QuestDetailCommand;
 import com.heartz.byeboo.application.command.quest.QuestTipCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
 import com.heartz.byeboo.application.port.out.quest.RetrieveQuestPort;
@@ -72,6 +70,15 @@ public class QuestService implements QuestUseCase {
                 false,
                 stepResponses
         );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public QuestDetailResponseDto getQuestDetail(QuestDetailCommand questDetailCommand){
+        retrieveUserPort.getUserById(questDetailCommand.getUserId());
+        Quest currentQuest = retrieveQuestPort.getQuestById(questDetailCommand.getQuestId());
+
+        return QuestDetailResponseDto.from(currentQuest);
     }
 
     private Long getProgressPeriod(UserJourney userJourney) {
