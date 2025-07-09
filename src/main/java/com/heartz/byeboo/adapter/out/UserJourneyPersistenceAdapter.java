@@ -85,4 +85,5 @@ public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, Ret
                 .where(userJourneyEntity.id.eq(userJourney.getId()))
                 .execute();
     }
+
 }

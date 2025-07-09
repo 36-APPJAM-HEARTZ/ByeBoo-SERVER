@@ -3,11 +3,9 @@ package com.heartz.byeboo.adapter.in.web.controller;
 import com.heartz.byeboo.adapter.in.web.dto.request.ActiveQuestRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.*;
+import com.heartz.byeboo.adapter.in.web.dto.response.JourneyListResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.QuestDetailResponseDto;
-import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
-import com.heartz.byeboo.application.command.QuestDetailCommand;
-import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
-import com.heartz.byeboo.application.command.SignedUrlCreateCommand;
+import com.heartz.byeboo.application.command.*;
 import com.heartz.byeboo.application.port.in.UserQuestUseCase;
 import com.heartz.byeboo.core.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +55,24 @@ public class UserQuestController {
         QuestDetailCommand command = QuestDetailCommand.of(questId, userId);
 
         return BaseResponse.success(userQuestUseCase.getDetailQuest(command));
+    }
+
+    @GetMapping("/journey")
+    public BaseResponse<JourneyListResponseDto> getCompletedJourney(
+            @RequestHeader final Long userId
+    ){
+        CompletedJourneyCommand command = CompletedJourneyCommand.of(userId);
+        return BaseResponse.success(userQuestUseCase.getCompletedJourney(command));
+    }
+
+    @PostMapping("/journey")
+    public BaseResponse<Void> createJourney(
+            @RequestHeader final Long userId,
+            @RequestParam final String journey
+    ){
+        JourneyUpdateCommand command = JourneyUpdateCommand.of(userId, journey);
+        userQuestUseCase.updateJourneyStatus(command);
+        return BaseResponse.success(null);
     }
 
 }

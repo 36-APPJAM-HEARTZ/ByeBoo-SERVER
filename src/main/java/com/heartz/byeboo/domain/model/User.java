@@ -25,6 +25,10 @@ public class User {
         this.currentNumber = 0L;
     }
 
+    public void startNewJourney(){
+        this.currentNumber = 1L;
+    }
+
     public void updateCurrentNumber(){
         this.currentNumber++;
     }
