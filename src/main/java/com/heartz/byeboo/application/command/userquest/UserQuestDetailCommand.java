@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class QuestDetailCommand {
+public class UserQuestDetailCommand {
     private Long questId;
     private Long userId;
 
-    public static QuestDetailCommand of(Long questId, Long userId){
-        return QuestDetailCommand.builder()
+    public static UserQuestDetailCommand of(Long questId, Long userId){
+        return UserQuestDetailCommand.builder()
                 .questId(questId)
                 .userId(userId)
                 .build();

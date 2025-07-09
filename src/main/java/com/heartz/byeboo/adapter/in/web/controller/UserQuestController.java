@@ -54,7 +54,7 @@ public class UserQuestController {
             @RequestHeader final Long userId,
             @PathVariable final Long questId
     ){
-        QuestDetailCommand command = QuestDetailCommand.of(questId, userId);
+        UserQuestDetailCommand command = UserQuestDetailCommand.of(questId, userId);
 
         return BaseResponse.success(userQuestUseCase.getDetailQuest(command));
     }

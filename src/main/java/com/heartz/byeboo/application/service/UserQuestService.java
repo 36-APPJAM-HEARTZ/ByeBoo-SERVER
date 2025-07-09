@@ -90,7 +90,7 @@ public class UserQuestService implements UserQuestUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public UserQuestDetailResponseDto getDetailQuest(QuestDetailCommand command) {
+    public UserQuestDetailResponseDto getDetailQuest(UserQuestDetailCommand command) {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
 

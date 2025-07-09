@@ -10,7 +10,7 @@ public interface UserQuestUseCase {
     void createRecordingQuest(RecordingQuestCreateCommand command);
     void createActiveQuest(ActiveQuestCreateCommand command);
     SignedUrlResponseDto getSignedUrl(SignedUrlCreateCommand command);
-    UserQuestDetailResponseDto getDetailQuest(QuestDetailCommand command);
+    UserQuestDetailResponseDto getDetailQuest(UserQuestDetailCommand command);
     JourneyListResponseDto getCompletedJourney(CompletedJourneyCommand command);
     void updateJourneyStatus(JourneyUpdateCommand command);
 }
