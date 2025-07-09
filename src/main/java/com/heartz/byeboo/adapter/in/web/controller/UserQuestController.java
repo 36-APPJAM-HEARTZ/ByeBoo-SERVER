@@ -65,4 +65,14 @@ public class UserQuestController {
         return BaseResponse.success(userQuestUseCase.getCompletedJourney(command));
     }
 
+    @PostMapping("/journey")
+    public BaseResponse<Void> createJourney(
+            @RequestHeader final Long userId,
+            @RequestParam final String journey
+    ){
+        JourneyUpdateCommand command = JourneyUpdateCommand.of(userId, journey);
+        userQuestUseCase.updateJourneyStatus(command);
+        return BaseResponse.success(null);
+    }
+
 }

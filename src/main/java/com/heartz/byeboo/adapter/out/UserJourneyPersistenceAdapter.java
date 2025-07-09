@@ -10,6 +10,7 @@ import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserJourneyErrorCode;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
+import com.heartz.byeboo.domain.type.EJourney;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
 import com.heartz.byeboo.mapper.UserJourneyMapper;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -43,7 +44,6 @@ public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, Ret
                         userJourney.getJourneyStatus().equals(EJourneyStatus.IN_PROGRESS))
                 .findFirst()
                 .orElseThrow(() -> new CustomException(UserJourneyErrorCode.NOT_FOUND_ONGOING_USER_JOURNEY));
-
     }
 
     @Override
@@ -51,6 +51,13 @@ public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, Ret
         return userJourneyRepository.findAllByUserId(user.getId()).stream().map(
                 userJourneyEntity -> UserJourneyMapper.toDomain(userJourneyEntity, user)
         ).toList();
+    }
+
+    @Override
+    public UserJourney getUserJourneyByUserAndJourney(User user, EJourney journey) {
+        return UserJourneyMapper.toDomain(
+                userJourneyRepository.findByUserIdAndJourney(user.getId(), journey), user
+        );
     }
 
     @Override
@@ -77,4 +84,5 @@ public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, Ret
                 .where(userJourneyEntity.id.eq(userJourney.getId()))
                 .execute();
     }
+
 }
