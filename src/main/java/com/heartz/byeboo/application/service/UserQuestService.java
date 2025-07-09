@@ -47,6 +47,8 @@ public class UserQuestService implements UserQuestUseCase {
         createUserQuestPort.createUserQuest(userQuest);
         findUser.updateCurrentNumber();
         updateUserPort.updateCurrentNumber(findUser);
+
+        isUserJourneyCompleted(findUser.getCurrentNumber());
     }
 
     @Override
@@ -62,12 +64,7 @@ public class UserQuestService implements UserQuestUseCase {
         findUser.updateCurrentNumber();
         updateUserPort.updateCurrentNumber(findUser);
 
-        //퀘스트 번호 31일때 여정 완료 상태로 변경
-        if (findUser.getCurrentNumber() == 31){
-            UserJourney ongoingUserJourney = retrieveUserJourneyPort.getOngoingUserJourneyByUser(findUser);
-            ongoingUserJourney.updateUserJourneyCompleted();
-            updateUserJourneyPort.updateUserJourney(ongoingUserJourney);
-        }
+        isUserJourneyCompleted(findUser.getCurrentNumber());
     }
 
     @Override
@@ -102,6 +99,15 @@ public class UserQuestService implements UserQuestUseCase {
     private void validateObjectExist(String imageKey){
         if (!validateGcsPort.isObjectExists(imageKey)){
             throw new CustomException(UserQuestErrorCode.IMAGE_NOT_UPLOADED);
+        }
+    }
+
+    //퀘스트 번호 31일때 여정 완료 상태로 변경
+    private void isUserJourneyCompleted(Long currentNumber){
+        if (currentNumber == 31){
+            UserJourney ongoingUserJourney = retrieveUserJourneyPort.getOngoingUserJourneyByUser(findUser);
+            ongoingUserJourney.updateUserJourneyCompleted();
+            updateUserJourneyPort.updateUserJourney(ongoingUserJourney);
         }
     }
 }
