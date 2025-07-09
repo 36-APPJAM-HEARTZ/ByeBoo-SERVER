@@ -133,7 +133,10 @@ public class UserQuestService implements UserQuestUseCase {
         return userJourneys.stream().filter(
                 userJourney -> userJourney.getJourneyStatus() == journeyStatus
         ).map(
-                userJourney -> JourneyResponseDto.from(userJourney.getJourney(), JourneyStyleMapper.journeyToQuestStyle(userJourney.getJourney()))
+                userJourney -> JourneyResponseDto.from(
+                        userJourney.getJourney(),
+                        JourneyStyleMapper.journeyToQuestStyle(userJourney.getJourney())
+                )
         ).toList();
     }
 }
