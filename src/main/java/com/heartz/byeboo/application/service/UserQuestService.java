@@ -15,6 +15,7 @@ import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
+import com.heartz.byeboo.mapper.JourneyStyleMapper;
 import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -132,7 +133,7 @@ public class UserQuestService implements UserQuestUseCase {
         return userJourneys.stream().filter(
                 userJourney -> userJourney.getJourneyStatus() == journeyStatus
         ).map(
-                userJourney -> JourneyResponseDto.from(userJourney.getJourney(), userJourney.getJourney().getQuestStyle())
+                userJourney -> JourneyResponseDto.from(userJourney.getJourney(), JourneyStyleMapper.journeyToQuestStyle(userJourney.getJourney()))
         ).toList();
     }
 }
