@@ -1,6 +1,8 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
+import com.heartz.byeboo.adapter.in.web.dto.response.JourneyListResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.TipListResponseDto;
+import com.heartz.byeboo.application.command.CompletedJourneyCommand;
 import com.heartz.byeboo.application.command.QuestTipCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
 import com.heartz.byeboo.core.common.BaseResponse;
