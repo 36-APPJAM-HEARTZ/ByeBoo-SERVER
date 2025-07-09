@@ -9,11 +9,13 @@ import com.heartz.byeboo.application.port.in.UserQuestUseCase;
 import com.heartz.byeboo.application.port.out.*;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.QuestErrorCode;
+import com.heartz.byeboo.domain.exception.UserJourneyErrorCode;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
+import com.heartz.byeboo.domain.type.EJourney;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
 import com.heartz.byeboo.mapper.JourneyStyleMapper;
 import com.heartz.byeboo.mapper.UserQuestMapper;
@@ -103,6 +105,20 @@ public class UserQuestService implements UserQuestUseCase {
         return JourneyListResponseDto.of(inCompletedJourneys.size(), inCompletedJourneys, completedJourneys.size(), completedJourneys);
     }
 
+    @Override
+    @Transactional
+    public void updateJourneyStatus(JourneyCreateCommand command) {
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
+        UserJourney findUserJourney = retrieveUserJourneyPort.getUserJourneyByUserAndJourney(findUser, command.getJourney());
+
+        isJourneyAlreadyStart(findUserJourney);
+
+        findUserJourney.updateInitialUserJourney();
+        updateUserJourneyPort.updateUserJourney(findUserJourney);
+        findUser.startNewJourney();
+        updateUserPort.updateCurrentNumber(findUser);
+    }
+
     private void validateUserQuest(User user, Long questId){
         if (!user.getCurrentNumber().equals(questId)) {
             throw new CustomException(UserQuestErrorCode.INVALID_QUEST_PROGRESS);
@@ -138,5 +154,12 @@ public class UserQuestService implements UserQuestUseCase {
                         JourneyStyleMapper.journeyToQuestStyle(userJourney.getJourney())
                 )
         ).toList();
+    }
+
+    //이미 완료된 journey를 시작하려할때
+    private void isJourneyAlreadyStart(UserJourney userJourney){
+         if (userJourney.getJourneyStatus() != EJourneyStatus.NOT_COMPLETED){
+            throw new CustomException(UserJourneyErrorCode.CONFLICT_USER_JOURNEY);
+        }
     }
 }
