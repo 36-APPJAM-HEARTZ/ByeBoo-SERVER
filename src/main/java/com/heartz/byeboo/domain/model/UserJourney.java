@@ -77,5 +77,6 @@ public class UserJourney {
 
     public void updateUserJourneyCompleted(){
         this.journeyStatus = EJourneyStatus.COMPLETED;
+        this.journeyEnd = LocalDate.now();
     }
 }

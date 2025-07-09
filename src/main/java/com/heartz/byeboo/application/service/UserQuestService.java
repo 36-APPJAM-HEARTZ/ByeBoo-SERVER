@@ -48,7 +48,7 @@ public class UserQuestService implements UserQuestUseCase {
         findUser.updateCurrentNumber();
         updateUserPort.updateCurrentNumber(findUser);
 
-        isUserJourneyCompleted(findUser.getCurrentNumber());
+        isUserJourneyCompleted(findUser);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class UserQuestService implements UserQuestUseCase {
         findUser.updateCurrentNumber();
         updateUserPort.updateCurrentNumber(findUser);
 
-        isUserJourneyCompleted(findUser.getCurrentNumber());
+        isUserJourneyCompleted(findUser);
     }
 
     @Override
@@ -103,11 +103,11 @@ public class UserQuestService implements UserQuestUseCase {
     }
 
     //퀘스트 번호 31일때 여정 완료 상태로 변경
-    private void isUserJourneyCompleted(Long currentNumber){
-        if (currentNumber == 31){
-            UserJourney ongoingUserJourney = retrieveUserJourneyPort.getOngoingUserJourneyByUser(findUser);
+    private void isUserJourneyCompleted(User user){
+        if (user.getCurrentNumber() == 31){
+            UserJourney ongoingUserJourney = retrieveUserJourneyPort.getOngoingUserJourneyByUser(user);
             ongoingUserJourney.updateUserJourneyCompleted();
-            updateUserJourneyPort.updateUserJourney(ongoingUserJourney);
+            updateUserJourneyPort.updateUserJourneyCompleted(ongoingUserJourney);
         }
     }
 }
