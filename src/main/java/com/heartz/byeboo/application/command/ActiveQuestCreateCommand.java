@@ -1,11 +1,9 @@
 package com.heartz.byeboo.application.command;
 
 import com.heartz.byeboo.adapter.in.web.dto.request.ActiveQuestRequestDto;
-import com.heartz.byeboo.constants.TextConstant;
+import com.heartz.byeboo.constants.QuestConstants;
 import com.heartz.byeboo.core.exception.CustomException;
-import com.heartz.byeboo.domain.exception.QuestErrorCode;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
-import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.type.EQuestEmotionState;
 import com.heartz.byeboo.utils.TextUtil;
 import lombok.Builder;
@@ -38,7 +36,7 @@ public class ActiveQuestCreateCommand {
     }
 
     private static void validateAnswerLength(String answer){
-        if (TextUtil.lengthWithEmoji(answer) > TextConstant.ACTIVE_QUEST_ANSWER_MAX){
+        if (TextUtil.lengthWithEmoji(answer) > QuestConstants.ACTIVE_QUEST_ANSWER_MAX){
             throw new CustomException(UserQuestErrorCode.ACTIVE_ANSWER_TOO_LONG);
         }
     }
