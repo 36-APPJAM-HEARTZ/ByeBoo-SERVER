@@ -20,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.heartz.byeboo.constants.TextConstant.QUEST_COUNT_MAX;
+
 @Service
 @RequiredArgsConstructor
 public class UserQuestService implements UserQuestUseCase {
@@ -91,7 +93,7 @@ public class UserQuestService implements UserQuestUseCase {
             throw new CustomException(UserQuestErrorCode.INVALID_QUEST_PROGRESS);
         }
 
-        if (user.getCurrentNumber() > 30){
+        if (user.getCurrentNumber() >= QUEST_COUNT_MAX){
             throw new CustomException(QuestErrorCode.CURRENT_NUMBER_OVER_MAX);
         }
     }
@@ -104,7 +106,7 @@ public class UserQuestService implements UserQuestUseCase {
 
     //퀘스트 번호 31일때 여정 완료 상태로 변경
     private void isUserJourneyCompleted(User user){
-        if (user.getCurrentNumber() == 31){
+        if (user.getCurrentNumber() == QUEST_COUNT_MAX){
             UserJourney ongoingUserJourney = retrieveUserJourneyPort.getOngoingUserJourneyByUser(user);
             ongoingUserJourney.updateUserJourneyCompleted();
             updateUserJourneyPort.updateUserJourneyCompleted(ongoingUserJourney);
