@@ -51,11 +51,36 @@ public class QuestService implements QuestUseCase {
                 allQuestCommand.getJourney()
         );
         List<Quest> quests = retrieveQuestPort.getALlQuestByJourney(allQuestCommand.getJourney());
-        Map<EStep, List<Quest>> stepGroupQuests
-                = quests.stream()
+        Map<EStep, List<Quest>> stepGroupQuests = geteStepGroupQuest(quests);
+        List<StepResponseDto> stepResponses = getStepResponseByMap(stepGroupQuests);
+
+        if(userJourney.getJourneyStatus().equals(EJourneyStatus.COMPLETED))
+            return AllQuestResponseDto.of(
+                    userJourney.getJourneyStart().toString() + " ~ " + userJourney.getJourneyEnd().toString(),
+                    null,
+                    true,
+                    stepResponses
+            );
+
+        return AllQuestResponseDto.of(
+                Long.toString(getProgressPeriod(userJourney)),
+                currentUser.getCurrentNumber(),
+                false,
+                stepResponses
+        );
+    }
+
+    private Long getProgressPeriod(UserJourney userJourney) {
+        return LocalDate.now().toEpochDay() - userJourney.getJourneyStart().toEpochDay() + 1;
+    }
+
+    private Map<EStep, List<Quest>> geteStepGroupQuest(List<Quest> quests) {
+        return quests.stream()
                 .collect(Collectors.groupingBy(Quest::getStep));
-        List<StepResponseDto> stepResponses
-                = stepGroupQuests.entrySet().stream()
+    }
+
+    private List<StepResponseDto> getStepResponseByMap(Map<EStep, List<Quest>> stepGroupQuests) {
+        return stepGroupQuests.entrySet().stream()
                 .sorted(Comparator.comparingInt(
                         stepGroupQuest -> stepGroupQuest.getKey().getStepNumber())
                 )
@@ -68,21 +93,5 @@ public class QuestService implements QuestUseCase {
                 )
                 .toList();
 
-        if(userJourney.getJourneyStatus().equals(EJourneyStatus.COMPLETED))
-            return AllQuestResponseDto.of(
-                    userJourney.getJourneyStart().toString() + " ~ " + userJourney.getJourneyEnd().toString(),
-                    null,
-                    true,
-                    stepResponses
-            );
-
-        long progressPeriod = LocalDate.now().toEpochDay() - userJourney.getJourneyStart().toEpochDay() + 1;
-
-        return AllQuestResponseDto.of(
-                Long.toString(progressPeriod),
-                currentUser.getCurrentNumber(),
-                false,
-                stepResponses
-        );
     }
 }
