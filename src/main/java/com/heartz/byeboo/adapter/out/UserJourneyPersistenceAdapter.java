@@ -16,6 +16,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -53,6 +54,19 @@ public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, Ret
                 .update(userJourneyEntity)
                 .set(userJourneyEntity.journeyStatus, userJourney.getJourneyStatus())
                 .set(userJourneyEntity.modifiedDate, LocalDateTime.now())
+                .where(userJourneyEntity.id.eq(userJourney.getId()))
+                .execute();
+    }
+
+    @Override
+    public void updateUserJourneyCompleted(UserJourney userJourney) {
+        QUserJourneyEntity userJourneyEntity = QUserJourneyEntity.userJourneyEntity;
+
+        queryFactory
+                .update(userJourneyEntity)
+                .set(userJourneyEntity.journeyStatus, userJourney.getJourneyStatus())
+                .set(userJourneyEntity.modifiedDate, LocalDateTime.now())
+                .set(userJourneyEntity.journeyEnd, LocalDate.now())
                 .where(userJourneyEntity.id.eq(userJourney.getId()))
                 .execute();
     }
