@@ -1,11 +1,10 @@
 package com.heartz.byeboo.application.service;
 
 import com.heartz.byeboo.adapter.in.web.dto.SignedUrlResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.JourneyListResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.JourneyResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.QuestDetailResponseDto;
-import com.heartz.byeboo.application.command.ActiveQuestCreateCommand;
-import com.heartz.byeboo.application.command.QuestDetailCommand;
-import com.heartz.byeboo.application.command.RecordingQuestCreateCommand;
-import com.heartz.byeboo.application.command.SignedUrlCreateCommand;
+import com.heartz.byeboo.application.command.*;
 import com.heartz.byeboo.application.port.in.UserQuestUseCase;
 import com.heartz.byeboo.application.port.out.*;
 import com.heartz.byeboo.core.exception.CustomException;
@@ -15,10 +14,13 @@ import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
+import com.heartz.byeboo.domain.type.EJourneyStatus;
 import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.heartz.byeboo.constants.TextConstant.QUEST_COUNT_MAX;
 
@@ -88,6 +90,18 @@ public class UserQuestService implements UserQuestUseCase {
         return QuestDetailResponseDto.of(userQuest, findQuest, signedUrl);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public JourneyListResponseDto getCompletedJourney(CompletedJourneyCommand command) {
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
+        List<UserJourney> userJourneys = retrieveUserJourneyPort.getJourneysByUser(findUser);
+
+        List<JourneyResponseDto> inCompletedJourneys = filterUserJourney(userJourneys, EJourneyStatus.NOT_COMPLETED);
+        List<JourneyResponseDto> completedJourneys = filterUserJourney(userJourneys, EJourneyStatus.COMPLETED);
+
+        return JourneyListResponseDto.of(inCompletedJourneys.size(), inCompletedJourneys, completedJourneys.size(), completedJourneys);
+    }
+
     private void validateUserQuest(User user, Long questId){
         if (!user.getCurrentNumber().equals(questId)) {
             throw new CustomException(UserQuestErrorCode.INVALID_QUEST_PROGRESS);
@@ -111,5 +125,14 @@ public class UserQuestService implements UserQuestUseCase {
             ongoingUserJourney.updateUserJourneyCompleted();
             updateUserJourneyPort.updateUserJourneyCompleted(ongoingUserJourney);
         }
+    }
+
+    //journey 완료 여부에 따라 필터링
+    private List<JourneyResponseDto> filterUserJourney(List<UserJourney> userJourneys, EJourneyStatus journeyStatus){
+        return userJourneys.stream().filter(
+                userJourney -> userJourney.getJourneyStatus() == journeyStatus
+        ).map(
+                userJourney -> JourneyResponseDto.from(userJourney.getJourney(), userJourney.getJourney().getQuestStyle())
+        ).toList();
     }
 }
