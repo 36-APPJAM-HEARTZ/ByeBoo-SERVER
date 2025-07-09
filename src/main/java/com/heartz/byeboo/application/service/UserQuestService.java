@@ -15,7 +15,6 @@ import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
-import com.heartz.byeboo.domain.type.EJourney;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
 import com.heartz.byeboo.mapper.JourneyStyleMapper;
 import com.heartz.byeboo.mapper.UserQuestMapper;
@@ -107,7 +106,7 @@ public class UserQuestService implements UserQuestUseCase {
 
     @Override
     @Transactional
-    public void updateJourneyStatus(JourneyCreateCommand command) {
+    public void updateJourneyStatus(JourneyUpdateCommand command) {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
         UserJourney findUserJourney = retrieveUserJourneyPort.getUserJourneyByUserAndJourney(findUser, command.getJourney());
 

@@ -8,14 +8,14 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class JourneyCreateCommand {
+public class JourneyUpdateCommand {
 
     private Long userId;
     private EJourney journey;
 
-    public static JourneyCreateCommand of(Long userId, String journey){
+    public static JourneyUpdateCommand of(Long userId, String journey){
         try {
-            return JourneyCreateCommand.builder()
+            return JourneyUpdateCommand.builder()
                     .userId(userId)
                     .journey(EJourney.valueOf(journey))
                     .build();

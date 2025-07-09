@@ -11,5 +11,5 @@ public interface UserQuestUseCase {
     SignedUrlResponseDto getSignedUrl(SignedUrlCreateCommand command);
     QuestDetailResponseDto getDetailQuest(QuestDetailCommand command);
     JourneyListResponseDto getCompletedJourney(CompletedJourneyCommand command);
-    void updateJourneyStatus(JourneyCreateCommand command);
+    void updateJourneyStatus(JourneyUpdateCommand command);
 }

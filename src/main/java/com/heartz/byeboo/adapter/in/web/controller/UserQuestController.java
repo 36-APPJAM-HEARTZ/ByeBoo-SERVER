@@ -70,7 +70,7 @@ public class UserQuestController {
             @RequestHeader final Long userId,
             @RequestParam final String journey
     ){
-        JourneyCreateCommand command = JourneyCreateCommand.of(userId, journey);
+        JourneyUpdateCommand command = JourneyUpdateCommand.of(userId, journey);
         userQuestUseCase.updateJourneyStatus(command);
         return BaseResponse.success(null);
     }
