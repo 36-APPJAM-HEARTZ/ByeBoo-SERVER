@@ -4,7 +4,7 @@ import com.heartz.byeboo.adapter.in.web.dto.request.ActiveQuestRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.SignedUrlRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.userquest.JourneyListResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.userquest.QuestDetailResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.userquest.UserQuestDetailResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.SignedUrlResponseDto;
 import com.heartz.byeboo.application.command.*;
 import com.heartz.byeboo.application.command.userquest.*;
@@ -49,12 +49,12 @@ public class UserQuestController {
         return BaseResponse.success(userQuestUseCase.getSignedUrl(command));
     }
 
-    @GetMapping("/{questId}")
-    public BaseResponse<QuestDetailResponseDto> getDetailQuest(
+    @GetMapping("/answer/{questId}")
+    public BaseResponse<UserQuestDetailResponseDto> getDetailQuest(
             @RequestHeader final Long userId,
             @PathVariable final Long questId
     ){
-        QuestDetailCommand command = QuestDetailCommand.of(questId, userId);
+        UserQuestDetailCommand command = UserQuestDetailCommand.of(questId, userId);
 
         return BaseResponse.success(userQuestUseCase.getDetailQuest(command));
     }

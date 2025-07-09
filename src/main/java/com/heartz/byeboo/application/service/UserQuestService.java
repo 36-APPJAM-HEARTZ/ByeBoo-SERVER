@@ -3,7 +3,7 @@ package com.heartz.byeboo.application.service;
 import com.heartz.byeboo.adapter.in.web.dto.response.SignedUrlResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.userquest.JourneyListResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.userquest.JourneyResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.userquest.QuestDetailResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.userquest.UserQuestDetailResponseDto;
 import com.heartz.byeboo.application.command.*;
 import com.heartz.byeboo.application.command.userquest.*;
 import com.heartz.byeboo.application.port.in.UserQuestUseCase;
@@ -90,14 +90,14 @@ public class UserQuestService implements UserQuestUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public QuestDetailResponseDto getDetailQuest(QuestDetailCommand command) {
+    public UserQuestDetailResponseDto getDetailQuest(UserQuestDetailCommand command) {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
 
         UserQuest userQuest = retrieveUserQuestPort.getUserQuestByUserAndQuest(findUser, findQuest);
         String signedUrl = retrieveGcsPort.getSignedUrl(userQuest.getImageKey().toString());
 
-        return QuestDetailResponseDto.of(userQuest, findQuest, signedUrl);
+        return UserQuestDetailResponseDto.of(userQuest, findQuest, signedUrl);
     }
 
     @Override

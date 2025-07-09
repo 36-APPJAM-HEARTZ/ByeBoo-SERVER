@@ -5,7 +5,7 @@ import com.heartz.byeboo.domain.model.UserQuest;
 
 import java.time.LocalDate;
 
-public record QuestDetailResponseDto(
+public record UserQuestDetailResponseDto(
         Integer stepNumber,
         Long questNumber,
         LocalDate createdAt,
@@ -15,8 +15,8 @@ public record QuestDetailResponseDto(
         String imageUrl,
         String emotionDescription
 ) {
-    public static QuestDetailResponseDto of(UserQuest userQuest, Quest quest, String signedUrl){
-        return new QuestDetailResponseDto(
+    public static UserQuestDetailResponseDto of(UserQuest userQuest, Quest quest, String signedUrl){
+        return new UserQuestDetailResponseDto(
                 quest.getStep().getStepNumber(),
                 quest.getQuestNumber(),
                 userQuest.getCreatedDate().toLocalDate(),
