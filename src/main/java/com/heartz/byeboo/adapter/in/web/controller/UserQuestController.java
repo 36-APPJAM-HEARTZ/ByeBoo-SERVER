@@ -49,7 +49,7 @@ public class UserQuestController {
         return BaseResponse.success(userQuestUseCase.getSignedUrl(command));
     }
 
-    @GetMapping("/{questId}")
+    @GetMapping("/answer/{questId}")
     public BaseResponse<UserQuestDetailResponseDto> getDetailQuest(
             @RequestHeader final Long userId,
             @PathVariable final Long questId
