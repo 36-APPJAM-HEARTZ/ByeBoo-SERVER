@@ -1,8 +1,10 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.adapter.in.web.dto.response.quest.AllQuestResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.QuestDetailResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.quest.TipListResponseDto;
 import com.heartz.byeboo.application.command.quest.AllQuestCommand;
+import com.heartz.byeboo.application.command.quest.QuestDetailCommand;
 import com.heartz.byeboo.application.command.quest.QuestTipCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
 import com.heartz.byeboo.core.common.BaseResponse;
@@ -32,5 +34,14 @@ public class QuestController {
     ){
         AllQuestCommand allQuestCommand = AllQuestCommand.of(userId, journey);
         return BaseResponse.success(questUseCase.getAllQuest(allQuestCommand));
+    }
+
+    @GetMapping("/{questId}")
+    public BaseResponse<QuestDetailResponseDto> getQuestDetail(
+            @RequestHeader final Long userId,
+            @PathVariable final Long questId
+    ){
+        QuestDetailCommand questDetailCommand = QuestDetailCommand.of(userId, questId);
+        return BaseResponse.success(questUseCase.getQuestDetail(questDetailCommand));
     }
 }
