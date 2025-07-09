@@ -1,9 +1,6 @@
 package com.heartz.byeboo.application.service;
 
-import com.heartz.byeboo.adapter.in.web.dto.response.HomeCountResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.UserCreateResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.UserJourneyResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.UserNameResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.*;
 import com.heartz.byeboo.application.command.*;
 import com.heartz.byeboo.application.port.in.UserUseCase;
 import com.heartz.byeboo.application.port.out.*;
@@ -14,6 +11,7 @@ import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
+import com.heartz.byeboo.domain.type.ECharacterDialogue;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
 import com.heartz.byeboo.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +36,9 @@ public class UserService implements UserUseCase {
     @Override
     @Transactional
     public UserCreateResponseDto createUser(UserCreateCommand userCreateCommand) {
-        User user = UserMapper.commandToDomain(userCreateCommand);
-        user.initializeCurrentNumber();
-        User savedUser = createUserPort.createUser(user);
+        User currentUser = UserMapper.commandToDomain(userCreateCommand);
+        currentUser.initializeCurrentNumber();
+        User savedUser = createUserPort.createUser(currentUser);
 
         List<UserJourney> userJourneyList = UserJourney.initializeUserJourney(savedUser);
         createUserJourneyPort.createUserJourney(userJourneyList);
@@ -51,9 +49,9 @@ public class UserService implements UserUseCase {
     @Override
     @Transactional(readOnly = true)
     public UserNameResponseDto getUserName(UserNameCommand userNameCommand) {
-        User user = retrieveUserPort.getUserById(userNameCommand.getId());
+        User currentUser = retrieveUserPort.getUserById(userNameCommand.getId());
 
-        return UserNameResponseDto.of(user.getName());
+        return UserNameResponseDto.of(currentUser.getName());
     }
 
     @Override
@@ -84,15 +82,13 @@ public class UserService implements UserUseCase {
         User currentUser = retrieveUserPort.getUserById(completedCountCommand.getId());
         Boolean todayCompleted = Boolean.FALSE;
 
-        if(currentUser.getCurrentNumber() == 0)
+        if(isBeforeStart(currentUser))
             throw new CustomException(UserQuestErrorCode.NOT_FOUND_ONGOING_USER_QUEST);
 
-        if(currentUser.getCurrentNumber() == 1)
+        if(isInitialStart(currentUser))
             return HomeCountResponseDto.of(todayCompleted, 0L);
 
-        UserQuest recentUserQuest = getRecentUserQuestByUser(currentUser);
-
-        if(recentUserQuest.getCreatedDate().plusDays(1).isAfter(LocalDateTime.now()))
+        if(isTodayCompleted(getRecentUserQuestByUser(currentUser)))
             todayCompleted = Boolean.TRUE;
 
         return HomeCountResponseDto.of(todayCompleted, currentUser.getCurrentNumber() - 1);
@@ -122,5 +118,49 @@ public class UserService implements UserUseCase {
         updateUserPort.updateCurrentNumber(currentUser);
 
         return null;
+    }
+
+    @Override
+    @Transactional
+    public UserCharacterResponseDto getCharacterDialogue(
+            UserCharacterDialogueCommand userCharacterDialogueCommand
+    ) {
+        User currentUser = retrieveUserPort.getUserById(userCharacterDialogueCommand.getId());
+        ECharacterDialogue dialogue;
+
+        if (isBeforeStart(currentUser))
+            return UserCharacterResponseDto.of(
+                    ECharacterDialogue.BEFORE_START.getDialogue(currentUser.getName())
+            );
+        if (isInitialStart(currentUser))
+            return UserCharacterResponseDto.of(
+                    ECharacterDialogue.START.getDialogue(currentUser.getName())
+            );
+
+        if(!isTodayCompleted(getRecentUserQuestByUser(currentUser))) {
+            dialogue = ECharacterDialogue.START;
+        } else if (isCompleted(currentUser)) {
+            dialogue = ECharacterDialogue.COMPLETED;
+        } else {
+            dialogue = ECharacterDialogue.IN_PROGRESS;
+        }
+
+        return UserCharacterResponseDto.of(dialogue.getDialogue(currentUser.getName()));
+    }
+
+    private Boolean isBeforeStart(User user) {
+        return user.getCurrentNumber() == 0;
+    }
+
+    private Boolean isInitialStart(User user) {
+        return user.getCurrentNumber() == 1;
+    }
+
+    private Boolean isCompleted(User user) {
+        return user.getCurrentNumber() == 31;
+    }
+
+    private Boolean isTodayCompleted(UserQuest recentUserQuest) {
+        return recentUserQuest.getCreatedDate().plusDays(1).isAfter(LocalDateTime.now());
     }
 }
