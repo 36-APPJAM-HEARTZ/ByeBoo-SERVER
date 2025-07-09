@@ -13,7 +13,8 @@ public record QuestDetailResponseDto(
         String question,
         String answer,
         String questEmotionState,
-        String imageUrl
+        String imageUrl,
+        String emotionDescription
 ) {
     public static QuestDetailResponseDto of(UserQuest userQuest, Quest quest, String signedUrl){
         return new QuestDetailResponseDto(
@@ -23,7 +24,8 @@ public record QuestDetailResponseDto(
                 quest.getQuestion(),
                 userQuest.getAnswer(),
                 userQuest.getQuestEmotionState().getLabel(),
-                signedUrl
+                signedUrl,
+                userQuest.getQuestEmotionState().getDescription()
                 );
     }
 }
