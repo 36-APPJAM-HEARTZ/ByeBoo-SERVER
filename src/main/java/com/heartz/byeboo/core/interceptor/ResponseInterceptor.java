@@ -30,10 +30,21 @@ public class ResponseInterceptor implements ResponseBodyAdvice<Object> {
             @NonNull ServerHttpRequest request,
             @NonNull ServerHttpResponse response
     ) {
-        if(body instanceof BaseResponse<?> baseResponse)
+        String path = request.getURI().getPath();
+
+        if (path.startsWith("/v3/api-docs") ||
+                path.startsWith("/swagger-ui") ||
+                path.startsWith("/swagger-resources") ||
+                path.startsWith("/swagger-config") ||
+                path.startsWith("/webjars/swagger-ui")) {
+            return body;
+        }
+
+        if(body instanceof BaseResponse<?> baseResponse) {
             if (Boolean.FALSE.equals(baseResponse.success())) {
                 return body;
             }
+        }
         return BaseResponse.success(body);
     }
 }
