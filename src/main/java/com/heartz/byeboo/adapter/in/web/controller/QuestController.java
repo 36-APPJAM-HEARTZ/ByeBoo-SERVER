@@ -8,6 +8,7 @@ import com.heartz.byeboo.application.command.quest.QuestDetailCommand;
 import com.heartz.byeboo.application.command.quest.QuestTipCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
 import com.heartz.byeboo.core.common.BaseResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,10 @@ public class QuestController {
 
     private final QuestUseCase questUseCase;
 
+    @Operation(
+            summary = "퀘스트 팁 조회",
+            description = "퀘스트 팁을 조회하기 위한 API입니다."
+    )
     @GetMapping("/{questId}/tip")
     public BaseResponse<TipListResponseDto> getQuestTip(
             @RequestHeader final Long userId,
