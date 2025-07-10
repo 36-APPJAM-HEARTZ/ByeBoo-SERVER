@@ -11,6 +11,7 @@ import com.heartz.byeboo.application.command.userquest.*;
 import com.heartz.byeboo.application.port.in.UserQuestUseCase;
 import com.heartz.byeboo.core.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,29 @@ public class UserQuestController {
 
     @Operation(
             summary = "퀘스트 답변 저장(질문/답변형)",
-            description = "질문/답변형 퀘스트에 대한 답변을 저장하는 API입니다."
+            description = "질문/답변형 퀘스트에 대한 답변을 저장하는 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "질문형 퀘스트 답변 저장 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일떄"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "퀘스트 답변 길이가 500 초과일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "퀘스트 답변 길이가 10보다 작을때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
     )
     @PostMapping("/{questId}/recording")
     public BaseResponse<Void> createRecordingQuest(
@@ -37,7 +60,29 @@ public class UserQuestController {
 
     @Operation(
             summary = "퀘스트 답변 저장(행동형)",
-            description = "퀘스트에 대한 답변을 저장하는 API입니다. (사진 제외, 텍스트만!)"
+            description = "퀘스트에 대한 답변을 저장하는 API입니다. (사진 제외, 텍스트만!)",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "퀘스트 팁 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "퀘스트 답변 길이가 200 초과일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "버킷에서 이미지를 찾을 수 없을때"
+                    )
+            }
     )
     @PostMapping("/{questId}/active")
     public BaseResponse<Void> createActiveQuest(
@@ -52,7 +97,25 @@ public class UserQuestController {
     @Operation(
             summary = "Signed URL 요청 (행동형 퀘스트)",
             description = "사진 첨부 (+ 버튼) 눌렀을때 Presigned Url을 요청하는 API 입니다."
-                    +"클라이언트는 발급받은 presigned url에 PUT 요청을 해서 이미지를 업로드하면 됩니다. (완료하기 버튼 누르면 업로드 해주세요)"
+                    +"클라이언트는 발급받은 presigned url에 PUT 요청을 해서 이미지를 업로드하면 됩니다. (완료하기 버튼 누르면 업로드 해주세요)",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "퀘스트 팁 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "UUID 형식이 올바르지 않을때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
     )
     @PostMapping("/images/signed-url")
     public BaseResponse<SignedUrlResponseDto> createSignedUrl(
@@ -65,7 +128,25 @@ public class UserQuestController {
 
     @Operation(
             summary = "작성된 퀘스트 상세 조회",
-            description = "기록한 퀘스트를 조회하는 API입니다."
+            description = "기록한 퀘스트를 조회하는 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "퀘스트 팁 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "현재 진행 중인 퀘스트가 아닙니다."
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
     )
     @GetMapping("/answer/{questId}")
     public BaseResponse<UserQuestDetailResponseDto> getDetailQuest(
@@ -79,7 +160,21 @@ public class UserQuestController {
 
     @Operation(
             summary = "완료된 퀘스트 여정 조회",
-            description = "완료된 여정을 조회하는 API입니다."
+            description = "완료된 여정을 조회하는 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "퀘스트 팁 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
     )
     @GetMapping("/journey")
     public BaseResponse<JourneyListResponseDto> getCompletedJourney(
@@ -91,7 +186,25 @@ public class UserQuestController {
 
     @Operation(
             summary = "새로운 여정 시작하기",
-            description = "새로운 여정을 눌렀을 때 보내야하는 API입니다."
+            description = "새로운 여정을 눌렀을 때 보내야하는 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "퀘스트 팁 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "이미 진행 중인 여정입니다."
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
     )
     @PostMapping("/journey")
     public BaseResponse<Void> createJourney(
