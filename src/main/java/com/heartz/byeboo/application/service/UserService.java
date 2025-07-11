@@ -68,16 +68,16 @@ public class UserService implements UserUseCase {
     }
 
     private UserJourneyResponseDto getUseJourneyResponseDto(UserJourney userJourney) {
-        if(userJourney.getJourneyStatus().equals(EJourneyStatus.BEFORE_START))
+//        if(userJourney.getJourneyStatus().equals(EJourneyStatus.BEFORE_START))
             return UserJourneyResponseDto.of(
                     userJourney.getJourney().getLabel(),
                     userJourney.getJourney().getDescription()
             );
-        else
-            return UserJourneyResponseDto.of(
-                    userJourney.getJourney().getLabel(),
-                    null
-            );
+//        else
+//            return UserJourneyResponseDto.of(
+//                    userJourney.getJourney().getLabel(),
+//                    null
+//            );
     }
 
     @Override
