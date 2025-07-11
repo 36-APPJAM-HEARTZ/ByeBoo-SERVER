@@ -4,18 +4,16 @@ import com.heartz.byeboo.adapter.in.web.dto.response.StepResponseDto;
 
 import java.util.List;
 
-public record AllQuestResponseDto(
+public record AllQuestCompletedResponseDto(
         String progressPeriod,
         Long currentStep,
-        Boolean isCompleted,
         List<StepResponseDto> steps
 ) {
-    public static AllQuestResponseDto of(
+    public static AllQuestCompletedResponseDto of(
             String progressPeriod,
             Long currentStep,
-            Boolean isCompleted,
             List<StepResponseDto> steps
     ) {
-        return new AllQuestResponseDto(progressPeriod, currentStep, isCompleted, steps);
+        return new AllQuestCompletedResponseDto(progressPeriod, currentStep, steps);
     }
 }

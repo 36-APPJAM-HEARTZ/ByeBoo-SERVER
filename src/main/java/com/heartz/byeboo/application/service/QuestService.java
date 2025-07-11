@@ -2,7 +2,8 @@ package com.heartz.byeboo.application.service;
 
 import com.heartz.byeboo.adapter.in.web.dto.response.*;
 import com.heartz.byeboo.adapter.in.web.dto.response.quest.*;
-import com.heartz.byeboo.application.command.quest.AllQuestCommand;
+import com.heartz.byeboo.application.command.quest.AllQuestCompletedCommand;
+import com.heartz.byeboo.application.command.quest.AllQuestProgressCommand;
 import com.heartz.byeboo.application.command.quest.QuestDetailCommand;
 import com.heartz.byeboo.application.command.quest.QuestTipCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
@@ -10,6 +11,8 @@ import com.heartz.byeboo.application.port.out.quest.RetrieveQuestPort;
 import com.heartz.byeboo.application.port.out.quest.RetrieveTipPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
+import com.heartz.byeboo.core.exception.CustomException;
+import com.heartz.byeboo.domain.exception.UserJourneyErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
@@ -46,28 +49,43 @@ public class QuestService implements QuestUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public AllQuestResponseDto getAllQuest(AllQuestCommand allQuestCommand) {
-        User currentUser = retrieveUserPort.getUserById(allQuestCommand.getUserId());
-        UserJourney userJourney = retrieveUserJourneyPort.getUserJourneyByUserAndJourney(
-                currentUser,
-                allQuestCommand.getJourney()
-        );
-        List<Quest> quests = retrieveQuestPort.getALlQuestByJourney(allQuestCommand.getJourney());
+    public AllQuestProgressResponseDto getProgressAllQuest(AllQuestProgressCommand allQuestProgressCommand) {
+        User currentUser = retrieveUserPort.getUserById(allQuestProgressCommand.getUserId());
+        UserJourney userJourney = retrieveUserJourneyPort.getOngoingUserJourneyByUser(currentUser);
+
+        if(userJourney.getJourneyStatus().equals(EJourneyStatus.BEFORE_START)) {
+            throw  new CustomException(UserJourneyErrorCode.BEFORE_START_USER_JOURNEY);
+        }
+
+        List<Quest> quests = retrieveQuestPort.getALlQuestByJourney(userJourney.getJourney());
         Map<EStep, List<Quest>> stepGroupQuests = geteStepGroupQuest(quests);
         List<StepResponseDto> stepResponses = getStepResponseByMap(stepGroupQuests);
 
-        if(userJourney.getJourneyStatus().equals(EJourneyStatus.COMPLETED))
-            return AllQuestResponseDto.of(
-                    userJourney.getJourneyStart().toString() + " ~ " + userJourney.getJourneyEnd().toString(),
-                    null,
-                    true,
-                    stepResponses
-            );
-
-        return AllQuestResponseDto.of(
-                Long.toString(getProgressPeriod(userJourney)),
+        return AllQuestProgressResponseDto.of(
+                getProgressPeriod(userJourney),
                 currentUser.getCurrentNumber(),
-                false,
+                stepResponses
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AllQuestCompletedResponseDto getCompletedAllQuest(AllQuestCompletedCommand allQuestCompletedCommand) {
+        User currentUser = retrieveUserPort.getUserById(allQuestCompletedCommand.getUserId());
+        UserJourney userJourney = retrieveUserJourneyPort.getUserJourneyByUserAndJourney(
+                currentUser,
+                allQuestCompletedCommand.getJourney()
+        );
+        List<Quest> quests = retrieveQuestPort.getALlQuestByJourney(allQuestCompletedCommand.getJourney());
+        Map<EStep, List<Quest>> stepGroupQuests = geteStepGroupQuest(quests);
+        List<StepResponseDto> stepResponses = getStepResponseByMap(stepGroupQuests);
+
+        if(!userJourney.getJourneyStatus().equals(EJourneyStatus.COMPLETED))
+            throw new CustomException(UserJourneyErrorCode.INVALID_COMPLETED_USER_JOURNEY);
+
+        return AllQuestCompletedResponseDto.of(
+                userJourney.getJourneyStart().toString() + " ~ " + userJourney.getJourneyEnd().toString(),
+                null,
                 stepResponses
         );
     }

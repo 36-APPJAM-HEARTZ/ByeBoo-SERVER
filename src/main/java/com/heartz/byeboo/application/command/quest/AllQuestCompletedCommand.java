@@ -9,13 +9,13 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AllQuestCommand {
+public class AllQuestCompletedCommand {
     private Long userId;
     private EJourney journey;
 
-    public static AllQuestCommand of(Long userId, String journey) {
+    public static AllQuestCompletedCommand of(Long userId, String journey) {
         try {
-            return AllQuestCommand.builder()
+            return AllQuestCompletedCommand.builder()
                     .userId(userId)
                     .journey(EJourney.valueOf(journey))
                     .build();
