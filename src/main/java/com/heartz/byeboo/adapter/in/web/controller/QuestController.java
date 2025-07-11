@@ -1,9 +1,11 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
-import com.heartz.byeboo.adapter.in.web.dto.response.quest.AllQuestResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.AllQuestCompletedResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.response.quest.AllQuestProgressResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.quest.QuestDetailResponseDto;
 import com.heartz.byeboo.adapter.in.web.dto.response.quest.TipListResponseDto;
-import com.heartz.byeboo.application.command.quest.AllQuestCommand;
+import com.heartz.byeboo.application.command.quest.AllQuestCompletedCommand;
+import com.heartz.byeboo.application.command.quest.AllQuestProgressCommand;
 import com.heartz.byeboo.application.command.quest.QuestDetailCommand;
 import com.heartz.byeboo.application.command.quest.QuestTipCommand;
 import com.heartz.byeboo.application.port.in.QuestUseCase;
@@ -50,12 +52,16 @@ public class QuestController {
     }
 
     @Operation(
-            summary = "전체 퀘스트 조회",
-            description = "전체 퀘스트 조회하기 위한 API입니다.",
+            summary = "진행중인 여정 전체 퀘스트 조회",
+            description = "진행중인 여정의 전체 퀘스트 조회하기 위한 API입니다.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
                             description = "전체 퀘스트 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "시작 전 여정일때"
                     ),
                     @ApiResponse(
                             responseCode = "404",
@@ -71,13 +77,51 @@ public class QuestController {
                     )
             }
     )
-    @GetMapping("/all")
-    public BaseResponse<AllQuestResponseDto> getAllQuest(
+    @GetMapping("/all/progress")
+    public BaseResponse<AllQuestProgressResponseDto> getAllQuest(
+            @RequestHeader final Long userId
+    ){
+        AllQuestProgressCommand allQuestProgressCommand = AllQuestProgressCommand.of(userId);
+        return BaseResponse.success(questUseCase.getProgressAllQuest(allQuestProgressCommand));
+    }
+
+    @Operation(
+            summary = "완료된 여정 전체 퀘스트 조회",
+            description = "완료된 여정의 전체 퀘스트 조회하기 위한 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "전체 퀘스트 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "올바르지 않은 여정일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "완료되지 않은 여정일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 여정일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @GetMapping("/all/completed")
+    public BaseResponse<AllQuestCompletedResponseDto> getAllQuest(
             @RequestHeader final Long userId,
             @RequestParam final String journey
     ){
-        AllQuestCommand allQuestCommand = AllQuestCommand.of(userId, journey);
-        return BaseResponse.success(questUseCase.getAllQuest(allQuestCommand));
+        AllQuestCompletedCommand allQuestCompletedCommand = AllQuestCompletedCommand.of(userId, journey);
+        return BaseResponse.success(questUseCase.getCompletedAllQuest(allQuestCompletedCommand));
     }
 
     @Operation(
