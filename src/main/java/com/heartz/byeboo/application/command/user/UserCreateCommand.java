@@ -24,6 +24,7 @@ public class UserCreateCommand {
             return UserCreateCommand.builder()
                     .name(userCreateRequestDto.name())
                     .questStyle(EQuestStyle.valueOf(userCreateRequestDto.questStyle()))
+                    .feeling(EFeeling.valueOf(userCreateRequestDto.feeling()))
                     .build();
         } catch (IllegalArgumentException e) {
             throw new CustomException(UserErrorCode.INVALID_QUEST_STYLE);
