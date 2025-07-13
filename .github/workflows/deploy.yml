@@ -50,13 +50,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: SSH 접속 및 배포 스크립트 실행
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.GCP_HOST }}
-        username: ${{ secrets.GCP_USER }}
-        key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
-        script: |
-          cd ~/byeboo-deploy
-          docker pull heartzbyeboo/byeboo:latest
-          ./deploy.sh
+      - name: SSH 접속 및 배포 & 헬스 체크
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.GCP_HOST }}
+          username: ${{ secrets.GCP_USER }}
+          key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/byeboo-deploy
+            docker pull heartzbyeboo/byeboo:latest
+            chmod +x ./deploy.sh
+            ./deploy.sh
+
+      - name: 배포 실패 여부 확인
+        if: failure()
+        run: |
+          echo "❌ 배포 실패: 헬스 체크 통과하지 못했습니다."
+          exit 1
+
+      - name: 배포 성공 확인
+        if: success()
+        run: |
+          echo "✅ 배포 성공 및 트래픽 전환 완료"
