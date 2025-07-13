@@ -58,7 +58,7 @@ public class QuestService implements QuestUseCase {
         }
 
         List<Quest> quests = retrieveQuestPort.getALlQuestByJourney(userJourney.getJourney());
-        Map<EStep, List<Quest>> stepGroupQuests = geteStepGroupQuest(quests);
+        Map<EStep, List<Quest>> stepGroupQuests = getStepGroupQuest(quests);
         List<StepResponseDto> stepResponses = getStepResponseByMap(stepGroupQuests);
 
         return AllQuestProgressResponseDto.of(
@@ -77,7 +77,7 @@ public class QuestService implements QuestUseCase {
                 allQuestCompletedCommand.getJourney()
         );
         List<Quest> quests = retrieveQuestPort.getALlQuestByJourney(allQuestCompletedCommand.getJourney());
-        Map<EStep, List<Quest>> stepGroupQuests = geteStepGroupQuest(quests);
+        Map<EStep, List<Quest>> stepGroupQuests = getStepGroupQuest(quests);
         List<StepResponseDto> stepResponses = getStepResponseByMap(stepGroupQuests);
 
         if(!userJourney.getJourneyStatus().equals(EJourneyStatus.COMPLETED))
@@ -103,7 +103,7 @@ public class QuestService implements QuestUseCase {
         return LocalDate.now().toEpochDay() - userJourney.getJourneyStart().toEpochDay() + 1;
     }
 
-    private Map<EStep, List<Quest>> geteStepGroupQuest(List<Quest> quests) {
+    private Map<EStep, List<Quest>> getStepGroupQuest(List<Quest> quests) {
         return quests.stream()
                 .collect(Collectors.groupingBy(Quest::getStep));
     }

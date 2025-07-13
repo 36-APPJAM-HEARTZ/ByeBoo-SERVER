@@ -9,7 +9,6 @@ public class TipMapper {
         return Tip.of(
                 tipEntity.getId(),
                 tipEntity.getTipStep(),
-                tipEntity.getTipQuestion(),
                 tipEntity.getTipAnswer(),
                 quest
         );
