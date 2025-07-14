@@ -24,6 +24,7 @@ import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
+import com.heartz.byeboo.domain.type.EQuestStyle;
 import com.heartz.byeboo.mapper.JourneyStyleMapper;
 import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
@@ -96,9 +97,12 @@ public class UserQuestService implements UserQuestUseCase {
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
 
         UserQuest userQuest = retrieveUserQuestPort.getUserQuestByUserAndQuest(findUser, findQuest);
-        String signedUrl = retrieveGcsPort.getSignedUrl(userQuest.getImageKey().toString());
 
-        return UserQuestDetailResponseDto.of(userQuest, findQuest, signedUrl);
+        if (findQuest.getQuestStyle() == EQuestStyle.ACTIVE) {
+            String signedUrl = retrieveGcsPort.getSignedUrl(userQuest.getImageKey().toString());
+            return UserQuestDetailResponseDto.of(userQuest, findQuest, signedUrl);
+        }
+        return UserQuestDetailResponseDto.of(userQuest, findQuest);
     }
 
     @Override

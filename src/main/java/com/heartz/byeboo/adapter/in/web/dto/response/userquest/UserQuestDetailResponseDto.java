@@ -27,4 +27,17 @@ public record UserQuestDetailResponseDto(
                 userQuest.getQuestEmotionState().getDescription()
                 );
     }
+
+    public static UserQuestDetailResponseDto of(UserQuest userQuest, Quest quest){
+        return new UserQuestDetailResponseDto(
+                quest.getStep().getStepNumber(),
+                quest.getQuestNumber(),
+                userQuest.getCreatedDate().toLocalDate(),
+                quest.getQuestion(),
+                userQuest.getAnswer(),
+                userQuest.getQuestEmotionState().getLabel(),
+                null,
+                userQuest.getQuestEmotionState().getDescription()
+        );
+    }
 }
