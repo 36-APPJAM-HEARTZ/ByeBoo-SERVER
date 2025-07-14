@@ -39,12 +39,14 @@ public class UserJourneyEntity extends BaseEntity{
 
     @Builder
     public UserJourneyEntity(
+            Long id,
             LocalDate journeyStart,
             LocalDate journeyEnd,
             EJourney journey,
             EJourneyStatus journeyStatus,
             Long userId
     ) {
+        this.id = id;
         this.journeyStart = journeyStart;
         this.journeyEnd = journeyEnd;
         this.journey = journey;
@@ -60,6 +62,24 @@ public class UserJourneyEntity extends BaseEntity{
             Long userId
     ) {
         return UserJourneyEntity.builder()
+                .journeyStart(journeyStart)
+                .journeyEnd(journeyEnd)
+                .journey(journey)
+                .journeyStatus(journeyStatus)
+                .userId(userId)
+                .build();
+    }
+
+    public static UserJourneyEntity createForUpdate(
+            Long id,
+            LocalDate journeyStart,
+            LocalDate journeyEnd,
+            EJourney journey,
+            EJourneyStatus journeyStatus,
+            Long userId
+    ) {
+        return UserJourneyEntity.builder()
+                .id(id)
                 .journeyStart(journeyStart)
                 .journeyEnd(journeyEnd)
                 .journey(journey)
