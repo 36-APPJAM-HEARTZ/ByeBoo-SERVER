@@ -25,4 +25,15 @@ public class UserJourneyMapper {
                 user
         );
     }
+
+    public static UserJourneyEntity toEntityForUpdate(UserJourney userJourney) {
+        return UserJourneyEntity.createForUpdate(
+                userJourney.getId(),
+                userJourney.getJourneyStart(),
+                userJourney.getJourneyEnd(),
+                userJourney.getJourney(),
+                userJourney.getJourneyStatus(),
+                userJourney.getUser().getId()
+        );
+    }
 }

@@ -29,4 +29,13 @@ public class UserMapper {
                 .build();
     }
 
+    public static UserEntity toEntityForUpdate(User user) {
+        return UserEntity.createForUpdate(
+                user.getId(),
+                user.getName(),
+                user.getQuestStyle(),
+                user.getCurrentNumber()
+        );
+    }
+
 }
