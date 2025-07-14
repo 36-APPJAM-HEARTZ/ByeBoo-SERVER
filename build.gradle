@@ -25,6 +25,7 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -45,6 +46,9 @@ dependencies {
 	// google storage
 	implementation group: 'com.google.cloud', name: 'google-cloud-storage', version: '2.40.1'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+	//discord
+	implementation 'com.github.napstr:logback-discord-appender:1.0.0'
 }
 
 task copyGitSubmodule(type: Copy) {
