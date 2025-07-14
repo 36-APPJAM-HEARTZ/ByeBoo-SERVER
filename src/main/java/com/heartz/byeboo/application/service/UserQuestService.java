@@ -132,10 +132,6 @@ public class UserQuestService implements UserQuestUseCase {
     }
 
     private void validateUserQuest(User user,  Quest quest, EQuestStyle questStyle){
-        if (user.getQuestStyle() != questStyle){
-            throw new CustomException(UserQuestErrorCode.NOT_USER_QUEST_STYLE);
-        }
-
         if (!user.getCurrentNumber().equals(quest.getQuestNumber())) {
             throw new CustomException(UserQuestErrorCode.INVALID_QUEST_PROGRESS);
         }
