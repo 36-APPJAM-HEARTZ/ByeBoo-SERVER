@@ -12,7 +12,7 @@ public record AllQuestDetailResponseDto(
         return new AllQuestDetailResponseDto(
                 quest.getId(),
                 quest.getQuestion(),
-                quest.getQuestStyle().getLabel(),
+                quest.getQuestStyle().toString(),
                 quest.getQuestNumber());
     }
 }
