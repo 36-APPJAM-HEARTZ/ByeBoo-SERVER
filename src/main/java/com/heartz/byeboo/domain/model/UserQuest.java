@@ -37,4 +37,22 @@ public class UserQuest {
                 .createdDate(createdDate)
                 .build();
     }
+
+    public static UserQuest of(
+            Long id,
+            String answer,
+            EQuestEmotionState questEmotionState,
+            User user,
+            Quest quest,
+            LocalDateTime createdDate
+    ){
+        return UserQuest.builder()
+                .id(id)
+                .answer(answer)
+                .questEmotionState(questEmotionState)
+                .user(user)
+                .quest(quest)
+                .createdDate(createdDate)
+                .build();
+    }
 }

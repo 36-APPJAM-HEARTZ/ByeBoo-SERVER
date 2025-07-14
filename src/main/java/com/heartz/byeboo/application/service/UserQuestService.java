@@ -24,6 +24,7 @@ import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
+import com.heartz.byeboo.domain.type.EQuestStyle;
 import com.heartz.byeboo.mapper.JourneyStyleMapper;
 import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
@@ -54,9 +55,9 @@ public class UserQuestService implements UserQuestUseCase {
     public void createRecordingQuest(RecordingQuestCreateCommand command) {
 
         User findUser = retrieveUserPort.getUserById(command.getUserId());
-        validateUserQuest(findUser, command.getQuestId());
-
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
+
+        validateUserQuest(findUser, findQuest.getQuestNumber());
         UserQuest userQuest = UserQuestMapper.commandToDomainRecording(command, findUser, findQuest);
         createUserQuestPort.createUserQuest(userQuest);
         findUser.updateCurrentNumber();
@@ -69,9 +70,10 @@ public class UserQuestService implements UserQuestUseCase {
     @Transactional
     public void createActiveQuest(ActiveQuestCreateCommand command) {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
-        validateUserQuest(findUser, command.getQuestId());
-        validateObjectExist(command.getImageKey().toString());
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
+
+        validateUserQuest(findUser, findQuest.getQuestNumber());
+        validateObjectExist(command.getImageKey().toString());
         UserQuest userQuest = UserQuestMapper.commandToDomainActive(command, findUser, findQuest);
         createUserQuestPort.createUserQuest(userQuest);
 
@@ -95,9 +97,12 @@ public class UserQuestService implements UserQuestUseCase {
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
 
         UserQuest userQuest = retrieveUserQuestPort.getUserQuestByUserAndQuest(findUser, findQuest);
-        String signedUrl = retrieveGcsPort.getSignedUrl(userQuest.getImageKey().toString());
 
-        return UserQuestDetailResponseDto.of(userQuest, findQuest, signedUrl);
+        if (findQuest.getQuestStyle() == EQuestStyle.ACTIVE) {
+            String signedUrl = retrieveGcsPort.getSignedUrl(userQuest.getImageKey().toString());
+            return UserQuestDetailResponseDto.of(userQuest, findQuest, signedUrl);
+        }
+        return UserQuestDetailResponseDto.of(userQuest, findQuest);
     }
 
     @Override
@@ -126,8 +131,8 @@ public class UserQuestService implements UserQuestUseCase {
         updateUserPort.updateCurrentNumber(findUser);
     }
 
-    private void validateUserQuest(User user, Long questId){
-        if (!user.getCurrentNumber().equals(questId)) {
+    private void validateUserQuest(User user, Long questNumber){
+        if (!user.getCurrentNumber().equals(questNumber)) {
             throw new CustomException(UserQuestErrorCode.INVALID_QUEST_PROGRESS);
         }
 
