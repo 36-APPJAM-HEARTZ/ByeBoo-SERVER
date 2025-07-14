@@ -110,7 +110,7 @@ public class QuestService implements QuestUseCase {
 
     private List<StepResponseDto> getStepResponseByMap(Map<EStep, List<Quest>> stepGroupQuests) {
         return stepGroupQuests.entrySet().stream()
-                .sorted(Comparator.comparingInt(
+                .sorted(Comparator.comparingLong(
                         stepGroupQuest -> stepGroupQuest.getKey().getStepNumber())
                 )
                 .map(stepListEntry -> StepResponseDto.of(

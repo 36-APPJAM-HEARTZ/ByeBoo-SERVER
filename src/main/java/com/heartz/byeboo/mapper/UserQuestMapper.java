@@ -48,4 +48,27 @@ public class UserQuestMapper {
                 userQuestEntity.getCreatedDate()
         );
     }
+
+    public static UserQuest toDomainActive(UserQuestEntity userQuestEntity, User user, Quest quest) {
+        return UserQuest.of(
+                userQuestEntity.getId(),
+                userQuestEntity.getAnswer(),
+                userQuestEntity.getImageKey(),
+                userQuestEntity.getQuestEmotionState(),
+                user,
+                quest,
+                userQuestEntity.getCreatedDate()
+        );
+    }
+
+    public static UserQuest toDomainRecording(UserQuestEntity userQuestEntity, User user, Quest quest){
+        return UserQuest.of(
+                userQuestEntity.getId(),
+                userQuestEntity.getAnswer(),
+                userQuestEntity.getQuestEmotionState(),
+                user,
+                quest,
+                userQuestEntity.getCreatedDate()
+        );
+    }
 }

@@ -6,7 +6,7 @@ import com.heartz.byeboo.domain.model.UserQuest;
 import java.time.LocalDate;
 
 public record UserQuestDetailResponseDto(
-        Integer stepNumber,
+        Long stepNumber,
         Long questNumber,
         LocalDate createdAt,
         String question,
