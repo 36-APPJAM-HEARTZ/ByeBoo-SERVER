@@ -6,7 +6,7 @@ import com.heartz.byeboo.domain.model.UserQuest;
 import java.time.LocalDate;
 
 public record UserQuestDetailResponseDto(
-        Integer stepNumber,
+        Long stepNumber,
         Long questNumber,
         LocalDate createdAt,
         String question,
@@ -26,5 +26,18 @@ public record UserQuestDetailResponseDto(
                 signedUrl,
                 userQuest.getQuestEmotionState().getDescription()
                 );
+    }
+
+    public static UserQuestDetailResponseDto of(UserQuest userQuest, Quest quest){
+        return new UserQuestDetailResponseDto(
+                quest.getStep().getStepNumber(),
+                quest.getQuestNumber(),
+                userQuest.getCreatedDate().toLocalDate(),
+                quest.getQuestion(),
+                userQuest.getAnswer(),
+                userQuest.getQuestEmotionState().getLabel(),
+                null,
+                userQuest.getQuestEmotionState().getDescription()
+        );
     }
 }

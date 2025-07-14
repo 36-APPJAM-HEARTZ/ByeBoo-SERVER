@@ -9,6 +9,7 @@ import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserQuest;
+import com.heartz.byeboo.domain.type.EQuestStyle;
 import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -30,7 +31,7 @@ public class UserQuestPersistenceAdapter implements CreateUserQuestPort, Retriev
         UserQuestEntity userQuestEntity = userQuestRepository.findByUserIdAndQuestId(user.getId(), quest.getId())
                 .orElseThrow(() -> new CustomException(UserQuestErrorCode.USER_QUEST_NOT_FOUND));
 
-        return UserQuestMapper.toDomain(userQuestEntity, user, quest);
+        return isActiveOrRecording(quest, userQuestEntity, user);
     }
 
     @Override
@@ -45,5 +46,13 @@ public class UserQuestPersistenceAdapter implements CreateUserQuestPort, Retriev
             return null;
 
         return UserQuestMapper.toDomain(userQuestEntity, user, quest);
+    }
+
+    private UserQuest isActiveOrRecording(Quest quest, UserQuestEntity userQuestEntity, User user){
+        if (quest.getQuestStyle() == EQuestStyle.ACTIVE){
+            return UserQuestMapper.toDomainActive(userQuestEntity, user, quest);
+        }
+
+        return UserQuestMapper.toDomainRecording(userQuestEntity, user, quest);
     }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 
 public record TipListResponseDto(
         String step,
-        Integer stepNumber,
+        Long stepNumber,
         Long questNumber,
         String question,
         List<TipResponseDto> tips
