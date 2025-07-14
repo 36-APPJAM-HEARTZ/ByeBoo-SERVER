@@ -1,5 +1,5 @@
 package com.heartz.byeboo.application.port.out;
 
-public interface ValidateGcsPort {
+public interface ValidateObjectPort {
     boolean isObjectExists(String imageKey);
 }
