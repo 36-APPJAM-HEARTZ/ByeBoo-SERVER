@@ -57,7 +57,7 @@ public class UserQuestService implements UserQuestUseCase {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
 
-        validateUserQuest(findUser, findQuest.getQuestNumber());
+        validateUserQuest(findUser, findQuest, EQuestStyle.RECORDING);
         UserQuest userQuest = UserQuestMapper.commandToDomainRecording(command, findUser, findQuest);
         createUserQuestPort.createUserQuest(userQuest);
         findUser.updateCurrentNumber();
@@ -72,7 +72,7 @@ public class UserQuestService implements UserQuestUseCase {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
 
-        validateUserQuest(findUser, findQuest.getQuestNumber());
+        validateUserQuest(findUser, findQuest, EQuestStyle.ACTIVE);
         validateObjectExist(command.getImageKey().toString());
         UserQuest userQuest = UserQuestMapper.commandToDomainActive(command, findUser, findQuest);
         createUserQuestPort.createUserQuest(userQuest);
@@ -131,8 +131,12 @@ public class UserQuestService implements UserQuestUseCase {
         updateUserPort.updateCurrentNumber(findUser);
     }
 
-    private void validateUserQuest(User user, Long questNumber){
-        if (!user.getCurrentNumber().equals(questNumber)) {
+    private void validateUserQuest(User user,  Quest quest, EQuestStyle questStyle){
+        if (user.getQuestStyle() != questStyle){
+            throw new CustomException(UserQuestErrorCode.NOT_USER_QUEST_STYLE);
+        }
+
+        if (!user.getCurrentNumber().equals(quest.getQuestNumber())) {
             throw new CustomException(UserQuestErrorCode.INVALID_QUEST_PROGRESS);
         }
 
