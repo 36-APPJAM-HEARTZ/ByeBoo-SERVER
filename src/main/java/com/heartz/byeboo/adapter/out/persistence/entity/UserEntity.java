@@ -28,7 +28,8 @@ public class UserEntity extends BaseEntity{
     private Long currentNumber;
 
     @Builder
-    public UserEntity(String name, EQuestStyle questStyle, Long currentNumber) {
+    public UserEntity(Long id, String name, EQuestStyle questStyle, Long currentNumber) {
+        this.id = id;
         this.name = name;
         this.questStyle = questStyle;
         this.currentNumber = currentNumber;
@@ -36,6 +37,15 @@ public class UserEntity extends BaseEntity{
 
     public static UserEntity create(String name, EQuestStyle questStyle, Long currentNumber) {
         return UserEntity.builder()
+                .name(name)
+                .questStyle(questStyle)
+                .currentNumber(currentNumber)
+                .build();
+    }
+
+    public static UserEntity createForUpdate(Long id, String name, EQuestStyle questStyle, Long currentNumber) {
+        return UserEntity.builder()
+                .id(id)
                 .name(name)
                 .questStyle(questStyle)
                 .currentNumber(currentNumber)
