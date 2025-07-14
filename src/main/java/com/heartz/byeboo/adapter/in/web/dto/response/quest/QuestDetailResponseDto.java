@@ -6,7 +6,7 @@ import com.heartz.byeboo.domain.type.EStep;
 
 public record QuestDetailResponseDto(
         String step,
-        Integer stepNumber,
+        Long stepNumber,
         Long questNumber,
         EQuestStyle questStyle,
         String question
