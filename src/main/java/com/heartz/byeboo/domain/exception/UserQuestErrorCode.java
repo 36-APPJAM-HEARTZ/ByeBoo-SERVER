@@ -17,7 +17,8 @@ public enum UserQuestErrorCode implements ErrorCode {
     IMAGE_NOT_UPLOADED(HttpStatus.NOT_FOUND, "버킷에 이미지가 업로드되지 않았습니다."),
     USER_QUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "유저 퀘스트가 존재하지 않습니다."),
     NOT_FOUND_ONGOING_USER_QUEST(HttpStatus.NOT_FOUND, "현재 진행중인 퀘스트가 없습니다."),
-    INVALID_SIGNED_URL(HttpStatus.BAD_REQUEST, "UUID 형식이 올바르지 않습니다.")
+    INVALID_SIGNED_URL(HttpStatus.BAD_REQUEST, "UUID 형식이 올바르지 않습니다."),
+    NOT_USER_QUEST_STYLE(HttpStatus.BAD_REQUEST, "옳지 않은 퀘스트 스타일입니다.")
     ;
     private final HttpStatus status;
     private final String message;
