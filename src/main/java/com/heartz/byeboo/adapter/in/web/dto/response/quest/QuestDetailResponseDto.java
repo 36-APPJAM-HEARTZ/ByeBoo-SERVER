@@ -5,16 +5,15 @@ import com.heartz.byeboo.domain.type.EQuestStyle;
 import com.heartz.byeboo.domain.type.EStep;
 
 public record QuestDetailResponseDto(
-        EStep step,
+        String step,
         Integer stepNumber,
         Long questNumber,
         EQuestStyle questStyle,
         String question
-
 ) {
     public static QuestDetailResponseDto from(Quest quest) {
         return new QuestDetailResponseDto(
-                quest.getStep(),
+                quest.getStep().getLabel(),
                 quest.getStep().getStepNumber(),
                 quest.getQuestNumber(),
                 quest.getQuestStyle(),
