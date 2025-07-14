@@ -4,9 +4,10 @@ import com.heartz.byeboo.domain.model.Quest;
 
 public record AllQuestDetailResponseDto(
         Long questId,
+        String question,
         Long questNumber
 ) {
     public static AllQuestDetailResponseDto from(Quest quest){
-        return new AllQuestDetailResponseDto(quest.getId(), quest.getQuestNumber());
+        return new AllQuestDetailResponseDto(quest.getId(), quest.getQuestion(), quest.getQuestNumber());
     }
 }
