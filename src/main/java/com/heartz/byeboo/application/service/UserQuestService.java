@@ -63,7 +63,7 @@ public class UserQuestService implements UserQuestUseCase {
         findUser.updateCurrentNumber();
         updateUserPort.updateCurrentNumber(findUser);
 
-        isUserJourneyCompleted(findUser);
+//        isUserJourneyCompleted(findUser);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class UserQuestService implements UserQuestUseCase {
         findUser.updateCurrentNumber();
         updateUserPort.updateCurrentNumber(findUser);
 
-        isUserJourneyCompleted(findUser);
+//        isUserJourneyCompleted(findUser);
     }
 
     @Override
