@@ -41,11 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<BaseResponse<Void>> customException(CustomException e, WebRequest request) {
 
-        //로컬에서는 에러 메시지 발신 안되게 설정
-        if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
-            sendDiscordAlarm(e, request);
-        }
-
+        sendDiscordAlarm(e, request);
         return ResponseEntity
                 .status(e.getErrorCode().getStatus())
                 .body(BaseResponse.fail(e.getErrorCode()));
@@ -123,11 +119,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseResponse<Void>> handleAnyException(Exception e,  WebRequest request) {
-
-        //로컬에서는 에러 메시지 발신 안되게 설정
-        if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
-            sendDiscordAlarm(e, request);
-        }
+        sendDiscordAlarm(e, request);
 
         return convert(GlobalErrorCode.INTERNAL_SERVER_ERROR);
     }
@@ -158,7 +150,9 @@ public class GlobalExceptionHandler {
     }
 
     private void sendDiscordAlarm(Exception e, WebRequest request) {
-        discordClient.sendAlarm(createMessage(e, request));
+        if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
+            discordClient.sendAlarm(createMessage(e, request));
+        }
     }
 
     private DiscordMessageDto createMessage(Exception e, WebRequest request) {
