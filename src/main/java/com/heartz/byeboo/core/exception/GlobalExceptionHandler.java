@@ -39,9 +39,8 @@ public class GlobalExceptionHandler {
      * Custom Exception 전용 ExceptionHandler
      */
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<BaseResponse<Void>> customException(CustomException e, WebRequest request) {
+    public ResponseEntity<BaseResponse<Void>> customException(CustomException e) {
 
-        sendDiscordAlarm(e, request);
         return ResponseEntity
                 .status(e.getErrorCode().getStatus())
                 .body(BaseResponse.fail(e.getErrorCode()));
