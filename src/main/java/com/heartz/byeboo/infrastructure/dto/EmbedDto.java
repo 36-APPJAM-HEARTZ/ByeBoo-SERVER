@@ -18,7 +18,6 @@ public record EmbedDto(
                         + "```\n"
                         + stackTrace
                         + "\n```"
-
         );
     }
 }

@@ -7,6 +7,8 @@ import com.heartz.byeboo.infrastructure.dto.EmbedDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -25,6 +27,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @RestControllerAdvice
@@ -33,13 +36,21 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     private final DiscordClient discordClient;
+
+    @Autowired
+    private Environment environment;
+
     /**
      * Custom Exception 전용 ExceptionHandler
      */
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<BaseResponse<Void>> customException(CustomException e, WebRequest request) {
 
-        sendDiscordAlarm(e, request);
+        //로컬에서는 에러 메시지 발신 안되게 설정
+        if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
+            sendDiscordAlarm(e, request);
+        }
+
         return ResponseEntity
                 .status(e.getErrorCode().getStatus())
                 .body(BaseResponse.fail(e.getErrorCode()));
@@ -118,7 +129,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseResponse<Void>> handleAnyException(Exception e,  WebRequest request) {
 
-        sendDiscordAlarm(e, request);
+        //로컬에서는 에러 메시지 발신 안되게 설정
+        if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
+            sendDiscordAlarm(e, request);
+        }
+
         return convert(GlobalErrorCode.INTERNAL_SERVER_ERROR);
     }
 
