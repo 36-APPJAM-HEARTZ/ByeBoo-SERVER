@@ -1,5 +1,5 @@
 package com.heartz.byeboo.application.port.out;
 
-public interface RetrieveGcsPort {
+public interface RetrieveObjectPort {
     String getSignedUrl(String imageKey);
 }

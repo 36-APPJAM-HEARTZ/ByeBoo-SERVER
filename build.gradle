@@ -23,6 +23,12 @@ configurations {
 	}
 }
 
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1" // 버전은 최신 안정 버전으로
+	}
+}
+
 repositories {
 	mavenCentral()
 }
@@ -45,6 +51,10 @@ dependencies {
 	// google storage
 	implementation group: 'com.google.cloud', name: 'google-cloud-storage', version: '2.40.1'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+	//discord
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
 }
 
 task copyGitSubmodule(type: Copy) {

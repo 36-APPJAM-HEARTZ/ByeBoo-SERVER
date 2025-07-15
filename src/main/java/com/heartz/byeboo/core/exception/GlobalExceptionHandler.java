@@ -1,7 +1,13 @@
 package com.heartz.byeboo.core.exception;
 
 import com.heartz.byeboo.core.common.BaseResponse;
+import com.heartz.byeboo.infrastructure.api.DiscordClient;
+import com.heartz.byeboo.infrastructure.dto.DiscordMessageDto;
+import com.heartz.byeboo.infrastructure.dto.EmbedDto;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -10,21 +16,32 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.List;
 
 @RestControllerAdvice
 @Slf4j
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final DiscordClient discordClient;
+    private final Environment environment;
+
     /**
      * Custom Exception 전용 ExceptionHandler
      */
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<BaseResponse<Void>> customException(CustomException e) {
+    public ResponseEntity<BaseResponse<Void>> customException(CustomException e, WebRequest request) {
+
+        sendDiscordAlarm(e, request);
         return ResponseEntity
                 .status(e.getErrorCode().getStatus())
                 .body(BaseResponse.fail(e.getErrorCode()));
@@ -101,7 +118,9 @@ public class GlobalExceptionHandler {
      * 그 외 에러
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<BaseResponse<Void>> handleAnyException(Exception e) {
+    public ResponseEntity<BaseResponse<Void>> handleAnyException(Exception e,  WebRequest request) {
+        sendDiscordAlarm(e, request);
+
         return convert(GlobalErrorCode.INTERNAL_SERVER_ERROR);
     }
 
@@ -128,6 +147,35 @@ public class GlobalExceptionHandler {
             buffer.append(error.getDefaultMessage()).append("\n");
         }
         return buffer.toString();
+    }
+
+    private void sendDiscordAlarm(Exception e, WebRequest request) {
+        if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
+            discordClient.sendAlarm(createMessage(e, request));
+        }
+    }
+
+    private DiscordMessageDto createMessage(Exception e, WebRequest request) {
+        EmbedDto embed = EmbedDto.of(createRequestFullPath(request), getStackTrace(e).substring(0, 1000));
+        return DiscordMessageDto.of(List.of(embed));
+    }
+
+    private String createRequestFullPath(WebRequest webRequest) {
+        HttpServletRequest request = ((ServletWebRequest) webRequest).getRequest();
+        String fullPath = request.getMethod() + " " + request.getRequestURL();
+
+        String queryString = request.getQueryString();
+        if (queryString != null) {
+            fullPath += "?" + queryString;
+        }
+
+        return fullPath;
+    }
+
+    private String getStackTrace(Exception e) {
+        StringWriter stringWriter = new StringWriter();
+        e.printStackTrace(new PrintWriter(stringWriter));
+        return stringWriter.toString();
     }
 }
 
