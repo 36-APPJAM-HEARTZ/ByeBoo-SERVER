@@ -109,7 +109,9 @@ public class GlobalExceptionHandler {
      * 내부 서버 오류 전용 ExceptionHandler
      */
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<BaseResponse<Void>> handleAnyException(RuntimeException e) {
+    public ResponseEntity<BaseResponse<Void>> handleAnyException(RuntimeException e, WebRequest request) {
+        sendDiscordAlarm(e, request);
+
         return convert(GlobalErrorCode.INTERNAL_SERVER_ERROR);
     }
 
