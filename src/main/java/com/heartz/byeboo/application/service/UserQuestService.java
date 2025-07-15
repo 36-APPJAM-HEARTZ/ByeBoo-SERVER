@@ -43,10 +43,10 @@ public class UserQuestService implements UserQuestUseCase {
     private final RetrieveQuestPort retrieveQuestPort;
     private final CreateUserQuestPort createUserQuestPort;
     private final UpdateUserPort updateUserPort;
-    private final CreateGcsPort createGcsPort;
-    private final ValidateGcsPort validateGcsPort;
+    private final CreateObjectPort createGcsPort;
+    private final ValidateObjectPort validateGcsPort;
     private final RetrieveUserQuestPort retrieveUserQuestPort;
-    private final RetrieveGcsPort retrieveGcsPort;
+    private final RetrieveObjectPort retrieveGcsPort;
     private final RetrieveUserJourneyPort retrieveUserJourneyPort;
     private final UpdateUserJourneyPort updateUserJourneyPort;
 
