@@ -45,6 +45,10 @@ dependencies {
 	// google storage
 	implementation group: 'com.google.cloud', name: 'google-cloud-storage', version: '2.40.1'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+	// server monitoring(prometheus)
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 task copyGitSubmodule(type: Copy) {
