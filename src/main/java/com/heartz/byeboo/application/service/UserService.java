@@ -144,9 +144,9 @@ public class UserService implements UserUseCase {
         if(!isTodayCompleted(getRecentUserQuestByUser(currentUser))) {
             dialogue = ECharacterDialogue.START;
         } else if (isCompleted(currentUser)) {
-            dialogue = ECharacterDialogue.COMPLETED;
+            dialogue = ECharacterDialogue.START; // 완료된 상태 변경에 따라 COMPLETED -> START 로 변경되었음.
         } else {
-            dialogue = ECharacterDialogue.IN_PROGRESS;
+            dialogue = ECharacterDialogue.START; // 진행중 상태 삭제에 따라 IN_PROGRESS -> START 로 변경되었음.
         }
 
         return UserCharacterResponseDto.of(dialogue.getDialogue(currentUser.getName()));
