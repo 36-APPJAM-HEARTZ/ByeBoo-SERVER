@@ -1,4 +1,4 @@
-package com.heartz.byeboo.adapter.in.web.dto.response.userquest;
+package com.heartz.byeboo.application.port.in.dto.response.userquest;
 
 import com.heartz.byeboo.domain.type.EJourney;
 import com.heartz.byeboo.domain.type.EQuestStyle;
