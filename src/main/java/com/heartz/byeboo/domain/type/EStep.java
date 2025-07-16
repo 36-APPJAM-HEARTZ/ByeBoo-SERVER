@@ -14,7 +14,7 @@ public enum EStep {
     AWAKE_HEART("마음 깨우기", 1L),
     LET_FLOW_EMOTION("감정 흘려보내기", 2L),
     NAMING_EMOTION("감정에 이름 붙이기", 3L),
-    SMALL_ROUTINE("나를 위한 작은 루틴", 4L),
+    SMALL_ROUTINE("나를 위한 루틴 만들기", 4L),
     ;
 
     private final String label;
