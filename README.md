@@ -1,4 +1,5 @@
-<img width="681" height="190" alt="Frame 2087328739" src="https://github.com/user-attachments/assets/950f56f2-97ae-43b1-bb8f-abfe7b6a84b1" />
+<img width="1200" src="https://github.com/user-attachments/assets/20e8a39a-78a1-4c88-bec4-3c84b7d257a5" />
+
 
 ```
 이별 극복을 위한 단 하나의 가이드, Bye Boo 입니다. 🪨🪨
