@@ -1,8 +1,7 @@
-package com.heartz.byeboo.adapter.in.web.dto.response.quest;
+package com.heartz.byeboo.application.port.in.dto.response.quest;
 
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.type.EQuestStyle;
-import com.heartz.byeboo.domain.type.EStep;
 
 public record QuestDetailResponseDto(
         String step,

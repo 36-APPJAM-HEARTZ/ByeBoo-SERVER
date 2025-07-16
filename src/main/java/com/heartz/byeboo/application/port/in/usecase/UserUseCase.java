@@ -1,8 +1,8 @@
-package com.heartz.byeboo.application.port.in;
+package com.heartz.byeboo.application.port.in.usecase;
 
-import com.heartz.byeboo.adapter.in.web.dto.response.user.*;
 import com.heartz.byeboo.application.command.user.*;
 import com.heartz.byeboo.application.command.userquest.CompletedCountCommand;
+import com.heartz.byeboo.application.port.in.dto.response.user.*;
 
 public interface UserUseCase {
     UserCreateResponseDto createUser(UserCreateCommand userCreateCommand);

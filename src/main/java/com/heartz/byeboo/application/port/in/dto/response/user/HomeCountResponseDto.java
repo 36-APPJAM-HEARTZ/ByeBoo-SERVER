@@ -1,4 +1,4 @@
-package com.heartz.byeboo.adapter.in.web.dto.response.user;
+package com.heartz.byeboo.application.port.in.dto.response.user;
 
 public record HomeCountResponseDto(
         Boolean todayComplete,

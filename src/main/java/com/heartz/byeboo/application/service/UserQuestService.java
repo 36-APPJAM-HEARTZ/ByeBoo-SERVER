@@ -1,12 +1,12 @@
 package com.heartz.byeboo.application.service;
 
-import com.heartz.byeboo.adapter.in.web.dto.response.SignedUrlResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.userquest.JourneyListResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.userquest.JourneyResponseDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.userquest.UserQuestDetailResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.SignedUrlResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.userquest.UserQuestDetailResponseDto;
 import com.heartz.byeboo.application.command.*;
 import com.heartz.byeboo.application.command.userquest.*;
-import com.heartz.byeboo.application.port.in.UserQuestUseCase;
+import com.heartz.byeboo.application.port.in.usecase.UserQuestUseCase;
 import com.heartz.byeboo.application.port.out.*;
 import com.heartz.byeboo.application.port.out.quest.RetrieveQuestPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
