@@ -19,8 +19,7 @@ public enum EJourney {
                        
                        하루에 하나씩 기록해 나가다 보면,
                        감정이 조금씩 정돈되고
-                       마음이 가벼워질 거예요.
-                       """
+                       마음이 가벼워질 거예요."""
     ),
     PROCESS_EMOTION(
             "감정 정리",
@@ -35,8 +34,7 @@ public enum EJourney {
                        하루에 하나씩 작은 행동을
                        실천하다 보면,
                        머릿속이 맑아지고
-                       마음도 조금씩 정리될 거예요.
-                       """
+                       마음도 조금씩 정리될 거예요."""
             );
 
     private final String label;
