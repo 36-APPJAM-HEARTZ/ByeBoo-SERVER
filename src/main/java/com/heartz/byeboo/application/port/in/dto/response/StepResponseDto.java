@@ -1,6 +1,6 @@
-package com.heartz.byeboo.adapter.in.web.dto.response;
+package com.heartz.byeboo.application.port.in.dto.response;
 
-import com.heartz.byeboo.adapter.in.web.dto.response.quest.AllQuestDetailResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.quest.AllQuestDetailResponseDto;
 import com.heartz.byeboo.domain.type.EStep;
 
 import java.util.List;

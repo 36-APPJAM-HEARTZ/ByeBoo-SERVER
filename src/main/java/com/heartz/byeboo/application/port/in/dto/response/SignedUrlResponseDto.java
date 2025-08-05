@@ -1,4 +1,4 @@
-package com.heartz.byeboo.adapter.in.web.dto.response;
+package com.heartz.byeboo.application.port.in.dto.response;
 
 public record SignedUrlResponseDto(
         String signedUrl

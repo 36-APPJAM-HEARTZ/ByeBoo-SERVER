@@ -1,10 +1,10 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.adapter.in.web.dto.request.UserCreateRequestDto;
-import com.heartz.byeboo.adapter.in.web.dto.response.user.*;
 import com.heartz.byeboo.application.command.user.*;
 import com.heartz.byeboo.application.command.userquest.CompletedCountCommand;
-import com.heartz.byeboo.application.port.in.UserUseCase;
+import com.heartz.byeboo.application.port.in.usecase.UserUseCase;
+import com.heartz.byeboo.application.port.in.dto.response.user.*;
 import com.heartz.byeboo.core.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
