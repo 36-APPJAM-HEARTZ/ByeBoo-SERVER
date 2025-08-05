@@ -12,9 +12,10 @@ public enum EStep {
     FIND_MEANING("관계의 의미 찾기", 4L),
     UNDERSTAND_SELF("지금의 나 이해하기", 5L),
     AWAKE_HEART("마음 깨우기", 1L),
-    LET_FLOW_EMOTION("감정 흘려보내기", 2L),
+    TO_BE_ALONE("혼자 있는 힘 기르기", 2L),
     NAMING_EMOTION("감정에 이름 붙이기", 3L),
     SMALL_ROUTINE("나를 위한 루틴 만들기", 4L),
+    TREATING_SELF("스스로에게 대접하기", 5L)
     ;
 
     private final String label;
