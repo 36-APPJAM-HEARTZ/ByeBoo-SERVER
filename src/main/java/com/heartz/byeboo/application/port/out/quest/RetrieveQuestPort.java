@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface RetrieveQuestPort {
     Quest getQuestById(Long questId);
-    Quest getQuestByJourneyAndQuestNumber(EJourney journey, Long stepNumber);
+    Quest getQuestByJourneyAndQuestNumber(EJourney journey, Long questNumber);
     List<Quest> getALlQuestByJourney(EJourney journey);
 }
