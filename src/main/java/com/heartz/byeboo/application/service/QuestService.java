@@ -71,7 +71,7 @@ public class QuestService implements QuestUseCase {
         UserQuest recentUserQuest = getRecentUserQuestByUser(currentUser);
         LocalDateTime questOpenTime = recentUserQuest.getCreatedDate().plusDays(1);
 
-        if(questOpenTime.isAfter(LocalDateTime.now()))
+        if(questOpenTime.isBefore(LocalDateTime.now()))
             return getOpenQuests(userJourney, currentUser, stepResponses);
 
         return getCloseQuests(userJourney, currentUser, questOpenTime, stepResponses);
