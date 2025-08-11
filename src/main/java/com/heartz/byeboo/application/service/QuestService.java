@@ -12,6 +12,7 @@ import com.heartz.byeboo.application.port.out.quest.RetrieveTipPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.userquest.RetrieveUserQuestPort;
+import com.heartz.byeboo.constants.QuestConstants;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserJourneyErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
@@ -56,21 +57,40 @@ public class QuestService implements QuestUseCase {
     public AllQuestProgressResponseDto getProgressAllQuest(AllQuestProgressCommand allQuestProgressCommand) {
         User currentUser = retrieveUserPort.getUserById(allQuestProgressCommand.getUserId());
         UserJourney userJourney = retrieveUserJourneyPort.getOngoingUserJourneyByUser(currentUser);
-        UserQuest recentUserQuest = getRecentUserQuestByUser(currentUser);
+        List<Quest> quests = retrieveQuestPort.getALlQuestByJourney(userJourney.getJourney());
+        Map<EStep, List<Quest>> stepGroupQuests = getStepGroupQuest(quests);
+        List<StepResponseDto> stepResponses = getStepResponseByMap(stepGroupQuests);
 
         if(userJourney.getJourneyStatus().equals(EJourneyStatus.BEFORE_START)) {
             throw new CustomException(UserJourneyErrorCode.BEFORE_START_USER_JOURNEY);
         }
 
-        List<Quest> quests = retrieveQuestPort.getALlQuestByJourney(userJourney.getJourney());
-        Map<EStep, List<Quest>> stepGroupQuests = getStepGroupQuest(quests);
-        LocalDateTime questOpenTime = recentUserQuest.getCreatedDate().plusDays(1);
-        List<StepResponseDto> stepResponses = getStepResponseByMap(stepGroupQuests);
+        if(currentUser.getCurrentNumber() == QuestConstants.QUEST_INITIAL_START_COUNT)
+            return getOpenQuests(userJourney, currentUser, stepResponses);
 
+        UserQuest recentUserQuest = getRecentUserQuestByUser(currentUser);
+        LocalDateTime questOpenTime = recentUserQuest.getCreatedDate().plusDays(1);
+
+        if(questOpenTime.isAfter(LocalDateTime.now()))
+            return getOpenQuests(userJourney, currentUser, stepResponses);
+
+        return getCloseQuests(userJourney, currentUser, questOpenTime, stepResponses);
+    }
+
+    private AllQuestProgressResponseDto getCloseQuests(UserJourney userJourney, User currentUser, LocalDateTime questOpenTime, List<StepResponseDto> stepResponses) {
         return AllQuestProgressResponseDto.of(
                 getProgressPeriod(userJourney),
                 currentUser.getCurrentNumber(),
                 questOpenTime,
+                stepResponses
+        );
+    }
+
+    private AllQuestProgressResponseDto getOpenQuests(UserJourney userJourney, User currentUser, List<StepResponseDto> stepResponses) {
+        return AllQuestProgressResponseDto.of(
+                getProgressPeriod(userJourney),
+                currentUser.getCurrentNumber(),
+                null,
                 stepResponses
         );
     }
