@@ -59,6 +59,17 @@ public class UserService implements UserUseCase {
     }
 
     @Override
+    @Transactional
+    public UserNameResponseDto updateUserName(UserNameUpdateCommand userNameUpdateCommand) {
+        User currentUser = retrieveUserPort.getUserById(userNameUpdateCommand.getId());
+        currentUser.updateName(userNameUpdateCommand.getName());
+
+        updateUserPort.updateName(currentUser);
+
+        return UserNameResponseDto.of(currentUser.getName());
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public UserJourneyResponseDto getUserJourney(UserJourneyCommand userJourneyCommand) {
         User currentUser = retrieveUserPort.getUserById(userJourneyCommand.getId());
