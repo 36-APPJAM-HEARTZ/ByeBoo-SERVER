@@ -85,6 +85,14 @@ public class UserController {
                             description = "유저 이름 변경 성공"
                     ),
                     @ApiResponse(
+                            responseCode = "400",
+                            description = "유저 이름 길이가 2글자 이하일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "유저 이름 길이가 5글자 이상일때"
+                    ),
+                    @ApiResponse(
                             responseCode = "404",
                             description = "존재하지 않는 유저일때"
                     ),
