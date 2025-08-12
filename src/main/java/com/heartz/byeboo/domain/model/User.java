@@ -32,4 +32,8 @@ public class User {
     public void updateCurrentNumber(){
         this.currentNumber++;
     }
+
+    public void updateName(String name) {
+        this.name = name;
+    }
 }
