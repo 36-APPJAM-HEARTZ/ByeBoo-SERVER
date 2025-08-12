@@ -1,6 +1,7 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.adapter.in.web.dto.request.UserCreateRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.UserNameUpdateRequestDto;
 import com.heartz.byeboo.application.command.user.*;
 import com.heartz.byeboo.application.command.userquest.CompletedCountCommand;
 import com.heartz.byeboo.application.port.in.usecase.UserUseCase;
@@ -73,6 +74,33 @@ public class UserController {
     public BaseResponse<UserNameResponseDto> getUserName(@RequestHeader Long userId) {
         UserNameCommand userNameCommand = UserNameCommand.of(userId);
         return BaseResponse.success(userUseCase.getUserName(userNameCommand));
+    }
+
+    @Operation(
+            summary = "유저 이름 변경",
+            description = "유저 이름을 변경하기 위한 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "유저 이름 변경 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @PatchMapping("/users")
+    public BaseResponse<UserNameResponseDto> updateUserName(
+            @RequestHeader Long userId,
+            @RequestBody UserNameUpdateRequestDto userNameUpdateRequestDto
+    ) {
+        UserNameUpdateCommand userNameUpdateCommand = UserNameUpdateCommand.of(userId, userNameUpdateRequestDto);
+        return BaseResponse.success(userUseCase.updateUserName(userNameUpdateCommand));
     }
 
     @Operation(
