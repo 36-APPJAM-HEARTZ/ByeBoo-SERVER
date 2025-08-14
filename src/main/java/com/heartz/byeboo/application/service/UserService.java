@@ -59,6 +59,17 @@ public class UserService implements UserUseCase {
     }
 
     @Override
+    @Transactional
+    public UserNameResponseDto updateUserName(UserNameUpdateCommand userNameUpdateCommand) {
+        User currentUser = retrieveUserPort.getUserById(userNameUpdateCommand.getId());
+        currentUser.updateName(userNameUpdateCommand.getName());
+
+        updateUserPort.updateName(currentUser);
+
+        return UserNameResponseDto.of(currentUser.getName());
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public UserJourneyResponseDto getUserJourney(UserJourneyCommand userJourneyCommand) {
         User currentUser = retrieveUserPort.getUserById(userJourneyCommand.getId());
@@ -144,9 +155,9 @@ public class UserService implements UserUseCase {
         if(!isTodayCompleted(getRecentUserQuestByUser(currentUser))) {
             dialogue = ECharacterDialogue.START;
         } else if (isCompleted(currentUser)) {
-            dialogue = ECharacterDialogue.START; // 완료된 상태 변경에 따라 COMPLETED -> START 로 변경되었음.
+            dialogue = ECharacterDialogue.COMPLETED;
         } else {
-            dialogue = ECharacterDialogue.START; // 진행중 상태 삭제에 따라 IN_PROGRESS -> START 로 변경되었음.
+            dialogue = ECharacterDialogue.IN_PROGRESS;
         }
 
         return UserCharacterResponseDto.of(dialogue.getDialogue(currentUser.getName()));
