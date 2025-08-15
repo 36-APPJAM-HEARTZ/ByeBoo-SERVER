@@ -55,6 +55,11 @@ dependencies {
 	//discord
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
+	// spring security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
 
 //	// server monitoring(prometheus)
 //	implementation 'org.springframework.boot:spring-boot-starter-actuator'
