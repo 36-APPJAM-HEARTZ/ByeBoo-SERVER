@@ -1,9 +1,9 @@
 package com.heartz.byeboo.core.exception;
 
 import com.heartz.byeboo.core.common.BaseResponse;
-import com.heartz.byeboo.infrastructure.api.DiscordClient;
-import com.heartz.byeboo.infrastructure.dto.DiscordMessageDto;
-import com.heartz.byeboo.infrastructure.dto.EmbedDto;
+import com.heartz.byeboo.infrastructure.api.DiscordFeignClient;
+import com.heartz.byeboo.infrastructure.dto.discord.DiscordMessageDto;
+import com.heartz.byeboo.infrastructure.dto.discord.EmbedDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    private final DiscordClient discordClient;
+    private final DiscordFeignClient discordClient;
     private final Environment environment;
 
     /**
