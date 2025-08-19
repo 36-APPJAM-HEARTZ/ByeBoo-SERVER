@@ -82,6 +82,7 @@ public class QuestService implements QuestUseCase {
                 getProgressPeriod(userJourney),
                 currentUser.getCurrentNumber(),
                 questOpenTime,
+                LocalDateTime.now(),
                 stepResponses
         );
     }
@@ -90,6 +91,7 @@ public class QuestService implements QuestUseCase {
         return AllQuestProgressResponseDto.of(
                 getProgressPeriod(userJourney),
                 currentUser.getCurrentNumber(),
+                null,
                 null,
                 stepResponses
         );
