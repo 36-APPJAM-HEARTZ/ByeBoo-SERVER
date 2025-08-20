@@ -62,12 +62,15 @@ public class UserEntity extends BaseEntity{
                 .build();
     }
 
-    public static UserEntity createForUpdate(Long id, String name, EQuestStyle questStyle, Long currentNumber) {
+    public static UserEntity createForUpdate(Long id, String name, EQuestStyle questStyle, Long currentNumber, EPlatform platform, ERole role, String serialId) {
         return UserEntity.builder()
                 .id(id)
                 .name(name)
                 .questStyle(questStyle)
                 .currentNumber(currentNumber)
+                .role(role)
+                .serialId(serialId)
+                .platform(platform)
                 .build();
     }
 }
