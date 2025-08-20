@@ -22,7 +22,7 @@ public class JwtProvider {
         return jwtGenerator.generateToken(userId, role, false);
     }
 
-    public Long getSubject(final String token) {
+    public Long getSubject(final String token) { //userId
         JwtParser jwtParser = jwtGenerator.getJwtParser();
         return Long.valueOf(jwtParser.parseClaimsJws(token)
                 .getBody()
