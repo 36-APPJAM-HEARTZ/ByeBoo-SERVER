@@ -1,4 +1,4 @@
-package com.heartz.byeboo.application.port.out;
+package com.heartz.byeboo.application.port.out.userinfo;
 
 import com.heartz.byeboo.domain.type.EPlatform;
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;

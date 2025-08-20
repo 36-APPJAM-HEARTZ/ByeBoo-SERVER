@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.heartz.byeboo.domain.type.EUserStatus.ACTIVE;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserUseCase {
@@ -45,6 +47,9 @@ public class UserService implements UserUseCase {
         currentUser.initializeCurrentNumber();
         currentUser.updateName(userCreateCommand.getName());
         currentUser.updateQuestStyle(userCreateCommand.getQuestStyle());
+        currentUser.updateStatus(ACTIVE);
+        currentUser.updateDeletedAt(null);
+
         //User savedUser = createUserPort.createUser(currentUser);
         updateUserPort.updateUser(currentUser);
 

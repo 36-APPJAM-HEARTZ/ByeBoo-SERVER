@@ -16,7 +16,10 @@ public class UserMapper {
                 user.getCurrentNumber(),
                 user.getPlatform(),
                 user.getRole(),
-                user.getSerialId()
+                user.getSerialId(),
+                user.getStatus(),
+                user.getDeletedAt()
+
         );
     }
 
@@ -28,7 +31,9 @@ public class UserMapper {
                 userEntity.getCurrentNumber(),
                 userEntity.getPlatform(),
                 userEntity.getRole(),
-                userEntity.getSerialId()
+                userEntity.getSerialId(),
+                userEntity.getStatus(),
+                userEntity.getDeletedAt()
         );
     }
 
@@ -47,9 +52,13 @@ public class UserMapper {
                 user.getCurrentNumber(),
                 user.getPlatform(),
                 user.getRole(),
-                user.getSerialId()
+                user.getSerialId(),
+                user.getStatus(),
+                user.getDeletedAt()
         );
     }
+
+
 
 
     public static User userInfoToDomain(String serialId, EPlatform platform, ERole role){
