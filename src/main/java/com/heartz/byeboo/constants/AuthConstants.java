@@ -3,7 +3,6 @@ package com.heartz.byeboo.constants;
 import java.util.List;
 
 public class AuthConstants {
-    public static String CLAIM_USER_ID = "uuid";
     public static String CLAIM_USER_ROLE = "role";
     public static String PREFIX_BEARER = "Bearer ";
     public static List<String> NO_NEED_AUTH = List.of(
