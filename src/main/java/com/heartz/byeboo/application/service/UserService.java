@@ -110,7 +110,7 @@ public class UserService implements UserUseCase {
         if(currentUser.getCurrentNumber() == QuestConstants.QUEST_COUNT_MAX)
             return HomeCountResponseDto.of(
                     null,
-                    EUserCurrentStatus.JOURNEY_COMPLETED,
+                    EUserCurrentStatus.JOURNEY_COMPLETED_STATUS,
                     currentUser.getCurrentNumber() - 1
             );
 
