@@ -7,5 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
+@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 public @interface UserId {
 }
