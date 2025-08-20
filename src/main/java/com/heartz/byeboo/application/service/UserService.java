@@ -17,6 +17,7 @@ import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
 import com.heartz.byeboo.domain.type.ECharacterDialogue;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
+import com.heartz.byeboo.domain.type.EUserCurrentStatus;
 import com.heartz.byeboo.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -95,18 +96,36 @@ public class UserService implements UserUseCase {
     @Transactional(readOnly = true)
     public HomeCountResponseDto getCompletedCount(CompletedCountCommand completedCountCommand) {
         User currentUser = retrieveUserPort.getUserById(completedCountCommand.getId());
-        Boolean todayCompleted = Boolean.FALSE;
 
         if(isBeforeStart(currentUser))
             throw new CustomException(UserQuestErrorCode.NOT_FOUND_ONGOING_USER_QUEST);
 
         if(isInitialStart(currentUser))
-            return HomeCountResponseDto.of(todayCompleted, 0L);
+            return HomeCountResponseDto.of(
+                    false,
+                    EUserCurrentStatus.INITIAL_START_STATUS,
+                    0L
+            );
+
+        if(currentUser.getCurrentNumber() == QuestConstants.QUEST_COUNT_MAX)
+            return HomeCountResponseDto.of(
+                    null,
+                    EUserCurrentStatus.JOURNEY_COMPLETED_STATUS,
+                    currentUser.getCurrentNumber() - 1
+            );
 
         if(isTodayCompleted(getRecentUserQuestByUser(currentUser)))
-            todayCompleted = Boolean.TRUE;
+            return HomeCountResponseDto.of(
+                    true,
+                    EUserCurrentStatus.TODAY_COMPLETED_STATUS,
+                    currentUser.getCurrentNumber() - 1
+            );
 
-        return HomeCountResponseDto.of(todayCompleted, currentUser.getCurrentNumber() - 1);
+        return HomeCountResponseDto.of(
+                    false,
+                    EUserCurrentStatus.TODAY_NOT_COMPLETED_STATUS,
+                    currentUser.getCurrentNumber() - 1
+            );
     }
 
     private UserQuest getRecentUserQuestByUser(User currentUser) {

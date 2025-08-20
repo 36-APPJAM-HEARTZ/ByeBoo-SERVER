@@ -72,6 +72,10 @@ public class QuestController {
                             description = "존재하지 않는 여정일때"
                     ),
                     @ApiResponse(
+                            responseCode = "409",
+                            description = "진행되었어야 하는 퀘스트가 없을때"
+                    ),
+                    @ApiResponse(
                             responseCode = "500",
                             description = "서버 에러"
                     )
