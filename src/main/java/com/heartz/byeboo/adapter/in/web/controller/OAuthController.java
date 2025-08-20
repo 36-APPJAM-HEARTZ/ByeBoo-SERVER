@@ -11,6 +11,7 @@ import com.heartz.byeboo.security.command.OAuthWithdrawCommand;
 import com.heartz.byeboo.security.usecase.OAuthUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -64,9 +65,29 @@ public class OAuthController {
         return BaseResponse.success(oAuthUseCase.logout(OAuthLogoutCommand.from(userId)));
     }
 
+    @Operation(
+            summary = "회원 탈퇴",
+            description = "회원 탈퇴를 위한 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "회원 탈퇴 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "토큰 형식이 잘못된 경우"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
     @DeleteMapping("/auth/withdraw")
     public BaseResponse<Void> withdraw(@UserId final Long userId,
-                                         @Nullable @RequestHeader("X-Apple-Code") final String code) {
+                                         @Nullable
+                                         @Schema(description = "널 가능(애플 로그인 탈퇴시에만 요청)")
+                                         @RequestHeader("X-Apple-Code") final String code) {
         return BaseResponse.success(oAuthUseCase.withdraw(OAuthWithdrawCommand.of(userId, code)));
     }
 
