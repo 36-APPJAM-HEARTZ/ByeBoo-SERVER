@@ -7,6 +7,8 @@ import com.heartz.byeboo.domain.type.EPlatform;
 import com.heartz.byeboo.domain.type.ERole;
 
 public class UserMapper {
+
+
     public static UserEntity toEntity(User user) {
         return UserEntity.create(
                 user.getName(),
@@ -42,9 +44,13 @@ public class UserMapper {
                 user.getId(),
                 user.getName(),
                 user.getQuestStyle(),
-                user.getCurrentNumber()
+                user.getCurrentNumber(),
+                user.getPlatform(),
+                user.getRole(),
+                user.getSerialId()
         );
     }
+
 
     public static User userInfoToDomain(String serialId, EPlatform platform, ERole role){
         return User.builder()

@@ -37,6 +37,10 @@ public class User {
         this.currentNumber = 1L;
     }
 
+    public void updateQuestStyle(EQuestStyle questStyle){
+        this.questStyle = questStyle;
+    }
+
     public void updateCurrentNumber(){
         this.currentNumber++;
     }
