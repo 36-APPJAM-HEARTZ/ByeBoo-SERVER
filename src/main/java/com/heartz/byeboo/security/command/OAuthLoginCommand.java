@@ -8,14 +8,14 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class OAuthCommand {
+public class OAuthLoginCommand {
 
     private EPlatform platform;
     private String token;
 
-    public static OAuthCommand of(String platform, String token){
+    public static OAuthLoginCommand of(String platform, String token){
         try {
-            return OAuthCommand.builder()
+            return OAuthLoginCommand.builder()
                     .platform(EPlatform.valueOf(platform))
                     .token(token)
                     .build();
