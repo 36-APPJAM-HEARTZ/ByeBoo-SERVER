@@ -9,7 +9,9 @@ import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.type.ERole;
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;
 import com.heartz.byeboo.mapper.UserMapper;
-import com.heartz.byeboo.security.command.OAuthCommand;
+import com.heartz.byeboo.security.command.OAuthLoginCommand;
+import com.heartz.byeboo.security.command.OAuthLogoutCommand;
+import com.heartz.byeboo.security.command.OAuthWithdrawCommand;
 import com.heartz.byeboo.security.jwt.JwtProvider;
 import com.heartz.byeboo.security.jwt.Token;
 import com.heartz.byeboo.security.usecase.OAuthUseCase;
@@ -32,7 +34,7 @@ public class OAuthService implements OAuthUseCase {
 
 
     @Transactional
-    public UserLoginResponse login(OAuthCommand command) {
+    public UserLoginResponse login(OAuthLoginCommand command) {
         SocialInfoResponse response = oAuthUserInfoAdapter.getUserInfo(command.getToken(), command.getPlatform());
         UserInfoResponse userInfoResponse = UserInfoResponse.of(command.getPlatform(), response.serialId());
         Optional<User> user = retrieveUserPort.findUserByPlatFormAndSeralId(userInfoResponse.platform(), userInfoResponse.serialId());
@@ -40,6 +42,21 @@ public class OAuthService implements OAuthUseCase {
         User findUser = loadOrCreateUser(user, userInfoResponse);
         Token issuedToken = jwtProvider.issueTokens(findUser.getId(), getUserRole(findUser.getId()));
         return UserLoginResponse.of(issuedToken, isRegistered);
+    }
+
+    @Override
+    public Void logout(OAuthLogoutCommand command) {
+        User findUser = retrieveUserPort.getUserById(command.userId());
+        //TODO :  레디스에서 유저의 리프레시 토큰 삭제
+
+        return null;
+    }
+
+    @Override
+    public Void withdraw(OAuthWithdrawCommand command) {
+        User findUser = retrieveUserPort.getUserById(command.userId());
+
+        return null;
     }
 
     private User loadOrCreateUser(final Optional<User> findUser, final UserInfoResponse userInfo) {

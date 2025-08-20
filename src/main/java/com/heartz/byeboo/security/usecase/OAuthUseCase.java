@@ -1,11 +1,12 @@
 package com.heartz.byeboo.security.usecase;
 
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserLoginResponse;
-import com.heartz.byeboo.security.command.OAuthCommand;
-import com.heartz.byeboo.security.jwt.Token;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.ResponseEntity;
+import com.heartz.byeboo.security.command.OAuthLoginCommand;
+import com.heartz.byeboo.security.command.OAuthLogoutCommand;
+import com.heartz.byeboo.security.command.OAuthWithdrawCommand;
 
 public interface OAuthUseCase {
-    UserLoginResponse login(OAuthCommand command);
+    UserLoginResponse login(OAuthLoginCommand command);
+    Void logout(OAuthLogoutCommand command);
+    Void withdraw(OAuthWithdrawCommand command);
 }
