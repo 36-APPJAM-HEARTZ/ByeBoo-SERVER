@@ -9,8 +9,10 @@ import com.heartz.byeboo.application.port.in.dto.response.SignedUrlResponseDto;
 import com.heartz.byeboo.application.command.*;
 import com.heartz.byeboo.application.command.userquest.*;
 import com.heartz.byeboo.application.port.in.usecase.UserQuestUseCase;
+import com.heartz.byeboo.core.annotation.UserId;
 import com.heartz.byeboo.core.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +52,7 @@ public class UserQuestController {
     )
     @PostMapping("/{questId}/recording")
     public BaseResponse<Void> createRecordingQuest(
-            @RequestHeader final Long userId,
+            @UserId final Long userId,
             @RequestBody final RecordingQuestRequestDto recordingQuestRequestDto,
             @PathVariable final Long questId){
         RecordingQuestCreateCommand command = RecordingQuestCreateCommand.from(recordingQuestRequestDto, questId, userId);
@@ -86,7 +88,7 @@ public class UserQuestController {
     )
     @PostMapping("/{questId}/active")
     public BaseResponse<Void> createActiveQuest(
-            @RequestHeader final Long userId,
+            @UserId final Long userId,
             @RequestBody final ActiveQuestRequestDto activeQuestRequestDto,
             @PathVariable final Long questId){
         ActiveQuestCreateCommand command = ActiveQuestCreateCommand.from(activeQuestRequestDto, questId, userId);
@@ -119,7 +121,7 @@ public class UserQuestController {
     )
     @PostMapping("/images/signed-url")
     public BaseResponse<SignedUrlResponseDto> createSignedUrl(
-            @RequestHeader final Long userId,
+            @UserId final Long userId,
             @RequestBody final SignedUrlRequestDto signedUrlRequestDto
             ){
         SignedUrlCreateCommand command = SignedUrlCreateCommand.of(signedUrlRequestDto, userId);
@@ -150,7 +152,7 @@ public class UserQuestController {
     )
     @GetMapping("/answer/{questId}")
     public BaseResponse<UserQuestDetailResponseDto> getDetailQuest(
-            @RequestHeader final Long userId,
+            @UserId final Long userId,
             @PathVariable final Long questId
     ){
         UserQuestDetailCommand command = UserQuestDetailCommand.of(questId, userId);
@@ -178,7 +180,7 @@ public class UserQuestController {
     )
     @GetMapping("/journey")
     public BaseResponse<JourneyListResponseDto> getCompletedJourney(
-            @RequestHeader final Long userId
+            @UserId final Long userId
     ){
         CompletedJourneyCommand command = CompletedJourneyCommand.of(userId);
         return BaseResponse.success(userQuestUseCase.getCompletedJourney(command));
@@ -208,7 +210,7 @@ public class UserQuestController {
     )
     @PostMapping("/journey")
     public BaseResponse<Void> createJourney(
-            @RequestHeader final Long userId,
+            @UserId final Long userId,
             @RequestParam final String journey
     ){
         JourneyUpdateCommand command = JourneyUpdateCommand.of(userId, journey);

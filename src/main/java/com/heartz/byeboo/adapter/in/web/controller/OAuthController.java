@@ -7,8 +7,9 @@ import com.heartz.byeboo.core.common.BaseResponse;
 import com.heartz.byeboo.security.command.OAuthCommand;
 import com.heartz.byeboo.security.usecase.OAuthUseCase;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +22,31 @@ public class OAuthController {
 
     private final OAuthUseCase oAuthUseCase;
 
+    @Operation(
+            summary = "로그인 / 회원가입",
+            description = "로그인 / 회원가입을 위한 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "로그인 / 회원가입 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "올바르지 않은 플랫폼"
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "토큰 형식이 잘못된 경우"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
     @PostMapping("/login")
     public BaseResponse<UserLoginResponse> login(
-            @RequestHeader(HttpHeaders.AUTHORIZATION) final String token,
+            @Parameter(hidden = true) @RequestHeader(HttpHeaders.AUTHORIZATION) final String token,
             @RequestBody final UserLoginRequestDto request){
         String rawToken = token.substring(AuthConstants.PREFIX_BEARER.length()).trim();
         return BaseResponse.success(oAuthUseCase.login(OAuthCommand.of(request.platform(), rawToken)));
