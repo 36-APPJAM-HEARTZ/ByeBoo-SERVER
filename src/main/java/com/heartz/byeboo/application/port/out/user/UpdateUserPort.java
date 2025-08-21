@@ -6,4 +6,5 @@ public interface UpdateUserPort {
     void updateCurrentNumber(User user);
 
     void updateName(User user);
+    void updateUser(User user);
 }

@@ -1,4 +1,4 @@
-package com.heartz.byeboo.application.service;
+package com.heartz.byeboo.application.service.user;
 
 import com.heartz.byeboo.application.command.user.*;
 import com.heartz.byeboo.application.command.userquest.CompletedCountCommand;
@@ -26,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.heartz.byeboo.domain.type.EUserStatus.ACTIVE;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserUseCase {
@@ -40,15 +42,22 @@ public class UserService implements UserUseCase {
 
     @Override
     @Transactional
-    public UserCreateResponseDto createUser(UserCreateCommand userCreateCommand) {
-        User currentUser = UserMapper.commandToDomain(userCreateCommand);
+    public UserCreateResponseDto updateUser(UserCreateCommand userCreateCommand) {
+        User currentUser = retrieveUserPort.getUserById(userCreateCommand.getUserId());
+       //User currentUser = UserMapper.commandToDomain(userCreateCommand);
         currentUser.initializeCurrentNumber();
-        User savedUser = createUserPort.createUser(currentUser);
+        currentUser.updateName(userCreateCommand.getName());
+        currentUser.updateQuestStyle(userCreateCommand.getQuestStyle());
+        currentUser.updateStatus(ACTIVE);
+        currentUser.updateDeletedAt(null);
 
-        List<UserJourney> userJourneyList = UserJourney.initializeUserJourney(savedUser);
+        //User savedUser = createUserPort.createUser(currentUser);
+        updateUserPort.updateUser(currentUser);
+
+        List<UserJourney> userJourneyList = UserJourney.initializeUserJourney(currentUser);
         createUserJourneyPort.createUserJourney(userJourneyList);
 
-        return UserCreateResponseDto.of(savedUser.getId(), savedUser.getName());
+        return UserCreateResponseDto.of(currentUser.getId(), currentUser.getName());
     }
 
     @Override

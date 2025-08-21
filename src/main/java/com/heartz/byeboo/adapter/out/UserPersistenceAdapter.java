@@ -8,9 +8,14 @@ import com.heartz.byeboo.application.port.out.user.UpdateUserPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserErrorCode;
 import com.heartz.byeboo.domain.model.User;
+import com.heartz.byeboo.domain.type.EPlatform;
+import com.heartz.byeboo.domain.type.EQuestStyle;
 import com.heartz.byeboo.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
@@ -35,6 +40,12 @@ public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort,
         return UserMapper.toDomain(userEntity);
     }
 
+    @Override
+    public Optional<User> findUserByPlatFormAndSeralId(EPlatform platform, String serialId) {
+        return Optional.ofNullable(userRepository.findByPlatformAndSerialId(platform, serialId))
+                .map(UserMapper::toDomain);
+    }
+
 
     @Override
     public void updateCurrentNumber(User user) {
@@ -49,4 +60,12 @@ public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort,
 
         userRepository.save(userEntity);
     }
+
+    @Override
+    public void updateUser(User user) {
+        UserEntity userEntity = UserMapper.toEntityForUpdate(user);
+        userRepository.save(userEntity);
+    }
+
+
 }

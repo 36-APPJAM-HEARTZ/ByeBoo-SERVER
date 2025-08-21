@@ -16,15 +16,18 @@ public class UserCreateCommand {
     private String name;
     private EFeeling feeling;
     private EQuestStyle questStyle;
+    private Long userId;
 
-    public static UserCreateCommand from(UserCreateRequestDto userCreateRequestDto) {
+    public static UserCreateCommand of(UserCreateRequestDto userCreateRequestDto, Long userId) {
         try {
+            System.out.println("command]"+userId);
             validateUserName(userCreateRequestDto.name());
 
             return UserCreateCommand.builder()
                     .name(userCreateRequestDto.name())
                     .questStyle(EQuestStyle.valueOf(userCreateRequestDto.questStyle()))
                     .feeling(EFeeling.valueOf(userCreateRequestDto.feeling()))
+                    .userId(userId)
                     .build();
         } catch (IllegalArgumentException e) {
             throw new CustomException(UserErrorCode.INVALID_QUEST_STYLE);
