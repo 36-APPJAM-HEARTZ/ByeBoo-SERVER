@@ -86,7 +86,7 @@ public class OAuthController {
     @DeleteMapping("/auth/withdraw")
     public BaseResponse<Void> withdraw(@UserId final Long userId,
                                          @Nullable
-                                         @Schema(description = "널 가능(애플 로그인 탈퇴시에만 요청)")
+                                         @Schema(description = "널 가능(애플 회원 탈퇴시에만 요청)")
                                          @RequestHeader("X-Apple-Code") final String code) {
         return BaseResponse.success(oAuthUseCase.withdraw(OAuthWithdrawCommand.of(userId, code)));
     }
