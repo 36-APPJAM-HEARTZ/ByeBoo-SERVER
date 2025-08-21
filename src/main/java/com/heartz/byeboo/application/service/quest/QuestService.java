@@ -1,4 +1,4 @@
-package com.heartz.byeboo.application.service;
+package com.heartz.byeboo.application.service.quest;
 
 import com.heartz.byeboo.application.command.quest.AllQuestCompletedCommand;
 import com.heartz.byeboo.application.command.quest.AllQuestProgressCommand;
@@ -15,6 +15,7 @@ import com.heartz.byeboo.application.port.out.userquest.RetrieveUserQuestPort;
 import com.heartz.byeboo.constants.QuestConstants;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserJourneyErrorCode;
+import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
@@ -69,6 +70,8 @@ public class QuestService implements QuestUseCase {
             return getOpenQuests(userJourney, currentUser, stepResponses);
 
         UserQuest recentUserQuest = getRecentUserQuestByUser(currentUser);
+        if(recentUserQuest == null)
+            throw new CustomException(UserQuestErrorCode.RECENT_USER_QUEST_NOT_MATCHED);
         LocalDateTime questOpenTime = recentUserQuest.getCreatedDate().plusDays(1);
 
         if(questOpenTime.isBefore(LocalDateTime.now()))

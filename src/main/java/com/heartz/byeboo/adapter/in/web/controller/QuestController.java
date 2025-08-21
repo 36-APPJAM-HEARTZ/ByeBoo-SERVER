@@ -9,8 +9,10 @@ import com.heartz.byeboo.application.command.quest.AllQuestProgressCommand;
 import com.heartz.byeboo.application.command.quest.QuestDetailCommand;
 import com.heartz.byeboo.application.command.quest.QuestTipCommand;
 import com.heartz.byeboo.application.port.in.usecase.QuestUseCase;
+import com.heartz.byeboo.core.annotation.UserId;
 import com.heartz.byeboo.core.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +46,7 @@ public class QuestController {
     )
     @GetMapping("/{questId}/tip")
     public BaseResponse<TipListResponseDto> getQuestTip(
-            @RequestHeader final Long userId,
+            @UserId final Long userId,
             @PathVariable final Long questId
     ){
         QuestTipCommand command = QuestTipCommand.of(userId, questId);
@@ -72,6 +74,10 @@ public class QuestController {
                             description = "존재하지 않는 여정일때"
                     ),
                     @ApiResponse(
+                            responseCode = "409",
+                            description = "진행되었어야 하는 퀘스트가 없을때"
+                    ),
+                    @ApiResponse(
                             responseCode = "500",
                             description = "서버 에러"
                     )
@@ -79,7 +85,7 @@ public class QuestController {
     )
     @GetMapping("/all/progress")
     public BaseResponse<AllQuestProgressResponseDto> getAllQuest(
-            @RequestHeader final Long userId
+            @UserId final Long userId
     ){
         AllQuestProgressCommand allQuestProgressCommand = AllQuestProgressCommand.of(userId);
         return BaseResponse.success(questUseCase.getProgressAllQuest(allQuestProgressCommand));
@@ -117,7 +123,7 @@ public class QuestController {
     )
     @GetMapping("/all/completed")
     public BaseResponse<AllQuestCompletedResponseDto> getAllQuest(
-            @RequestHeader final Long userId,
+            @UserId final Long userId,
             @RequestParam final String journey
     ){
         AllQuestCompletedCommand allQuestCompletedCommand = AllQuestCompletedCommand.of(userId, journey);
@@ -144,8 +150,8 @@ public class QuestController {
     )
     @GetMapping("/{questId}")
     public BaseResponse<QuestDetailResponseDto> getQuestDetail(
-            @RequestHeader final Long userId,
-            @PathVariable final Long questId
+            @UserId final Long userId
+            ,@PathVariable final Long questId
     ){
         QuestDetailCommand questDetailCommand = QuestDetailCommand.of(userId, questId);
         return BaseResponse.success(questUseCase.getQuestDetail(questDetailCommand));

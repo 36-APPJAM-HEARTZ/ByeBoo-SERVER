@@ -6,8 +6,10 @@ import com.heartz.byeboo.application.command.user.*;
 import com.heartz.byeboo.application.command.userquest.CompletedCountCommand;
 import com.heartz.byeboo.application.port.in.usecase.UserUseCase;
 import com.heartz.byeboo.application.port.in.dto.response.user.*;
+import com.heartz.byeboo.core.annotation.UserId;
 import com.heartz.byeboo.core.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +21,8 @@ public class UserController {
     private final UserUseCase userUseCase;
 
     @Operation(
-            summary = "유저 생성",
-            description = "유저를 생성하기 위한 API입니다.",
+            summary = "온보딩",
+            description = "온보딩에서 입력한 정보로 유저를 생성하기 위한 API입니다.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -44,12 +46,13 @@ public class UserController {
                     )
             }
     )
-    @PostMapping("/users")
-    public BaseResponse<UserCreateResponseDto> createUser(
+    @PatchMapping("/users")
+    public BaseResponse<UserCreateResponseDto> updateUser(
+            @UserId final Long userId,
             @RequestBody UserCreateRequestDto userCreateRequestDto
     ) {
-        UserCreateCommand userCreateCommand = UserCreateCommand.from(userCreateRequestDto);
-        return BaseResponse.success(userUseCase.createUser(userCreateCommand));
+        UserCreateCommand userCreateCommand = UserCreateCommand.of(userCreateRequestDto, userId);
+        return BaseResponse.success(userUseCase.updateUser(userCreateCommand));
     }
 
     @Operation(
@@ -71,7 +74,8 @@ public class UserController {
             }
     )
     @GetMapping("/users")
-    public BaseResponse<UserNameResponseDto> getUserName(@RequestHeader Long userId) {
+    public BaseResponse<UserNameResponseDto> getUserName(
+            @UserId final Long userId) {
         UserNameCommand userNameCommand = UserNameCommand.of(userId);
         return BaseResponse.success(userUseCase.getUserName(userNameCommand));
     }
@@ -102,9 +106,9 @@ public class UserController {
                     )
             }
     )
-    @PatchMapping("/users")
+    @PatchMapping("/users/name")
     public BaseResponse<UserNameResponseDto> updateUserName(
-            @RequestHeader Long userId,
+            @UserId final Long userId,
             @RequestBody UserNameUpdateRequestDto userNameUpdateRequestDto
     ) {
         UserNameUpdateCommand userNameUpdateCommand = UserNameUpdateCommand.of(userId, userNameUpdateRequestDto);
@@ -134,7 +138,9 @@ public class UserController {
             }
     )
     @GetMapping("/users/journey")
-    public BaseResponse<UserJourneyResponseDto> getUserJourney(@RequestHeader Long userId) {
+    public BaseResponse<UserJourneyResponseDto> getUserJourney(
+            @UserId final Long userId
+    ) {
         UserJourneyCommand userJourneyCommand = UserJourneyCommand.of(userId);
         return BaseResponse.success(userUseCase.getUserJourney(userJourneyCommand));
     }
@@ -162,7 +168,9 @@ public class UserController {
             }
     )
     @GetMapping("/users/count")
-    public BaseResponse<HomeCountResponseDto> getCompletedCount(@RequestHeader Long userId) {
+    public BaseResponse<HomeCountResponseDto> getCompletedCount(
+            @UserId final Long userId
+            ) {
         CompletedCountCommand completedCountCommand = CompletedCountCommand.of(userId);
         return BaseResponse.success(userUseCase.getCompletedCount(completedCountCommand));
     }
@@ -190,7 +198,9 @@ public class UserController {
             }
     )
     @PatchMapping("/users/journey/start")
-    public BaseResponse<Void> updateInitialUserJourney(@RequestHeader Long userId) {
+    public BaseResponse<Void> updateInitialUserJourney(
+            @UserId final Long userId
+    ) {
         UserJourneyUpdateCommand userJourneyUpdateCommand = UserJourneyUpdateCommand.of(userId);
         return BaseResponse.success(userUseCase.updateInitialUserJourney(userJourneyUpdateCommand));
     }
@@ -218,7 +228,9 @@ public class UserController {
             }
     )
     @GetMapping("/users/character")
-    public BaseResponse<UserCharacterResponseDto> getCharacterDialogue(@RequestHeader Long userId) {
+    public BaseResponse<UserCharacterResponseDto> getCharacterDialogue(
+            @UserId final Long userId
+    ) {
         UserCharacterDialogueCommand userCharacterDialogueCommand = UserCharacterDialogueCommand.of(userId);
         return BaseResponse.success(userUseCase.getCharacterDialogue(userCharacterDialogueCommand));
     }

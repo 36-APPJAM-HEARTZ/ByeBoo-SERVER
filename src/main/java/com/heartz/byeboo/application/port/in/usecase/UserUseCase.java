@@ -5,7 +5,7 @@ import com.heartz.byeboo.application.command.userquest.CompletedCountCommand;
 import com.heartz.byeboo.application.port.in.dto.response.user.*;
 
 public interface UserUseCase {
-    UserCreateResponseDto createUser(UserCreateCommand userCreateCommand);
+    UserCreateResponseDto updateUser(UserCreateCommand userCreateCommand);
     UserNameResponseDto getUserName(UserNameCommand userNameCommand);
     UserNameResponseDto updateUserName(UserNameUpdateCommand userNameUpdateCommand);
     UserJourneyResponseDto getUserJourney(UserJourneyCommand userJourneyCommand);

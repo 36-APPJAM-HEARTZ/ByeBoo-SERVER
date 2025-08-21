@@ -1,4 +1,4 @@
-package com.heartz.byeboo.infrastructure.dto;
+package com.heartz.byeboo.infrastructure.dto.discord;
 
 import java.time.LocalDateTime;
 
