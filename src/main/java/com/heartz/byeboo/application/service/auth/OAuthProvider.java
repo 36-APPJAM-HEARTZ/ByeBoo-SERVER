@@ -1,4 +1,4 @@
-package com.heartz.byeboo.security.service;
+package com.heartz.byeboo.application.service.auth;
 
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;
 

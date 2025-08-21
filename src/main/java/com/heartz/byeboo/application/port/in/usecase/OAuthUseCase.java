@@ -1,4 +1,4 @@
-package com.heartz.byeboo.security.usecase;
+package com.heartz.byeboo.application.port.in.usecase;
 
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserLoginResponse;
 import com.heartz.byeboo.application.command.auth.OAuthLoginCommand;

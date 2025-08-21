@@ -8,7 +8,7 @@ import com.heartz.byeboo.core.common.BaseResponse;
 import com.heartz.byeboo.application.command.auth.OAuthLoginCommand;
 import com.heartz.byeboo.application.command.auth.OAuthLogoutCommand;
 import com.heartz.byeboo.application.command.auth.OAuthWithdrawCommand;
-import com.heartz.byeboo.security.usecase.OAuthUseCase;
+import com.heartz.byeboo.application.port.in.usecase.OAuthUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;

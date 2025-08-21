@@ -3,7 +3,7 @@ package com.heartz.byeboo.infrastructure.api.kakao;
 import com.heartz.byeboo.constants.AuthConstants;
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;
 import com.heartz.byeboo.infrastructure.dto.kakao.KakaoUserInfo;
-import com.heartz.byeboo.security.service.OAuthProvider;
+import com.heartz.byeboo.application.service.auth.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

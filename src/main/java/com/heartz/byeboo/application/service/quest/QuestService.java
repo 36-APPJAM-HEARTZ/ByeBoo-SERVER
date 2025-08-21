@@ -1,4 +1,4 @@
-package com.heartz.byeboo.application.service;
+package com.heartz.byeboo.application.service.quest;
 
 import com.heartz.byeboo.application.command.quest.AllQuestCompletedCommand;
 import com.heartz.byeboo.application.command.quest.AllQuestProgressCommand;

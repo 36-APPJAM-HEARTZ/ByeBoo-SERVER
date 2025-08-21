@@ -1,4 +1,4 @@
-package com.heartz.byeboo.application.service;
+package com.heartz.byeboo.application.service.userquest;
 
 import com.heartz.byeboo.application.port.in.dto.response.SignedUrlResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;

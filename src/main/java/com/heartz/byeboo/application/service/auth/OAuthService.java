@@ -1,4 +1,4 @@
-package com.heartz.byeboo.security.service;
+package com.heartz.byeboo.application.service.auth;
 
 import com.heartz.byeboo.adapter.out.OAuthUserInfoAdapter;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserInfoResponse;
@@ -15,7 +15,7 @@ import com.heartz.byeboo.application.command.auth.OAuthLogoutCommand;
 import com.heartz.byeboo.application.command.auth.OAuthWithdrawCommand;
 import com.heartz.byeboo.security.jwt.JwtProvider;
 import com.heartz.byeboo.security.jwt.Token;
-import com.heartz.byeboo.security.usecase.OAuthUseCase;
+import com.heartz.byeboo.application.port.in.usecase.OAuthUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

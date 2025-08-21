@@ -6,7 +6,7 @@ import com.heartz.byeboo.domain.exception.AuthErrorCode;
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;
 import com.heartz.byeboo.infrastructure.dto.apple.ApplePublicKeys;
 import com.heartz.byeboo.infrastructure.dto.apple.AppleTokenResponse;
-import com.heartz.byeboo.security.service.OAuthProvider;
+import com.heartz.byeboo.application.service.auth.OAuthProvider;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

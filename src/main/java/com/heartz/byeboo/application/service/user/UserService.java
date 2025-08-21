@@ -1,4 +1,4 @@
-package com.heartz.byeboo.application.service;
+package com.heartz.byeboo.application.service.user;
 
 import com.heartz.byeboo.application.command.user.*;
 import com.heartz.byeboo.application.command.userquest.CompletedCountCommand;
@@ -17,7 +17,6 @@ import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
 import com.heartz.byeboo.domain.type.ECharacterDialogue;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
-import com.heartz.byeboo.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

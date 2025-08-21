@@ -4,8 +4,8 @@ import com.heartz.byeboo.application.port.out.userinfo.RetrieveUserInfoPort;
 import com.heartz.byeboo.application.port.out.userinfo.UnlinkUserInfoPort;
 import com.heartz.byeboo.domain.type.EPlatform;
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;
-import com.heartz.byeboo.security.service.OAuthProvider;
-import com.heartz.byeboo.security.service.OAuthProviderFactory;
+import com.heartz.byeboo.application.service.auth.OAuthProvider;
+import com.heartz.byeboo.application.service.auth.OAuthProviderFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
