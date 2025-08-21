@@ -55,6 +55,8 @@ dependencies {
 	//discord
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	// spring security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'

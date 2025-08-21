@@ -9,14 +9,16 @@ public record AllQuestProgressResponseDto(
         Long progressPeriod,
         Long currentStep,
         LocalDateTime questOpenTime,
+        LocalDateTime currentTime,
         List<StepResponseDto> steps
 ) {
     public static AllQuestProgressResponseDto of(
             Long progressPeriod,
             Long currentStep,
             LocalDateTime questOpenTime,
+            LocalDateTime currentTime,
             List<StepResponseDto> steps
     ) {
-        return new AllQuestProgressResponseDto(progressPeriod, currentStep, questOpenTime, steps);
+        return new AllQuestProgressResponseDto(progressPeriod, currentStep, questOpenTime, currentTime, steps);
     }
 }
