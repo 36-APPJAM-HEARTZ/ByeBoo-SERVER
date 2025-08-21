@@ -18,7 +18,7 @@ public class JwtValidator {
 
     public void validateAccessToken(final String accessToken) {
         try {
-            String role = parseToken(accessToken).get(AuthConstants.CLAIM_USER_ROLE, String.class);
+            String role = parseToken(accessToken).get(AuthConstants.OAuth2.CLAIM_USER_ROLE, String.class);
             if (role == null) {
                 throw new CustomException(AuthErrorCode.INVALID_ACCESS_TOKEN_VALUE);
             }
@@ -47,8 +47,8 @@ public class JwtValidator {
     }
 
     private String getToken(final String refreshToken) {
-        if (refreshToken.startsWith(AuthConstants.PREFIX_BEARER)) {
-            return refreshToken.substring(AuthConstants.PREFIX_BEARER.length());
+        if (refreshToken.startsWith(AuthConstants.OAuth2.PREFIX_BEARER)) {
+            return refreshToken.substring(AuthConstants.OAuth2.PREFIX_BEARER.length());
         }
         throw new CustomException(AuthErrorCode.MISSING_BEARER_PREFIX);
     }

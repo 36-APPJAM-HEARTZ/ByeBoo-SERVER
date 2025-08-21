@@ -32,7 +32,7 @@ public class JwtGenerator {
 
         Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
         if (isAccessToken) {
-            claims.put(AuthConstants.CLAIM_USER_ROLE, role);
+            claims.put(AuthConstants.OAuth2.CLAIM_USER_ROLE, role);
         }
 
         return Jwts.builder()

@@ -1,4 +1,4 @@
-package com.heartz.byeboo.infrastructure.api;
+package com.heartz.byeboo.infrastructure.api.kakao;
 
 import com.heartz.byeboo.constants.AuthConstants;
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;
@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import static com.heartz.byeboo.infrastructure.api.KakaoAccessToken.createKakaoAccessToken;
+import static com.heartz.byeboo.infrastructure.api.kakao.KakaoAccessToken.createKakaoAccessToken;
 
 @Component
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public class KakaoOAuthProvider implements OAuthProvider
 
     @Override
     public void requestRevoke(String code, String serialId) {
-        kakaoFeignClient.unlinkKakaoServer(AuthConstants.GRANT_TYPE + adminKey, AuthConstants.TARGET_ID_TYPE, Long.parseLong(serialId));
+        kakaoFeignClient.unlinkKakaoServer(AuthConstants.Kakao.AUTHORIZATION_PREFIX + adminKey, AuthConstants.Kakao.TARGET_ID_TYPE, Long.parseLong(serialId));
     }
 
 }

@@ -25,6 +25,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.heartz.byeboo.constants.AuthConstants.OAuth2.HEADER_AUTHORIZATION;
 import static com.heartz.byeboo.security.jwt.UserAuthentication.createUserAuthentication;
 
 @RequiredArgsConstructor
@@ -43,9 +44,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getAccessToken(HttpServletRequest request) {
-        String accessToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(accessToken) && accessToken.startsWith(AuthConstants.PREFIX_BEARER)) {
-            return accessToken.substring(AuthConstants.PREFIX_BEARER.length());
+        String accessToken = request.getHeader(HEADER_AUTHORIZATION);
+        if (StringUtils.hasText(accessToken) && accessToken.startsWith(AuthConstants.OAuth2.PREFIX_BEARER)) {
+            return accessToken.substring(AuthConstants.OAuth2.PREFIX_BEARER.length());
         }
         throw new CustomException(AuthErrorCode.INVALID_ACCESS_TOKEN);
     }

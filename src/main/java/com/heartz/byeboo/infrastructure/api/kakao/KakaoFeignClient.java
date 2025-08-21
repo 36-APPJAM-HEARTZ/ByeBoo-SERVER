@@ -1,4 +1,4 @@
-package com.heartz.byeboo.infrastructure.api;
+package com.heartz.byeboo.infrastructure.api.kakao;
 
 import com.heartz.byeboo.infrastructure.dto.kakao.KakaoUserInfo;
 import org.springframework.cloud.openfeign.FeignClient;

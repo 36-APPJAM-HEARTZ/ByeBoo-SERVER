@@ -1,4 +1,4 @@
-package com.heartz.byeboo.infrastructure.api;
+package com.heartz.byeboo.infrastructure.api.kakao;
 
 import com.heartz.byeboo.constants.AuthConstants;
 import lombok.AccessLevel;
@@ -16,6 +16,6 @@ public class KakaoAccessToken {
     }
 
     protected String getAccessTokenWithTokenType() {
-        return AuthConstants.PREFIX_BEARER + accessToken;
+        return AuthConstants.OAuth2.PREFIX_BEARER + accessToken;
     }
 }
