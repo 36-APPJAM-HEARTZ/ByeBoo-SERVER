@@ -1,7 +1,7 @@
 package com.heartz.byeboo.core.exception;
 
 import com.heartz.byeboo.core.common.BaseResponse;
-import com.heartz.byeboo.infrastructure.api.DiscordFeignClient;
+import com.heartz.byeboo.infrastructure.api.discord.DiscordFeignClient;
 import com.heartz.byeboo.infrastructure.dto.discord.DiscordMessageDto;
 import com.heartz.byeboo.infrastructure.dto.discord.EmbedDto;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,9 +1,9 @@
 package com.heartz.byeboo.security.usecase;
 
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserLoginResponse;
-import com.heartz.byeboo.security.command.OAuthLoginCommand;
-import com.heartz.byeboo.security.command.OAuthLogoutCommand;
-import com.heartz.byeboo.security.command.OAuthWithdrawCommand;
+import com.heartz.byeboo.application.command.auth.OAuthLoginCommand;
+import com.heartz.byeboo.application.command.auth.OAuthLogoutCommand;
+import com.heartz.byeboo.application.command.auth.OAuthWithdrawCommand;
 
 public interface OAuthUseCase {
     UserLoginResponse login(OAuthLoginCommand command);

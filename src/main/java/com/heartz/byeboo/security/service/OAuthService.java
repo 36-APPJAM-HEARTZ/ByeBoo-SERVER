@@ -8,12 +8,11 @@ import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.user.UpdateUserPort;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.type.ERole;
-import com.heartz.byeboo.domain.type.EUserStatus;
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;
 import com.heartz.byeboo.mapper.UserMapper;
-import com.heartz.byeboo.security.command.OAuthLoginCommand;
-import com.heartz.byeboo.security.command.OAuthLogoutCommand;
-import com.heartz.byeboo.security.command.OAuthWithdrawCommand;
+import com.heartz.byeboo.application.command.auth.OAuthLoginCommand;
+import com.heartz.byeboo.application.command.auth.OAuthLogoutCommand;
+import com.heartz.byeboo.application.command.auth.OAuthWithdrawCommand;
 import com.heartz.byeboo.security.jwt.JwtProvider;
 import com.heartz.byeboo.security.jwt.Token;
 import com.heartz.byeboo.security.usecase.OAuthUseCase;
@@ -77,22 +76,6 @@ public class OAuthService implements OAuthUseCase {
         return findUser.orElseGet(() -> createNewUser(userInfo));
     }
 
-//    private User loadOrCreateUser(final Optional<User> findUser, final UserInfoResponse userInfo) {
-//        return findUser.map(user -> updateOrGetUserInfo(user, user.getStatus(), userInfo))
-//                .orElseGet(() -> createNewUser(userInfo));
-//    }
-//
-//    private User updateOrGetUserInfo(final User user, final EUserStatus status, final UserInfoResponse userInfo) {
-//        if (status == ACTIVE) {
-//            return user;
-//        }
-//        return updateUserInfo(user, userInfo);
-//    }
-//
-//    private User updateUserInfo(final User user) {
-//        user.rejoin();
-//        return user;
-//    }
 
     private User createNewUser(final UserInfoResponse userInfo) {
         User newUser = UserMapper.userInfoToDomain(userInfo.serialId(), userInfo.platform(), ERole.USER);

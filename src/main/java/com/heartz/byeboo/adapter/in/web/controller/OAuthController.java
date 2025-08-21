@@ -5,9 +5,9 @@ import com.heartz.byeboo.application.port.in.dto.response.auth.UserLoginResponse
 import com.heartz.byeboo.constants.AuthConstants;
 import com.heartz.byeboo.core.annotation.UserId;
 import com.heartz.byeboo.core.common.BaseResponse;
-import com.heartz.byeboo.security.command.OAuthLoginCommand;
-import com.heartz.byeboo.security.command.OAuthLogoutCommand;
-import com.heartz.byeboo.security.command.OAuthWithdrawCommand;
+import com.heartz.byeboo.application.command.auth.OAuthLoginCommand;
+import com.heartz.byeboo.application.command.auth.OAuthLogoutCommand;
+import com.heartz.byeboo.application.command.auth.OAuthWithdrawCommand;
 import com.heartz.byeboo.security.usecase.OAuthUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
