@@ -53,7 +53,7 @@ public class OAuthController {
     public BaseResponse<UserLoginResponse> login(
             @Parameter(hidden = true) @RequestHeader(HttpHeaders.AUTHORIZATION) final String token,
             @RequestBody final UserLoginRequestDto request){
-        String rawToken = token.substring(AuthConstants.PREFIX_BEARER.length()).trim();
+        String rawToken = token.substring(AuthConstants.OAuth2.PREFIX_BEARER.length()).trim();
         return BaseResponse.success(oAuthUseCase.login(OAuthLoginCommand.of(request.platform(), rawToken)));
     }
 
