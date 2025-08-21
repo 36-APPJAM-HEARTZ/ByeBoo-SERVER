@@ -57,6 +57,24 @@ public class OAuthController {
         return BaseResponse.success(oAuthUseCase.login(OAuthLoginCommand.of(request.platform(), rawToken)));
     }
 
+    @Operation(
+            summary = "로그아웃 (구현 전)",
+            description = "로그아웃을 위한 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "로그아웃 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "토큰 형식이 잘못된 경우"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
     @DeleteMapping("/auth/logout")
     public BaseResponse<Void> signOut(
             @UserId final Long userId
