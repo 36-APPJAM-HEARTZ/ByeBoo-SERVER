@@ -1,4 +1,4 @@
-package com.heartz.byeboo.security.command;
+package com.heartz.byeboo.application.command.auth;
 
 public record OAuthWithdrawCommand(
         Long userId,

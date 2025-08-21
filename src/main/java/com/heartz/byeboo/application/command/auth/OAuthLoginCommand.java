@@ -1,4 +1,4 @@
-package com.heartz.byeboo.security.command;
+package com.heartz.byeboo.application.command.auth;
 
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.AuthErrorCode;

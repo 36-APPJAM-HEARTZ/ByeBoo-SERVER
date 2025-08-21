@@ -1,4 +1,4 @@
-package com.heartz.byeboo.infrastructure.api;
+package com.heartz.byeboo.infrastructure.api.discord;
 
 import com.heartz.byeboo.config.FeignConfig;
 import com.heartz.byeboo.infrastructure.dto.discord.DiscordMessageDto;
