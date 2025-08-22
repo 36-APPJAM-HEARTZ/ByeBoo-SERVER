@@ -10,8 +10,8 @@ public class JwtProvider {
 
     private final JwtGenerator jwtGenerator;
 
-    public Token issueTokens(final Long userId, final String role) {
-        return Token.of(generateAccessToken(userId, role), generateRefreshToken(userId, role));
+    public TokenResponse issueTokens(final Long userId, final String role) {
+        return TokenResponse.of(generateAccessToken(userId, role), generateRefreshToken(userId, role));
     }
 
     private String generateAccessToken(final Long userId, final String role) {
