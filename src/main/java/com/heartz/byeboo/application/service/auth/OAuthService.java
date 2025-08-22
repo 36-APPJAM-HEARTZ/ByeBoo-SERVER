@@ -1,11 +1,20 @@
 package com.heartz.byeboo.application.service.auth;
 
 import com.heartz.byeboo.adapter.out.OAuthUserInfoAdapter;
+import com.heartz.byeboo.application.command.auth.ReissueCommand;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserInfoResponse;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserLoginResponse;
+import com.heartz.byeboo.application.port.in.dto.response.auth.UserReissueResponse;
+import com.heartz.byeboo.application.port.out.token.CreateTokenPort;
+import com.heartz.byeboo.application.port.out.token.DeleteTokenPort;
+import com.heartz.byeboo.application.port.out.token.RetrieveTokenPort;
+import com.heartz.byeboo.application.port.out.token.UpdateTokenPort;
 import com.heartz.byeboo.application.port.out.user.CreateUserPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.user.UpdateUserPort;
+import com.heartz.byeboo.core.exception.CustomException;
+import com.heartz.byeboo.domain.exception.AuthErrorCode;
+import com.heartz.byeboo.domain.model.Token;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.type.ERole;
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;
@@ -14,13 +23,15 @@ import com.heartz.byeboo.application.command.auth.OAuthLoginCommand;
 import com.heartz.byeboo.application.command.auth.OAuthLogoutCommand;
 import com.heartz.byeboo.application.command.auth.OAuthWithdrawCommand;
 import com.heartz.byeboo.security.jwt.JwtProvider;
-import com.heartz.byeboo.security.jwt.Token;
+import com.heartz.byeboo.security.jwt.JwtValidator;
+import com.heartz.byeboo.security.jwt.TokenResponse;
 import com.heartz.byeboo.application.port.in.usecase.OAuthUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.heartz.byeboo.domain.type.EUserStatus.ACTIVE;
@@ -34,7 +45,12 @@ public class OAuthService implements OAuthUseCase {
     private final RetrieveUserPort retrieveUserPort;
     private final CreateUserPort createUserPort;
     private final JwtProvider jwtProvider;
+    private final JwtValidator jwtValidator;
     private final UpdateUserPort updateUserPort;
+    private final CreateTokenPort createTokenPort;
+    private final DeleteTokenPort deleteTokenPort;
+    private final RetrieveTokenPort retrieveTokenPort;
+    private final UpdateTokenPort updateTokenPort;
 
 
     @Transactional
@@ -45,14 +61,16 @@ public class OAuthService implements OAuthUseCase {
         Optional<User> user = retrieveUserPort.findUserByPlatFormAndSeralId(userInfoResponse.platform(), userInfoResponse.serialId());
         boolean isRegistered = isRegistered(user);
         User findUser = loadOrCreateUser(user, userInfoResponse);
-        Token issuedToken = jwtProvider.issueTokens(findUser.getId(), getUserRole(findUser.getId()));
-        return UserLoginResponse.of(issuedToken, isRegistered);
+        TokenResponse issuedTokenResponse = jwtProvider.issueTokens(findUser.getId(), getUserRole(findUser.getId()));
+        Token token = Token.of(findUser.getId(), issuedTokenResponse.refreshToken());
+        createTokenPort.createToken(token);
+        return UserLoginResponse.of(issuedTokenResponse, isRegistered);
     }
 
     @Override
     public Void logout(OAuthLogoutCommand command) {
         User findUser = retrieveUserPort.getUserById(command.userId());
-        //TODO :  레디스에서 유저의 리프레시 토큰 삭제
+        deleteTokenPort.deleteToken(findUser.getId());
 
         return null;
     }
@@ -65,6 +83,23 @@ public class OAuthService implements OAuthUseCase {
         findUser.softDelete();
         updateUserPort.updateUser(findUser);
         return null;
+    }
+
+    @Override
+    @Transactional
+    public UserReissueResponse reissue(ReissueCommand reissueCommand) {
+        Long userId = jwtValidator.validateRefreshToken(reissueCommand.refreshToken());
+        Token token = retrieveTokenPort.retrieveTokenByRefreshToken(reissueCommand.refreshToken());
+
+        if(!Objects.equals(token.getId(), userId))
+            throw new CustomException(AuthErrorCode.MISMATCH_REFRESH_TOKEN);
+
+        User findUser = retrieveUserPort.getUserById(token.getId());
+        TokenResponse issuedTokenResponse = jwtProvider.issueTokens(findUser.getId(), getUserRole(findUser.getId()));
+        Token newToken = Token.of(findUser.getId(), issuedTokenResponse.refreshToken());
+
+        updateTokenPort.updateToken(newToken);
+        return UserReissueResponse.from(issuedTokenResponse);
     }
 
     private boolean isRegistered(final Optional<User> user) {
