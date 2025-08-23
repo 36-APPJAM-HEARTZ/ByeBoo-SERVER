@@ -1,7 +1,9 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.adapter.in.web.dto.request.UserLoginRequestDto;
+import com.heartz.byeboo.application.command.auth.ReissueCommand;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserLoginResponse;
+import com.heartz.byeboo.application.port.in.dto.response.auth.UserReissueResponse;
 import com.heartz.byeboo.constants.AuthConstants;
 import com.heartz.byeboo.core.annotation.UserId;
 import com.heartz.byeboo.core.common.BaseResponse;
@@ -58,7 +60,7 @@ public class OAuthController {
     }
 
     @Operation(
-            summary = "로그아웃 (구현 전)",
+            summary = "로그아웃",
             description = "로그아웃을 위한 API입니다.",
             responses = {
                     @ApiResponse(
@@ -75,7 +77,7 @@ public class OAuthController {
                     )
             }
     )
-    @DeleteMapping("/auth/logout")
+    @DeleteMapping("/logout")
     public BaseResponse<Void> signOut(
             @UserId final Long userId
     ) {
@@ -101,12 +103,45 @@ public class OAuthController {
                     )
             }
     )
-    @DeleteMapping("/auth/withdraw")
+    @DeleteMapping("/withdraw")
     public BaseResponse<Void> withdraw(@UserId final Long userId,
                                          @Nullable
                                          @Schema(description = "널 가능(애플 회원 탈퇴시에만 요청)")
                                          @RequestHeader("X-Apple-Code") final String code) {
         return BaseResponse.success(oAuthUseCase.withdraw(OAuthWithdrawCommand.of(userId, code)));
+    }
+
+    @Operation(
+            summary = "토큰 재발급",
+            description = "토큰 재발급을 위한 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "토큰 재발급 성곱"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "올바르지 않은 토큰"
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "토큰 형식이 잘못된 경우"
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "리프레시 토큰이 일치하지 않는 경우"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @PostMapping("/reissue")
+    public BaseResponse<UserReissueResponse> reissue(
+            @Parameter(hidden = true) @RequestHeader(HttpHeaders.AUTHORIZATION) final String refreshToken
+    ) {
+        return BaseResponse.success(oAuthUseCase.reissue(ReissueCommand.of(refreshToken)));
     }
 
 }
