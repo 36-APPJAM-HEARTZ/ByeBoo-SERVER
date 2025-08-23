@@ -17,6 +17,9 @@ public enum ECharacterDialogue {
         if (this == BEFORE_START) {
             return String.format(dialogue, userName);
         }
+        if (this == START) {
+            return String.format(dialogue, userName);
+        }
         return dialogue;
     }
 }

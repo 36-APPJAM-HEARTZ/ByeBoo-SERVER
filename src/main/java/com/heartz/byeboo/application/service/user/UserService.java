@@ -112,7 +112,7 @@ public class UserService implements UserUseCase {
         if(isInitialStart(currentUser))
             return HomeCountResponseDto.of(
                     false,
-                    EUserCurrentStatus.INITIAL_START_STATUS,
+                    EUserCurrentStatus.TODAY_NOT_COMPLETED_STATUS,
                     0L
             );
 
