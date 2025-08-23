@@ -5,8 +5,6 @@ import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.AuthErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -29,9 +27,10 @@ public class JwtValidator {
         }
     }
 
-    public void validateRefreshToken(final String refreshToken) {
+    public Long validateRefreshToken(final String refreshToken) {
         try {
-            parseToken(getToken(refreshToken));
+            Claims claims = parseToken(getToken(refreshToken));
+            return Long.valueOf(claims.getSubject());
         } catch (ExpiredJwtException e) {
             throw new CustomException(AuthErrorCode.EXPIRED_REFRESH_TOKEN);
         } catch (Exception e) {
