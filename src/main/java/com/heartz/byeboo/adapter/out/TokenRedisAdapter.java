@@ -35,9 +35,9 @@ public class TokenRedisAdapter implements CreateTokenPort, UpdateTokenPort, Dele
     }
 
     @Override
-    public Token retrieveTokenByRefreshToken(String refreshToken){
-        TokenRedisEntity tokenRedisEntity = tokenRedisRepository.findTokenRedisEntityByRefreshToken(refreshToken)
-                .orElseThrow(() -> new CustomException(AuthErrorCode.INVALID_REFRESH_TOKEN_VALUE));
+    public Token retrieveTokenById(Long userId){
+        TokenRedisEntity tokenRedisEntity = tokenRedisRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(AuthErrorCode.NOT_FOUND_REFRESH_TOKEN));
         return TokenMapper.toDomain(tokenRedisEntity);
     }
 }
