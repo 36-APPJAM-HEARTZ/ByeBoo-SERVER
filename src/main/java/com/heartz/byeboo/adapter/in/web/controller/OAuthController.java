@@ -77,7 +77,7 @@ public class OAuthController {
                     )
             }
     )
-    @DeleteMapping("/auth/logout")
+    @DeleteMapping("/logout")
     public BaseResponse<Void> signOut(
             @UserId final Long userId
     ) {
@@ -103,7 +103,7 @@ public class OAuthController {
                     )
             }
     )
-    @DeleteMapping("/auth/withdraw")
+    @DeleteMapping("/withdraw")
     public BaseResponse<Void> withdraw(@UserId final Long userId,
                                          @Nullable
                                          @Schema(description = "널 가능(애플 회원 탈퇴시에만 요청)")
@@ -139,7 +139,7 @@ public class OAuthController {
     )
     @PostMapping("/reissue")
     public BaseResponse<UserReissueResponse> reissue(
-            @RequestHeader("X-Refresh-Token") String refreshToken
+            @Parameter(hidden = true) @RequestHeader(HttpHeaders.AUTHORIZATION) final String refreshToken
     ) {
         return BaseResponse.success(oAuthUseCase.reissue(ReissueCommand.of(refreshToken)));
     }
