@@ -1,10 +1,14 @@
 package com.heartz.byeboo.application.service.auth;
 
 import com.heartz.byeboo.adapter.out.OAuthUserInfoAdapter;
+import com.heartz.byeboo.application.command.auth.OAuthLoginCommand;
+import com.heartz.byeboo.application.command.auth.OAuthLogoutCommand;
+import com.heartz.byeboo.application.command.auth.OAuthWithdrawCommand;
 import com.heartz.byeboo.application.command.auth.ReissueCommand;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserInfoResponse;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserLoginResponse;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserReissueResponse;
+import com.heartz.byeboo.application.port.in.usecase.OAuthUseCase;
 import com.heartz.byeboo.application.port.out.token.CreateTokenPort;
 import com.heartz.byeboo.application.port.out.token.DeleteTokenPort;
 import com.heartz.byeboo.application.port.out.token.RetrieveTokenPort;
@@ -12,26 +16,19 @@ import com.heartz.byeboo.application.port.out.token.UpdateTokenPort;
 import com.heartz.byeboo.application.port.out.user.CreateUserPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.user.UpdateUserPort;
-import com.heartz.byeboo.core.exception.CustomException;
-import com.heartz.byeboo.domain.exception.AuthErrorCode;
 import com.heartz.byeboo.domain.model.Token;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.type.ERole;
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;
 import com.heartz.byeboo.mapper.UserMapper;
-import com.heartz.byeboo.application.command.auth.OAuthLoginCommand;
-import com.heartz.byeboo.application.command.auth.OAuthLogoutCommand;
-import com.heartz.byeboo.application.command.auth.OAuthWithdrawCommand;
 import com.heartz.byeboo.security.jwt.JwtProvider;
 import com.heartz.byeboo.security.jwt.JwtValidator;
 import com.heartz.byeboo.security.jwt.TokenResponse;
-import com.heartz.byeboo.application.port.in.usecase.OAuthUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.heartz.byeboo.domain.type.EUserStatus.ACTIVE;
@@ -89,10 +86,9 @@ public class OAuthService implements OAuthUseCase {
     @Transactional
     public UserReissueResponse reissue(ReissueCommand reissueCommand) {
         Long userId = jwtValidator.validateRefreshToken(reissueCommand.refreshToken());
-        Token token = retrieveTokenPort.retrieveTokenByRefreshToken(reissueCommand.refreshToken());
+        Token token = retrieveTokenPort.retrieveTokenById(userId);
 
-        if(!Objects.equals(token.getId(), userId))
-            throw new CustomException(AuthErrorCode.MISMATCH_REFRESH_TOKEN);
+        jwtValidator.checkTokenEquality(reissueCommand.refreshToken(), token.getRefreshToken());
 
         User findUser = retrieveUserPort.getUserById(token.getId());
         TokenResponse issuedTokenResponse = jwtProvider.issueTokens(findUser.getId(), getUserRole(findUser.getId()));
