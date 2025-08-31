@@ -1,9 +1,6 @@
 package com.heartz.byeboo.adapter.out.persistence.entity;
 
-import com.heartz.byeboo.domain.type.EPlatform;
-import com.heartz.byeboo.domain.type.EQuestStyle;
-import com.heartz.byeboo.domain.type.ERole;
-import com.heartz.byeboo.domain.type.EUserStatus;
+import com.heartz.byeboo.domain.type.*;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,6 +26,10 @@ public class UserEntity extends BaseEntity{
     @Column(name = "quest_style", length = 50)
     private EQuestStyle questStyle;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "journey", length = 50)
+    private EJourney journey;
+
     @Column(name = "current_number")
     private Long currentNumber;
 
@@ -51,10 +52,11 @@ public class UserEntity extends BaseEntity{
     private LocalDateTime deletedAt;
 
     @Builder
-    public UserEntity(Long id, String name, EQuestStyle questStyle, Long currentNumber,EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt) {
+    public UserEntity(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber,EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt) {
         this.id = id;
         this.name = name;
         this.questStyle = questStyle;
+        this.journey = journey;
         this.currentNumber = currentNumber;
         this.platform = platform;
         this.role = role;
@@ -63,10 +65,11 @@ public class UserEntity extends BaseEntity{
         this.deletedAt = deletedAt;
     }
 
-    public static UserEntity create(String name, EQuestStyle questStyle, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt) {
+    public static UserEntity create(String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt) {
         return UserEntity.builder()
                 .name(name)
                 .questStyle(questStyle)
+                .journey(journey)
                 .currentNumber(currentNumber)
                 .platform(platform)
                 .serialId(serialId)
@@ -76,11 +79,12 @@ public class UserEntity extends BaseEntity{
                 .build();
     }
 
-    public static UserEntity createForUpdate(Long id, String name, EQuestStyle questStyle, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt) {
+    public static UserEntity createForUpdate(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt) {
         return UserEntity.builder()
                 .id(id)
                 .name(name)
                 .questStyle(questStyle)
+                .journey(journey)
                 .currentNumber(currentNumber)
                 .role(role)
                 .serialId(serialId)

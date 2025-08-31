@@ -19,6 +19,7 @@ import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.user.UpdateUserPort;
 import com.heartz.byeboo.domain.model.Token;
 import com.heartz.byeboo.domain.model.User;
+import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.type.ERole;
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;
 import com.heartz.byeboo.mapper.UserMapper;
@@ -64,16 +65,22 @@ public class OAuthService implements OAuthUseCase {
         Token token = Token.of(findUser.getId(), issuedTokenResponse.refreshToken());
         createTokenPort.createToken(token);
 
-        if(isRegistered)
+        if(isRegistered){
+            UserJourney userJourney = retrieveUserJourneyPort.getUserJourneyByUserAndJourney(findUser, findUser.getJourney());
+
             return UserLoginResponse.of(
                     issuedTokenResponse,
                     isRegistered,
                     findUser.getName(),
-                    retrieveUserJourneyPort.getOngoingUserJourneyByUser(findUser).getJourney()
+                    userJourney.getJourney(),
+                    userJourney.getJourneyStatus()
             );
+        }
+
         return UserLoginResponse.of(
                 issuedTokenResponse,
                 isRegistered,
+                null,
                 null,
                 null
         );

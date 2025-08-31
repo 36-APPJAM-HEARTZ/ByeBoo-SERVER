@@ -1,16 +1,12 @@
 package com.heartz.byeboo.domain.model;
 
-import com.heartz.byeboo.domain.type.EPlatform;
-import com.heartz.byeboo.domain.type.EQuestStyle;
-import com.heartz.byeboo.domain.type.ERole;
-import com.heartz.byeboo.domain.type.EUserStatus;
+import com.heartz.byeboo.domain.type.*;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 import static com.heartz.byeboo.constants.AuthConstants.DELETED_USER_DEFAULT_INFO;
-import static com.heartz.byeboo.domain.type.EUserStatus.ACTIVE;
 import static com.heartz.byeboo.domain.type.EUserStatus.INACTIVE;
 
 @Getter
@@ -19,6 +15,7 @@ public class User {
     private Long id;
     private String name;
     private EQuestStyle questStyle;
+    private EJourney journey;
     private Long currentNumber;
     private String serialId;
     private EPlatform platform;
@@ -26,11 +23,12 @@ public class User {
     private EUserStatus status;
     private LocalDateTime deletedAt;
 
-    public static User of(Long id, String name, EQuestStyle questStyle, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt) {
+    public static User of(Long id, String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt) {
         return User.builder()
                 .id(id)
                 .name(name)
                 .questStyle(questStyle)
+                .journey(journey)
                 .currentNumber(currentNumber)
                 .role(role)
                 .serialId(serialId)
@@ -72,5 +70,9 @@ public class User {
 
     public void updateDeletedAt(final LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public void updateJourney(final EJourney journey) {
+        this.journey = journey;
     }
 }
