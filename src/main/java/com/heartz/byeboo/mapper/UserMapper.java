@@ -13,6 +13,7 @@ public class UserMapper {
         return UserEntity.create(
                 user.getName(),
                 user.getQuestStyle(),
+                user.getJourney(),
                 user.getCurrentNumber(),
                 user.getPlatform(),
                 user.getRole(),
@@ -28,6 +29,7 @@ public class UserMapper {
                 userEntity.getId(),
                 userEntity.getName(),
                 userEntity.getQuestStyle(),
+                userEntity.getJourney(),
                 userEntity.getCurrentNumber(),
                 userEntity.getPlatform(),
                 userEntity.getRole(),
@@ -49,6 +51,7 @@ public class UserMapper {
                 user.getId(),
                 user.getName(),
                 user.getQuestStyle(),
+                user.getJourney(),
                 user.getCurrentNumber(),
                 user.getPlatform(),
                 user.getRole(),
