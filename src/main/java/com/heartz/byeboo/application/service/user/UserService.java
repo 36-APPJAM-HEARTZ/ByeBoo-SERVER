@@ -187,10 +187,14 @@ public class UserService implements UserUseCase {
                     ECharacterDialogue.START.getDialogue(currentUser.getName())
             );
 
+        if (isCompleted(currentUser)) {
+            return UserCharacterResponseDto.of(
+                    ECharacterDialogue.COMPLETED.getDialogue(currentUser.getName())
+            );
+        }
+
         if(!isTodayCompleted(getRecentUserQuestByUser(currentUser))) {
             dialogue = ECharacterDialogue.START;
-        } else if (isCompleted(currentUser)) {
-            dialogue = ECharacterDialogue.COMPLETED;
         } else {
             dialogue = ECharacterDialogue.IN_PROGRESS;
         }
