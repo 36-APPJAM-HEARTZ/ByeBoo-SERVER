@@ -22,6 +22,7 @@ import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
 import com.heartz.byeboo.domain.type.EStep;
+import com.heartz.byeboo.utils.TextUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,7 +117,7 @@ public class QuestService implements QuestUseCase {
             throw new CustomException(UserJourneyErrorCode.INVALID_COMPLETED_USER_JOURNEY);
 
         return AllQuestCompletedResponseDto.of(
-                userJourney.getJourneyStart().toString() + " ~ " + userJourney.getJourneyEnd().toString(),
+                TextUtil.formatPeriod(userJourney.getJourneyStart(),userJourney.getJourneyEnd()),
                 null,
                 stepResponses
         );
