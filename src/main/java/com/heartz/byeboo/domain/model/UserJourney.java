@@ -72,6 +72,7 @@ public class UserJourney {
     }
 
     public void updateInitialUserJourney() {
+        this.journeyStart = LocalDate.now();
         this.journeyStatus = EJourneyStatus.IN_PROGRESS;
     }
 
