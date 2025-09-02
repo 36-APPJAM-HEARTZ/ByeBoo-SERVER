@@ -2,8 +2,8 @@ package com.heartz.byeboo.application.service.user;
 
 import com.heartz.byeboo.application.command.user.*;
 import com.heartz.byeboo.application.command.userquest.CompletedCountCommand;
-import com.heartz.byeboo.application.port.in.usecase.UserUseCase;
 import com.heartz.byeboo.application.port.in.dto.response.user.*;
+import com.heartz.byeboo.application.port.in.usecase.UserUseCase;
 import com.heartz.byeboo.application.port.out.quest.RetrieveQuestPort;
 import com.heartz.byeboo.application.port.out.user.*;
 import com.heartz.byeboo.application.port.out.userquest.RetrieveUserQuestPort;
@@ -16,9 +16,9 @@ import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
 import com.heartz.byeboo.domain.type.ECharacterDialogue;
+import com.heartz.byeboo.domain.type.EJourney;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
 import com.heartz.byeboo.domain.type.EUserCurrentStatus;
-import com.heartz.byeboo.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +31,7 @@ import static com.heartz.byeboo.domain.type.EUserStatus.ACTIVE;
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserUseCase {
-    private final CreateUserPort createUserPort;
+//    private final CreateUserPort createUserPort;
     private final CreateUserJourneyPort createUserJourneyPort;
     private final RetrieveUserPort retrieveUserPort;
     private final RetrieveUserJourneyPort retrieveUserJourneyPort;
@@ -45,9 +45,16 @@ public class UserService implements UserUseCase {
     public UserCreateResponseDto updateUser(UserCreateCommand userCreateCommand) {
         User currentUser = retrieveUserPort.getUserById(userCreateCommand.getUserId());
        //User currentUser = UserMapper.commandToDomain(userCreateCommand);
+
+        EJourney initialJourney = switch (userCreateCommand.getQuestStyle()) {
+            case RECORDING -> EJourney.FACE_EMOTION;
+            case ACTIVE -> EJourney.PROCESS_EMOTION;
+        };
+
         currentUser.initializeCurrentNumber();
         currentUser.updateName(userCreateCommand.getName());
         currentUser.updateQuestStyle(userCreateCommand.getQuestStyle());
+        currentUser.updateJourney(initialJourney);
         currentUser.updateStatus(ACTIVE);
         currentUser.updateDeletedAt(null);
 
@@ -180,10 +187,14 @@ public class UserService implements UserUseCase {
                     ECharacterDialogue.START.getDialogue(currentUser.getName())
             );
 
+        if (isCompleted(currentUser)) {
+            return UserCharacterResponseDto.of(
+                    ECharacterDialogue.COMPLETED.getDialogue(currentUser.getName())
+            );
+        }
+
         if(!isTodayCompleted(getRecentUserQuestByUser(currentUser))) {
             dialogue = ECharacterDialogue.START;
-        } else if (isCompleted(currentUser)) {
-            dialogue = ECharacterDialogue.COMPLETED;
         } else {
             dialogue = ECharacterDialogue.IN_PROGRESS;
         }

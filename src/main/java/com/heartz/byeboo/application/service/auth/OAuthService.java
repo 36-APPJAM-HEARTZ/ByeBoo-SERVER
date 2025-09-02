@@ -14,10 +14,12 @@ import com.heartz.byeboo.application.port.out.token.DeleteTokenPort;
 import com.heartz.byeboo.application.port.out.token.RetrieveTokenPort;
 import com.heartz.byeboo.application.port.out.token.UpdateTokenPort;
 import com.heartz.byeboo.application.port.out.user.CreateUserPort;
+import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.user.UpdateUserPort;
 import com.heartz.byeboo.domain.model.Token;
 import com.heartz.byeboo.domain.model.User;
+import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.type.ERole;
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;
 import com.heartz.byeboo.mapper.UserMapper;
@@ -48,6 +50,7 @@ public class OAuthService implements OAuthUseCase {
     private final DeleteTokenPort deleteTokenPort;
     private final RetrieveTokenPort retrieveTokenPort;
     private final UpdateTokenPort updateTokenPort;
+    private final RetrieveUserJourneyPort retrieveUserJourneyPort;
 
 
     @Transactional
@@ -61,7 +64,26 @@ public class OAuthService implements OAuthUseCase {
         TokenResponse issuedTokenResponse = jwtProvider.issueTokens(findUser.getId(), getUserRole(findUser.getId()));
         Token token = Token.of(findUser.getId(), issuedTokenResponse.refreshToken());
         createTokenPort.createToken(token);
-        return UserLoginResponse.of(issuedTokenResponse, isRegistered);
+
+        if(isRegistered){
+            UserJourney userJourney = retrieveUserJourneyPort.getUserJourneyByUserAndJourney(findUser, findUser.getJourney());
+
+            return UserLoginResponse.of(
+                    issuedTokenResponse,
+                    isRegistered,
+                    findUser.getName(),
+                    userJourney.getJourney(),
+                    userJourney.getJourneyStatus()
+            );
+        }
+
+        return UserLoginResponse.of(
+                issuedTokenResponse,
+                isRegistered,
+                null,
+                null,
+                null
+        );
     }
 
     @Override
