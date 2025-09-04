@@ -22,8 +22,9 @@ public class User {
     private ERole role;
     private EUserStatus status;
     private LocalDateTime deletedAt;
+    private String refreshToken;
 
-    public static User of(Long id, String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt) {
+    public static User of(Long id, String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken) {
         return User.builder()
                 .id(id)
                 .name(name)
@@ -35,6 +36,7 @@ public class User {
                 .platform(platform)
                 .status(status)
                 .deletedAt(deletedAt)
+                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -62,6 +64,7 @@ public class User {
         updateStatus(INACTIVE);
         updateDeletedAt(LocalDateTime.now());
         this.name = DELETED_USER_DEFAULT_INFO;
+        deleteRefreshToken();
     }
 
     public void updateStatus(final EUserStatus userStatus) {
@@ -74,5 +77,9 @@ public class User {
 
     public void updateJourney(final EJourney journey) {
         this.journey = journey;
+    }
+
+    public void deleteRefreshToken(){
+        this.refreshToken = null;
     }
 }

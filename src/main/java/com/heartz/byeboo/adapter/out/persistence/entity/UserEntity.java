@@ -51,8 +51,11 @@ public class UserEntity extends BaseEntity{
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     @Builder
-    public UserEntity(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber,EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt) {
+    public UserEntity(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber,EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken) {
         this.id = id;
         this.name = name;
         this.questStyle = questStyle;
@@ -63,9 +66,10 @@ public class UserEntity extends BaseEntity{
         this.serialId = serialId;
         this.status = status;
         this.deletedAt = deletedAt;
+        this.refreshToken = refreshToken;
     }
 
-    public static UserEntity create(String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt) {
+    public static UserEntity create(String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken) {
         return UserEntity.builder()
                 .name(name)
                 .questStyle(questStyle)
@@ -76,10 +80,11 @@ public class UserEntity extends BaseEntity{
                 .role(role)
                 .status(status)
                 .deletedAt(deletedAt)
+                .refreshToken(refreshToken)
                 .build();
     }
 
-    public static UserEntity createForUpdate(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt) {
+    public static UserEntity createForUpdate(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken) {
         return UserEntity.builder()
                 .id(id)
                 .name(name)
@@ -91,6 +96,7 @@ public class UserEntity extends BaseEntity{
                 .platform(platform)
                 .status(status)
                 .deletedAt(deletedAt)
+                .refreshToken(refreshToken)
                 .build();
     }
 }

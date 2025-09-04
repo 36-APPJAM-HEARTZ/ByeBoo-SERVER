@@ -54,9 +54,12 @@ public class OAuthController {
     @PostMapping("/login")
     public BaseResponse<UserLoginResponse> login(
             @Parameter(hidden = true) @RequestHeader(HttpHeaders.AUTHORIZATION) final String token,
+            @Nullable
+            @Schema(description = "널 가능(애플 회원 로그인시에만 요청)")
+            @RequestHeader("X-Apple-Code") final String code,
             @RequestBody final UserLoginRequestDto request){
         String rawToken = token.substring(AuthConstants.OAuth2.PREFIX_BEARER.length()).trim();
-        return BaseResponse.success(oAuthUseCase.login(OAuthLoginCommand.of(request.platform(), rawToken)));
+        return BaseResponse.success(oAuthUseCase.login(OAuthLoginCommand.of(request.platform(), rawToken, code)));
     }
 
     @Operation(
@@ -104,11 +107,8 @@ public class OAuthController {
             }
     )
     @DeleteMapping("/withdraw")
-    public BaseResponse<Void> withdraw(@UserId final Long userId,
-                                         @Nullable
-                                         @Schema(description = "널 가능(애플 회원 탈퇴시에만 요청)")
-                                         @RequestHeader("X-Apple-Code") final String code) {
-        return BaseResponse.success(oAuthUseCase.withdraw(OAuthWithdrawCommand.of(userId, code)));
+    public BaseResponse<Void> withdraw(@UserId final Long userId) {
+        return BaseResponse.success(oAuthUseCase.withdraw(OAuthWithdrawCommand.of(userId)));
     }
 
     @Operation(

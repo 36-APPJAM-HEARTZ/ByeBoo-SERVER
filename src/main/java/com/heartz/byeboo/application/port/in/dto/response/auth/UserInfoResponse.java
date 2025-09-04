@@ -4,9 +4,10 @@ import com.heartz.byeboo.domain.type.EPlatform;
 
 public record UserInfoResponse(
         EPlatform platform,
-        String serialId
+        String serialId,
+        String refreshToken
 ) {
-    public static UserInfoResponse of(EPlatform platform, String serialId){
-        return new UserInfoResponse(platform, serialId);
+    public static UserInfoResponse of(EPlatform platform, String serialId, String refreshToken){
+        return new UserInfoResponse(platform, serialId, refreshToken);
     }
 }

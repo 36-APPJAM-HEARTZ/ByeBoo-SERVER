@@ -1,5 +1,7 @@
 package com.heartz.byeboo.adapter.out;
 
+import com.heartz.byeboo.application.command.auth.ProviderUserInfoCommand;
+import com.heartz.byeboo.application.command.auth.UserInfoCommand;
 import com.heartz.byeboo.application.port.out.userinfo.RetrieveUserInfoPort;
 import com.heartz.byeboo.application.port.out.userinfo.UnlinkUserInfoPort;
 import com.heartz.byeboo.domain.type.EPlatform;
@@ -16,14 +18,14 @@ public class OAuthUserInfoAdapter implements RetrieveUserInfoPort, UnlinkUserInf
     private final OAuthProviderFactory oAuthProviderFactory;
 
     @Override
-    public SocialInfoResponse getUserInfo(String token, EPlatform platform) {
-        OAuthProvider oAuthProvider = oAuthProviderFactory.findProvider(platform);
-        return oAuthProvider.getUserInfo(token);
+    public SocialInfoResponse getUserInfo(UserInfoCommand command) {
+        OAuthProvider oAuthProvider = oAuthProviderFactory.findProvider(command.platform());
+        return oAuthProvider.getUserInfo(ProviderUserInfoCommand.of(command.token(), command.code()));
     }
 
     @Override
-    public void revoke(EPlatform platform, String code, String serialId) {
+    public void revoke(EPlatform platform, String refreshToken, String serialId) {
         OAuthProvider oAuthProvider = oAuthProviderFactory.findProvider(platform);
-        oAuthProvider.requestRevoke(code, serialId);
+        oAuthProvider.requestRevoke(refreshToken, serialId);
     }
 }
