@@ -51,7 +51,6 @@ public class AppleOAuthProvider implements OAuthProvider {
     @Override
     public void requestRevoke(String refreshToken, final String serialId) {
         try {
-            System.out.println("리프레"+refreshToken);
             String clientSecret = appleClientSecretGenerator.generateClientSecret();
             appleFeignClient.revoke(refreshToken, clientId, clientSecret, AuthConstants.OAuth2.TOKEN_TYPE_REFRESH);
         } catch (Exception e) {
