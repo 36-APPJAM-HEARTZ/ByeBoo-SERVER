@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface UserJourneyRepository extends JpaRepository<UserJourneyEntity, Long> {
     List<UserJourneyEntity> findAllByUserId(Long userId);
     Optional<UserJourneyEntity> findByUserIdAndJourney(Long userId, EJourney journey);
+    void deleteAllByUserId(Long userId);
 }
