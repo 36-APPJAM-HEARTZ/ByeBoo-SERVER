@@ -3,6 +3,7 @@ package com.heartz.byeboo.adapter.out;
 import com.heartz.byeboo.adapter.out.persistence.entity.UserQuestEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.UserQuestRepository;
 import com.heartz.byeboo.application.port.out.userquest.CreateUserQuestPort;
+import com.heartz.byeboo.application.port.out.userquest.DeleteUserQuestPort;
 import com.heartz.byeboo.application.port.out.userquest.RetrieveUserQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class UserQuestPersistenceAdapter implements CreateUserQuestPort, RetrieveUserQuestPort {
+public class UserQuestPersistenceAdapter implements CreateUserQuestPort, RetrieveUserQuestPort, DeleteUserQuestPort {
 
     private final UserQuestRepository userQuestRepository;
 
@@ -54,5 +55,10 @@ public class UserQuestPersistenceAdapter implements CreateUserQuestPort, Retriev
         }
 
         return UserQuestMapper.toDomainRecording(userQuestEntity, user, quest);
+    }
+
+    @Override
+    public void deleteAllByUserId(Long userId) {
+        userQuestRepository.deleteAllByUserId(userId);
     }
 }

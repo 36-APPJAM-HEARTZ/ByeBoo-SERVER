@@ -3,6 +3,7 @@ package com.heartz.byeboo.adapter.out;
 import com.heartz.byeboo.adapter.out.persistence.entity.UserEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.UserRepository;
 import com.heartz.byeboo.application.port.out.user.CreateUserPort;
+import com.heartz.byeboo.application.port.out.user.DeleteUserPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.user.UpdateUserPort;
 import com.heartz.byeboo.core.exception.CustomException;
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
-public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort, UpdateUserPort {
+public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort, UpdateUserPort, DeleteUserPort {
     private final UserRepository userRepository;
 
 
@@ -68,4 +69,8 @@ public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort,
     }
 
 
+    @Override
+    public void deleteUserById(Long userId) {
+        userRepository.deleteById(userId);
+    }
 }
