@@ -13,10 +13,8 @@ import com.heartz.byeboo.application.port.out.token.CreateTokenPort;
 import com.heartz.byeboo.application.port.out.token.DeleteTokenPort;
 import com.heartz.byeboo.application.port.out.token.RetrieveTokenPort;
 import com.heartz.byeboo.application.port.out.token.UpdateTokenPort;
-import com.heartz.byeboo.application.port.out.user.CreateUserPort;
-import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
-import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
-import com.heartz.byeboo.application.port.out.user.UpdateUserPort;
+import com.heartz.byeboo.application.port.out.user.*;
+import com.heartz.byeboo.application.port.out.userquest.DeleteUserQuestPort;
 import com.heartz.byeboo.domain.model.Token;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
@@ -45,12 +43,14 @@ public class OAuthService implements OAuthUseCase {
     private final CreateUserPort createUserPort;
     private final JwtProvider jwtProvider;
     private final JwtValidator jwtValidator;
-    private final UpdateUserPort updateUserPort;
     private final CreateTokenPort createTokenPort;
     private final DeleteTokenPort deleteTokenPort;
     private final RetrieveTokenPort retrieveTokenPort;
     private final UpdateTokenPort updateTokenPort;
     private final RetrieveUserJourneyPort retrieveUserJourneyPort;
+    private final DeleteUserPort deleteUserPort;
+    private final DeleteUserQuestPort deleteUserQuestPort;
+    private final DeleteUserJourneyPort deleteUserJourneyPort;
 
 
     @Transactional
@@ -99,8 +99,11 @@ public class OAuthService implements OAuthUseCase {
     public Void withdraw(OAuthWithdrawCommand command) {
         User findUser = retrieveUserPort.getUserById(command.userId());
         oAuthUserInfoAdapter.revoke(findUser.getPlatform(), command.code(), findUser.getSerialId());
-        findUser.softDelete();
-        updateUserPort.updateUser(findUser);
+        deleteUserQuestPort.deleteAllByUserId(findUser.getId());
+        deleteUserJourneyPort.deleteAllByUserId(findUser.getId());
+        deleteUserPort.deleteUserById(findUser.getId());
+        //findUser.softDelete();
+        //updateUserPort.updateUser(findUser);
         return null;
     }
 
