@@ -1,5 +1,6 @@
 package com.heartz.byeboo.infrastructure.api.apple;
 
+import com.heartz.byeboo.application.command.auth.ProviderUserInfoCommand;
 import com.heartz.byeboo.constants.AuthConstants;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.AuthErrorCode;
@@ -28,21 +29,29 @@ public class AppleOAuthProvider implements OAuthProvider {
     private String clientId;
 
     @Override
-    public SocialInfoResponse getUserInfo(final String identityToken) {
-        Map<String, String> headers = appleIdentityTokenParser.parseHeaders(identityToken);
+    public SocialInfoResponse getUserInfo(final ProviderUserInfoCommand command) {
+        Map<String, String> headers = appleIdentityTokenParser.parseHeaders(command.providerToken());
         ApplePublicKeys applePublicKeys = appleFeignClient.getApplePublicKey();
+
         PublicKey applePublicKey = applePublicKeyGenerator.generatePublicKey(headers, applePublicKeys);
-        Claims claims = appleIdentityTokenParser.parsePublicKeyAndGetClaims(identityToken, applePublicKey);
+        Claims claims = appleIdentityTokenParser.parsePublicKeyAndGetClaims(command.providerToken(), applePublicKey);
+        String refreshToken;
+        try {
+            String clientSecret = appleClientSecretGenerator.generateClientSecret();
+            refreshToken = getAppleRefreshToken(command.authorizationCode(), clientSecret);
+        } catch (Exception e) {
+            throw new CustomException(AuthErrorCode.APPLE_LOGIN_FAILED);
+        }
         return SocialInfoResponse.of(
-                claims.get("sub").toString()
+                claims.get("sub").toString(),
+                refreshToken
         );
     }
 
     @Override
-    public void requestRevoke(final String authorizationCode, final String serialId) {
+    public void requestRevoke(String refreshToken, final String serialId) {
         try {
             String clientSecret = appleClientSecretGenerator.generateClientSecret();
-            String refreshToken = getAppleRefreshToken(authorizationCode, clientSecret);
             appleFeignClient.revoke(refreshToken, clientId, clientSecret, AuthConstants.OAuth2.TOKEN_TYPE_REFRESH);
         } catch (Exception e) {
             throw new CustomException(AuthErrorCode.APPLE_REVOKE_FAILED);

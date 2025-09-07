@@ -19,7 +19,8 @@ public class UserMapper {
                 user.getRole(),
                 user.getSerialId(),
                 user.getStatus(),
-                user.getDeletedAt()
+                user.getDeletedAt(),
+                user.getRefreshToken()
 
         );
     }
@@ -35,15 +36,9 @@ public class UserMapper {
                 userEntity.getRole(),
                 userEntity.getSerialId(),
                 userEntity.getStatus(),
-                userEntity.getDeletedAt()
+                userEntity.getDeletedAt(),
+                userEntity.getRefreshToken()
         );
-    }
-
-    public static User commandToDomain(UserCreateCommand userCreateCommand) {
-        return User.builder()
-                .name(userCreateCommand.getName())
-                .questStyle(userCreateCommand.getQuestStyle())
-                .build();
     }
 
     public static UserEntity toEntityForUpdate(User user) {
@@ -57,18 +52,20 @@ public class UserMapper {
                 user.getRole(),
                 user.getSerialId(),
                 user.getStatus(),
-                user.getDeletedAt()
+                user.getDeletedAt(),
+                user.getRefreshToken()
         );
     }
 
 
 
 
-    public static User userInfoToDomain(String serialId, EPlatform platform, ERole role){
+    public static User userInfoToDomain(String serialId, EPlatform platform, ERole role, String refreshToken){
         return User.builder()
                 .serialId(serialId)
                 .platform(platform)
                 .role(role)
+                .refreshToken(refreshToken)
                 .build();
     }
 
