@@ -9,16 +9,14 @@ import com.heartz.byeboo.application.port.out.user.*;
 import com.heartz.byeboo.application.port.out.userquest.RetrieveUserQuestPort;
 import com.heartz.byeboo.constants.QuestConstants;
 import com.heartz.byeboo.core.exception.CustomException;
+import com.heartz.byeboo.domain.exception.UserErrorCode;
 import com.heartz.byeboo.domain.exception.UserJourneyErrorCode;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
-import com.heartz.byeboo.domain.type.ECharacterDialogue;
-import com.heartz.byeboo.domain.type.EJourney;
-import com.heartz.byeboo.domain.type.EJourneyStatus;
-import com.heartz.byeboo.domain.type.EUserCurrentStatus;
+import com.heartz.byeboo.domain.type.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +43,10 @@ public class UserService implements UserUseCase {
     public UserCreateResponseDto updateUser(UserCreateCommand userCreateCommand) {
         User currentUser = retrieveUserPort.getUserById(userCreateCommand.getUserId());
        //User currentUser = UserMapper.commandToDomain(userCreateCommand);
+
+        if(currentUser.getStatus() == ACTIVE){
+            throw new CustomException(UserErrorCode.ALREADY_PROCEED_ONBOARDING);
+        }
 
         EJourney initialJourney = switch (userCreateCommand.getQuestStyle()) {
             case RECORDING -> EJourney.FACE_EMOTION;
