@@ -3,6 +3,7 @@ package com.heartz.byeboo.adapter.out;
 import com.heartz.byeboo.adapter.out.persistence.entity.UserJourneyEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.UserJourneyRepository;
 import com.heartz.byeboo.application.port.out.user.CreateUserJourneyPort;
+import com.heartz.byeboo.application.port.out.user.DeleteUserJourneyPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
 import com.heartz.byeboo.application.port.out.user.UpdateUserJourneyPort;
 import com.heartz.byeboo.core.exception.CustomException;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, RetrieveUserJourneyPort, UpdateUserJourneyPort {
+public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, RetrieveUserJourneyPort, UpdateUserJourneyPort, DeleteUserJourneyPort {
     private final UserJourneyRepository userJourneyRepository;
 
     @Override
@@ -70,4 +71,8 @@ public class UserJourneyPersistenceAdapter implements CreateUserJourneyPort, Ret
         userJourneyRepository.save(userJourneyEntity);
     }
 
+    @Override
+    public void deleteAllByUserId(Long userId) {
+        userJourneyRepository.deleteAllByUserId(userId);
+    }
 }
