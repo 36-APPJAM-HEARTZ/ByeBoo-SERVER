@@ -73,11 +73,16 @@ public class UserJourney {
 
     public void updateInitialUserJourney() {
         this.journeyStart = LocalDate.now();
-        this.journeyStatus = EJourneyStatus.BEFORE_START;
+        this.journeyStatus = EJourneyStatus.IN_PROGRESS;
     }
 
     public void updateUserJourneyCompleted(){
         this.journeyStatus = EJourneyStatus.COMPLETED;
         this.journeyEnd = LocalDate.now();
+    }
+
+    public void updateNewUserJourney() {
+        this.journeyStart = LocalDate.now();
+        this.journeyStatus = EJourneyStatus.BEFORE_START;
     }
 }

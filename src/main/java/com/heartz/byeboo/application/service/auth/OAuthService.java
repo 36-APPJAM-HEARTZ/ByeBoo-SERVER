@@ -1,10 +1,7 @@
 package com.heartz.byeboo.application.service.auth;
 
 import com.heartz.byeboo.adapter.out.OAuthUserInfoAdapter;
-import com.heartz.byeboo.application.command.auth.OAuthLoginCommand;
-import com.heartz.byeboo.application.command.auth.OAuthLogoutCommand;
-import com.heartz.byeboo.application.command.auth.OAuthWithdrawCommand;
-import com.heartz.byeboo.application.command.auth.ReissueCommand;
+import com.heartz.byeboo.application.command.auth.*;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserInfoResponse;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserLoginResponse;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserReissueResponse;
@@ -99,9 +96,6 @@ public class OAuthService implements OAuthUseCase {
     public Void withdraw(OAuthWithdrawCommand command) {
         User findUser = retrieveUserPort.getUserById(command.userId());
         oAuthUserInfoAdapter.revoke(findUser.getPlatform(), findUser.getRefreshToken(), findUser.getSerialId());
-        findUser.softDelete();
-        updateUserPort.updateUser(findUser);
-        oAuthUserInfoAdapter.revoke(findUser.getPlatform(), command.code(), findUser.getSerialId());
         deleteUserQuestPort.deleteAllByUserId(findUser.getId());
         deleteUserJourneyPort.deleteAllByUserId(findUser.getId());
         deleteUserPort.deleteUserById(findUser.getId());
