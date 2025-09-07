@@ -125,10 +125,10 @@ public class UserQuestService implements UserQuestUseCase {
 
         isJourneyAlreadyStart(findUserJourney);
 
-        findUserJourney.updateNewUserJourney();
+        findUserJourney.updateInitialUserJourney();
         findUser.updateJourney(command.getJourney());
         updateUserJourneyPort.updateUserJourney(findUserJourney);
-        findUser.initializeCurrentNumber();
+        findUser.startNewJourney();
         updateUserPort.updateCurrentNumber(findUser);
     }
 
