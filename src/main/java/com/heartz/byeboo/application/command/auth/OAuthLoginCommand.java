@@ -6,18 +6,19 @@ import com.heartz.byeboo.domain.type.EPlatform;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
 @Builder
-public class OAuthLoginCommand {
+public record OAuthLoginCommand(
+        EPlatform platform,
+        String token,
+        String code
+) {
 
-    private EPlatform platform;
-    private String token;
-
-    public static OAuthLoginCommand of(String platform, String token){
+    public static OAuthLoginCommand of(String platform, String token, String code){
         try {
             return OAuthLoginCommand.builder()
                     .platform(EPlatform.valueOf(platform))
                     .token(token)
+                    .code(code)
                     .build();
         } catch (IllegalArgumentException e){
             throw new CustomException(AuthErrorCode.INVALID_PLATFORM);

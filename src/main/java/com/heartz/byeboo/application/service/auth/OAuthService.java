@@ -56,8 +56,8 @@ public class OAuthService implements OAuthUseCase {
     @Transactional
     @Override
     public UserLoginResponse login(OAuthLoginCommand command) {
-        SocialInfoResponse response = oAuthUserInfoAdapter.getUserInfo(command.getToken(), command.getPlatform());
-        UserInfoResponse userInfoResponse = UserInfoResponse.of(command.getPlatform(), response.serialId());
+        SocialInfoResponse response = oAuthUserInfoAdapter.getUserInfo(UserInfoCommand.of(command.platform(), command.token(), command.code()));
+        UserInfoResponse userInfoResponse = UserInfoResponse.of(command.platform(), response.serialId(), response.refreshToken());
         Optional<User> user = retrieveUserPort.findUserByPlatFormAndSeralId(userInfoResponse.platform(), userInfoResponse.serialId());
         boolean isRegistered = isRegistered(user);
         User findUser = loadOrCreateUser(user, userInfoResponse);
@@ -98,6 +98,9 @@ public class OAuthService implements OAuthUseCase {
     @Transactional
     public Void withdraw(OAuthWithdrawCommand command) {
         User findUser = retrieveUserPort.getUserById(command.userId());
+        oAuthUserInfoAdapter.revoke(findUser.getPlatform(), findUser.getRefreshToken(), findUser.getSerialId());
+        findUser.softDelete();
+        updateUserPort.updateUser(findUser);
         oAuthUserInfoAdapter.revoke(findUser.getPlatform(), command.code(), findUser.getSerialId());
         deleteUserQuestPort.deleteAllByUserId(findUser.getId());
         deleteUserJourneyPort.deleteAllByUserId(findUser.getId());
@@ -132,9 +135,8 @@ public class OAuthService implements OAuthUseCase {
         return findUser.orElseGet(() -> createNewUser(userInfo));
     }
 
-
     private User createNewUser(final UserInfoResponse userInfo) {
-        User newUser = UserMapper.userInfoToDomain(userInfo.serialId(), userInfo.platform(), ERole.USER);
+        User newUser = UserMapper.userInfoToDomain(userInfo.serialId(), userInfo.platform(), ERole.USER, userInfo.refreshToken());
         return createUserPort.createUser(newUser);
     }
 
