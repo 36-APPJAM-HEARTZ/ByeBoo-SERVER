@@ -15,6 +15,7 @@ public enum AuthErrorCode implements ErrorCode {
     FAILED_TO_LOAD_PRIVATE_KEY(HttpStatus.BAD_REQUEST, "개인 키를 로드하는 데 실패했습니다."),
     APPLE_REVOKE_FAILED(HttpStatus.BAD_REQUEST, "Apple 탈퇴에 실패했습니다."),
     APPLE_INVALID_PRIVATE_KEY(HttpStatus.BAD_REQUEST, "올바르지 않은 키가 사용되었습니다."),
+    APPLE_LOGIN_FAILED(HttpStatus.BAD_REQUEST, "Apple 로그인에 실패했습니다."),
 
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "리소스 접근 권한이 없습니다."),
     INVALID_PLATFORM(HttpStatus.UNAUTHORIZED,"올바르지 않은 로그인 방식입니다."),
