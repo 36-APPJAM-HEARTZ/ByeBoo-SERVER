@@ -1,10 +1,7 @@
 package com.heartz.byeboo.application.service.auth;
 
 import com.heartz.byeboo.adapter.out.OAuthUserInfoAdapter;
-import com.heartz.byeboo.application.command.auth.OAuthLoginCommand;
-import com.heartz.byeboo.application.command.auth.OAuthLogoutCommand;
-import com.heartz.byeboo.application.command.auth.OAuthWithdrawCommand;
-import com.heartz.byeboo.application.command.auth.ReissueCommand;
+import com.heartz.byeboo.application.command.auth.*;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserInfoResponse;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserLoginResponse;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserReissueResponse;
@@ -13,10 +10,8 @@ import com.heartz.byeboo.application.port.out.token.CreateTokenPort;
 import com.heartz.byeboo.application.port.out.token.DeleteTokenPort;
 import com.heartz.byeboo.application.port.out.token.RetrieveTokenPort;
 import com.heartz.byeboo.application.port.out.token.UpdateTokenPort;
-import com.heartz.byeboo.application.port.out.user.CreateUserPort;
-import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
-import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
-import com.heartz.byeboo.application.port.out.user.UpdateUserPort;
+import com.heartz.byeboo.application.port.out.user.*;
+import com.heartz.byeboo.application.port.out.userquest.DeleteUserQuestPort;
 import com.heartz.byeboo.domain.model.Token;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
@@ -45,19 +40,21 @@ public class OAuthService implements OAuthUseCase {
     private final CreateUserPort createUserPort;
     private final JwtProvider jwtProvider;
     private final JwtValidator jwtValidator;
-    private final UpdateUserPort updateUserPort;
     private final CreateTokenPort createTokenPort;
     private final DeleteTokenPort deleteTokenPort;
     private final RetrieveTokenPort retrieveTokenPort;
     private final UpdateTokenPort updateTokenPort;
     private final RetrieveUserJourneyPort retrieveUserJourneyPort;
+    private final DeleteUserPort deleteUserPort;
+    private final DeleteUserQuestPort deleteUserQuestPort;
+    private final DeleteUserJourneyPort deleteUserJourneyPort;
 
 
     @Transactional
     @Override
     public UserLoginResponse login(OAuthLoginCommand command) {
-        SocialInfoResponse response = oAuthUserInfoAdapter.getUserInfo(command.getToken(), command.getPlatform());
-        UserInfoResponse userInfoResponse = UserInfoResponse.of(command.getPlatform(), response.serialId());
+        SocialInfoResponse response = oAuthUserInfoAdapter.getUserInfo(UserInfoCommand.of(command.platform(), command.token(), command.code()));
+        UserInfoResponse userInfoResponse = UserInfoResponse.of(command.platform(), response.serialId(), response.refreshToken());
         Optional<User> user = retrieveUserPort.findUserByPlatFormAndSeralId(userInfoResponse.platform(), userInfoResponse.serialId());
         boolean isRegistered = isRegistered(user);
         User findUser = loadOrCreateUser(user, userInfoResponse);
@@ -98,9 +95,12 @@ public class OAuthService implements OAuthUseCase {
     @Transactional
     public Void withdraw(OAuthWithdrawCommand command) {
         User findUser = retrieveUserPort.getUserById(command.userId());
-        oAuthUserInfoAdapter.revoke(findUser.getPlatform(), command.code(), findUser.getSerialId());
-        findUser.softDelete();
-        updateUserPort.updateUser(findUser);
+        oAuthUserInfoAdapter.revoke(findUser.getPlatform(), findUser.getRefreshToken(), findUser.getSerialId());
+        deleteUserQuestPort.deleteAllByUserId(findUser.getId());
+        deleteUserJourneyPort.deleteAllByUserId(findUser.getId());
+        deleteUserPort.deleteUserById(findUser.getId());
+        //findUser.softDelete();
+        //updateUserPort.updateUser(findUser);
         return null;
     }
 
@@ -129,9 +129,8 @@ public class OAuthService implements OAuthUseCase {
         return findUser.orElseGet(() -> createNewUser(userInfo));
     }
 
-
     private User createNewUser(final UserInfoResponse userInfo) {
-        User newUser = UserMapper.userInfoToDomain(userInfo.serialId(), userInfo.platform(), ERole.USER);
+        User newUser = UserMapper.userInfoToDomain(userInfo.serialId(), userInfo.platform(), ERole.USER, userInfo.refreshToken());
         return createUserPort.createUser(newUser);
     }
 

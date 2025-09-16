@@ -1,5 +1,6 @@
 package com.heartz.byeboo.infrastructure.api.kakao;
 
+import com.heartz.byeboo.application.command.auth.ProviderUserInfoCommand;
 import com.heartz.byeboo.constants.AuthConstants;
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;
 import com.heartz.byeboo.infrastructure.dto.kakao.KakaoUserInfo;
@@ -20,12 +21,13 @@ public class KakaoOAuthProvider implements OAuthProvider
     private String adminKey;
 
     @Override
-    public SocialInfoResponse getUserInfo(String providerToken) {
-        KakaoAccessToken kakaoAccessToken = createKakaoAccessToken(providerToken);
+    public SocialInfoResponse getUserInfo(ProviderUserInfoCommand command) {
+        KakaoAccessToken kakaoAccessToken = createKakaoAccessToken(command.providerToken());
         String accessTokenWithTokenType = kakaoAccessToken.getAccessTokenWithTokenType();
         KakaoUserInfo kakaoUserInfo = kakaoFeignClient.getUserInfo(accessTokenWithTokenType);
         return SocialInfoResponse.of(
-                kakaoUserInfo.id().toString()
+                kakaoUserInfo.id().toString(),
+                null
         );
     }
 
