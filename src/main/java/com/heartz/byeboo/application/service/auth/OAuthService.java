@@ -70,7 +70,8 @@ public class OAuthService implements OAuthUseCase {
                     isRegistered,
                     findUser.getName(),
                     userJourney.getJourney(),
-                    userJourney.getJourneyStatus()
+                    userJourney.getJourneyStatus(),
+                    findUser.getId()
             );
         }
 
@@ -79,7 +80,8 @@ public class OAuthService implements OAuthUseCase {
                 isRegistered,
                 null,
                 null,
-                null
+                null,
+                findUser.getId()
         );
     }
 
