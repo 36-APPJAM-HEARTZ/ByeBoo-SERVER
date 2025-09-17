@@ -12,14 +12,16 @@ public record UserLoginResponse(
         boolean isRegistered,
         String name,
         EJourney journey,
-        EJourneyStatus journeyStatus
+        EJourneyStatus journeyStatus,
+        Long userId
 ) implements Serializable {
     public static UserLoginResponse of(
             TokenResponse tokenResponse,
             boolean isRegistered,
             String name,
             EJourney journey,
-            EJourneyStatus journeyStatus
+            EJourneyStatus journeyStatus,
+            Long userId
     ){
         return new UserLoginResponse(
                 tokenResponse.accessToken(),
@@ -27,7 +29,8 @@ public record UserLoginResponse(
                 isRegistered,
                 name,
                 journey,
-                journeyStatus
+                journeyStatus,
+                userId
         );
     }
 }
