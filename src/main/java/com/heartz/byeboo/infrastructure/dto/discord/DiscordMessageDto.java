@@ -10,7 +10,14 @@ public record DiscordMessageDto(
         String content,
         List<EmbedDto> embeds
 ) {
-    public static DiscordMessageDto of(List<EmbedDto> embeds){
+
+    public static DiscordMessageDto signUp(List<EmbedDto> embeds){
+        return new DiscordMessageDto(
+                "# 🎉 새로운 유저가 회원가입했어요! 🎉", embeds
+        );
+    }
+
+    public static DiscordMessageDto error(List<EmbedDto> embeds){
         return new DiscordMessageDto(
                 "# 🚨 에러 발생 비이이사아앙 🚨", embeds
         );
