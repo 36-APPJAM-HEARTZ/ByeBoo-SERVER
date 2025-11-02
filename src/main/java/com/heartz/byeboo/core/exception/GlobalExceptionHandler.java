@@ -1,7 +1,7 @@
 package com.heartz.byeboo.core.exception;
 
 import com.heartz.byeboo.core.common.BaseResponse;
-import com.heartz.byeboo.infrastructure.api.discord.DiscordFeignClient;
+import com.heartz.byeboo.infrastructure.api.discord.DiscordErrorFeignClient;
 import com.heartz.byeboo.infrastructure.dto.discord.DiscordMessageDto;
 import com.heartz.byeboo.infrastructure.dto.discord.EmbedDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    private final DiscordFeignClient discordClient;
+    private final DiscordErrorFeignClient discordClient;
     private final Environment environment;
 
     /**
@@ -157,8 +157,8 @@ public class GlobalExceptionHandler {
     }
 
     private DiscordMessageDto createMessage(Exception e, WebRequest request) {
-        EmbedDto embed = EmbedDto.of(createRequestFullPath(request), getStackTrace(e).substring(0, 1000));
-        return DiscordMessageDto.of(List.of(embed));
+        EmbedDto embed = EmbedDto.error(createRequestFullPath(request), getStackTrace(e).substring(0, 1000));
+        return DiscordMessageDto.error(List.of(embed));
     }
 
     private String createRequestFullPath(WebRequest webRequest) {

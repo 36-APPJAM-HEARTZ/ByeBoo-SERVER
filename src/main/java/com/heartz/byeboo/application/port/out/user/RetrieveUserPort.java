@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface RetrieveUserPort {
     User getUserById(Long userId);
     Optional<User> findUserByPlatFormAndSeralId(EPlatform platform, String serialId);
+    Long countAllUsers();
 }
