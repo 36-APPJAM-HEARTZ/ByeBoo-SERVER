@@ -10,11 +10,9 @@ import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserErrorCode;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.type.EPlatform;
-import com.heartz.byeboo.domain.type.EQuestStyle;
 import com.heartz.byeboo.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -73,4 +71,7 @@ public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort,
     public void deleteUserById(Long userId) {
         userRepository.deleteById(userId);
     }
+
+    @Override
+    public Long countAllUsers() { return userRepository.count();}
 }

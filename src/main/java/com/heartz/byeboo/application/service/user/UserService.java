@@ -16,7 +16,13 @@ import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
-import com.heartz.byeboo.domain.type.*;
+import com.heartz.byeboo.domain.type.ECharacterDialogue;
+import com.heartz.byeboo.domain.type.EJourney;
+import com.heartz.byeboo.domain.type.EJourneyStatus;
+import com.heartz.byeboo.domain.type.EUserCurrentStatus;
+import com.heartz.byeboo.infrastructure.api.discord.DiscordOnboardingFeignClient;
+import com.heartz.byeboo.infrastructure.dto.discord.DiscordMessageDto;
+import com.heartz.byeboo.infrastructure.dto.discord.EmbedDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +43,7 @@ public class UserService implements UserUseCase {
     private final RetrieveUserQuestPort retrieveUserQuestPort;
     private final UpdateUserPort updateUserPort;
     private final UpdateUserJourneyPort updateUserJourneyPort;
+    private final DiscordOnboardingFeignClient discordClient;
 
     @Override
     @Transactional
@@ -65,6 +72,7 @@ public class UserService implements UserUseCase {
 
         List<UserJourney> userJourneyList = UserJourney.initializeUserJourney(currentUser);
         createUserJourneyPort.createUserJourney(userJourneyList);
+        discordClient.sendAlarm(DiscordMessageDto.signUp(List.of(EmbedDto.signUp(currentUser.getName(), retrieveUserPort.countAllUsers()))));
 
         return UserCreateResponseDto.of(currentUser.getId(), currentUser.getName());
     }
