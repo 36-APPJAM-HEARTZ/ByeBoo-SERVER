@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
-        name = "discord-client",
-        url = "${logging.discord.webhook-url}",
+        name = "discord-error-client",
+        url = "${logging.discord.error-webhook-url}",
         configuration = FeignConfig.class)
-public interface DiscordFeignClient {
+public interface DiscordErrorFeignClient {
 
     @PostMapping()
     void sendAlarm(@RequestBody DiscordMessageDto message);
