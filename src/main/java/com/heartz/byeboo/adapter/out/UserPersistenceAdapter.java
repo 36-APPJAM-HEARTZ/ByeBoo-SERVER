@@ -66,6 +66,12 @@ public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort,
         userRepository.save(userEntity);
     }
 
+    @Override
+    public void updateAlarmEnabled(User user) {
+        UserEntity userEntity = UserMapper.toEntityForUpdate(user);
+        userRepository.save(userEntity);
+    }
+
 
     @Override
     public void deleteUserById(Long userId) {
