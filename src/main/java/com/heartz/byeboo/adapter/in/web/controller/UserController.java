@@ -234,4 +234,30 @@ public class UserController {
         UserCharacterDialogueCommand userCharacterDialogueCommand = UserCharacterDialogueCommand.of(userId);
         return BaseResponse.success(userUseCase.getCharacterDialogue(userCharacterDialogueCommand));
     }
+
+    @Operation(
+            summary = "알림 on/off",
+            description = "알림을 on/off 설정하는 API 입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "알림 토글 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @PatchMapping("/api/v1/users/alarm")
+    public BaseResponse<AlarmEnabledResponse> updateAlarmPermission(
+            @UserId final Long userId
+    ){
+        AlarmPermissionCommand alarmPermissionCommand = AlarmPermissionCommand.of(userId);
+        return BaseResponse.success(userUseCase.updateAlarmPermission(alarmPermissionCommand));
+    }
 }

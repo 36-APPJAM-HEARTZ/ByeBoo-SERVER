@@ -23,8 +23,9 @@ public class User {
     private EUserStatus status;
     private LocalDateTime deletedAt;
     private String refreshToken;
+    private boolean alarmEnabled;
 
-    public static User of(Long id, String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken) {
+    public static User of(Long id, String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken, boolean alarmEnabled) {
         return User.builder()
                 .id(id)
                 .name(name)
@@ -37,6 +38,7 @@ public class User {
                 .status(status)
                 .deletedAt(deletedAt)
                 .refreshToken(refreshToken)
+                .alarmEnabled(alarmEnabled)
                 .build();
     }
 
@@ -81,5 +83,9 @@ public class User {
 
     public void deleteRefreshToken(){
         this.refreshToken = null;
+    }
+
+    public void updateAlarmState(boolean alarmState){
+        this.alarmEnabled = alarmState;
     }
 }
