@@ -7,4 +7,5 @@ public interface UpdateUserPort {
 
     void updateName(User user);
     void updateUser(User user);
+    void updateAlarmEnabled(User user);
 }
