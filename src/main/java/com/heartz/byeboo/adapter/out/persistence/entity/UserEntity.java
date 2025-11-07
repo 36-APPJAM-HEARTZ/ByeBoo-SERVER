@@ -54,8 +54,11 @@ public class UserEntity extends BaseEntity{
     @Column(name = "refresh_token")
     private String refreshToken;
 
+    @Column(name = "alarm_enabled", nullable = false)
+    private boolean alarmEnabled = false;
+
     @Builder
-    public UserEntity(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber,EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken) {
+    public UserEntity(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber,EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken, boolean alarmEnabled) {
         this.id = id;
         this.name = name;
         this.questStyle = questStyle;
@@ -67,9 +70,10 @@ public class UserEntity extends BaseEntity{
         this.status = status;
         this.deletedAt = deletedAt;
         this.refreshToken = refreshToken;
+        this.alarmEnabled = alarmEnabled;
     }
 
-    public static UserEntity create(String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken) {
+    public static UserEntity create(String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken, boolean alarmEnabled) {
         return UserEntity.builder()
                 .name(name)
                 .questStyle(questStyle)
@@ -81,10 +85,11 @@ public class UserEntity extends BaseEntity{
                 .status(status)
                 .deletedAt(deletedAt)
                 .refreshToken(refreshToken)
+                .alarmEnabled(alarmEnabled)
                 .build();
     }
 
-    public static UserEntity createForUpdate(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken) {
+    public static UserEntity createForUpdate(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken, boolean alarmEnabled) {
         return UserEntity.builder()
                 .id(id)
                 .name(name)
@@ -97,6 +102,7 @@ public class UserEntity extends BaseEntity{
                 .status(status)
                 .deletedAt(deletedAt)
                 .refreshToken(refreshToken)
+                .alarmEnabled(alarmEnabled)
                 .build();
     }
 }
