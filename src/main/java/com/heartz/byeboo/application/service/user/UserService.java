@@ -212,6 +212,16 @@ public class UserService implements UserUseCase {
         return UserCharacterResponseDto.of(dialogue.getDialogue(currentUser.getName()));
     }
 
+    @Override
+    @Transactional
+    public AlarmEnabledResponse updateAlarmPermission(AlarmPermissionCommand alarmPermissionCommand) {
+        User currentUser = retrieveUserPort.getUserById(alarmPermissionCommand.getUserId());
+
+        currentUser.updateAlarmState(!currentUser.isAlarmEnabled());
+        updateUserPort.updateAlarmEnabled(currentUser);
+        return AlarmEnabledResponse.of(currentUser.isAlarmEnabled());
+    }
+
     private Boolean isBeforeStart(User user) {
         return user.getCurrentNumber() == QuestConstants.QUEST_BEFORE_START_COUNT;
     }

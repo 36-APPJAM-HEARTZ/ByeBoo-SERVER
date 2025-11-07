@@ -12,4 +12,5 @@ public interface UserUseCase {
     HomeCountResponseDto getCompletedCount(CompletedCountCommand completedCountCommand);
     Void updateInitialUserJourney(UserJourneyUpdateCommand userJourneyUpdateCommand);
     UserCharacterResponseDto getCharacterDialogue(UserCharacterDialogueCommand userCharacterDialogueCommand);
+    AlarmEnabledResponse updateAlarmPermission(AlarmPermissionCommand alarmPermissionCommand);
 }
