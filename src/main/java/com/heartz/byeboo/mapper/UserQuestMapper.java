@@ -14,7 +14,8 @@ public class UserQuestMapper {
                 userQuest.getImageKey(),
                 userQuest.getQuestEmotionState(),
                 userQuest.getUser().getId(),
-                userQuest.getQuest().getId()
+                userQuest.getQuest().getId(),
+                userQuest.isNotified()
         );
     }
 
@@ -45,7 +46,8 @@ public class UserQuestMapper {
                 userQuestEntity.getQuestEmotionState(),
                 user,
                 quest,
-                userQuestEntity.getCreatedDate()
+                userQuestEntity.getCreatedDate(),
+                userQuestEntity.isNotified()
         );
     }
 
@@ -57,7 +59,8 @@ public class UserQuestMapper {
                 userQuestEntity.getQuestEmotionState(),
                 user,
                 quest,
-                userQuestEntity.getCreatedDate()
+                userQuestEntity.getCreatedDate(),
+                userQuestEntity.isNotified()
         );
     }
 
@@ -68,7 +71,9 @@ public class UserQuestMapper {
                 userQuestEntity.getQuestEmotionState(),
                 user,
                 quest,
-                userQuestEntity.getCreatedDate()
+                userQuestEntity.getCreatedDate(),
+                userQuestEntity.isNotified()
         );
     }
+
 }
