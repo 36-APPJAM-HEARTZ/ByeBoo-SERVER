@@ -16,10 +16,8 @@ public interface UserQuestRepository extends JpaRepository<UserQuestEntity, Long
     Optional<UserQuestEntity> findByUserIdAndQuestId(Long userId, Long questId);
     void deleteAllByUserId(Long userId);
 
-    @Query("SELECT q FROM UserQuestEntity q WHERE q.notified = false AND q.createdDate <= :threshold "+
-    "AND q.userId IN (" +
-            "    SELECT u.id FROM UserEntity u WHERE u.alarmEnabled = true" +
-            ")")
+    @Query("SELECT q FROM UserQuestEntity q WHERE q.notified = false AND q.createdDate <= :threshold")
     List<UserQuestEntity> findUnnotifiedQuestsBefore(@Param("threshold") LocalDateTime threshold);
+
 
 }
