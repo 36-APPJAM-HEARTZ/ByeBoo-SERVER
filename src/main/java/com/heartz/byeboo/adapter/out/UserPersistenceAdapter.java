@@ -80,4 +80,9 @@ public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort,
 
     @Override
     public Long countAllUsers() { return userRepository.count();}
+
+    @Override
+    public boolean isAlarmEnabledById(Long userId) {
+        return userRepository.isAlarmEnabledById(userId);
+    }
 }
