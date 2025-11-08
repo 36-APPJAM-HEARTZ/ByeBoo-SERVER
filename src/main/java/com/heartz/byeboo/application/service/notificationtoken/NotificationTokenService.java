@@ -54,6 +54,7 @@ public class NotificationTokenService implements NotificationTokenUseCase {
         return null;
     }
 
+    @Override
     @Transactional
     public void cleanUpOldNotificationTokens() {
         LocalDateTime limitDate = LocalDateTime.now().minusDays(30);

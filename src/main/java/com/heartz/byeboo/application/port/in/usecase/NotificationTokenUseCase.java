@@ -8,4 +8,5 @@ public interface NotificationTokenUseCase {
     Void saveToken(NotificationTokenSaveCommand command);
     Void updateTimeStamp(NotificationTokenUpdateCommand command);
     Void deleteToken(NotificationTokenDeleteCommand command);
+    void cleanUpOldNotificationTokens();
 }
