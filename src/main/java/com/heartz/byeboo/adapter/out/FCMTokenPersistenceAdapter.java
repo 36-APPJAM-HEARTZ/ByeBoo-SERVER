@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
@@ -34,6 +35,11 @@ public class FCMTokenPersistenceAdapter implements CreateNotificationTokenPort, 
                 .orElseThrow(() -> new CustomException(NotificationTokenErrorCode.NOTIFICATION_TOKEN_NOT_FOUND));
 
         return NotificationTokenMapper.toDomain(notificationTokenEntity, user);
+    }
+
+    @Override
+    public Optional<NotificationTokenEntity> findByUserId(Long userId) {
+        return notificationTokenRepository.findByUserId(userId);
     }
 
     @Override
