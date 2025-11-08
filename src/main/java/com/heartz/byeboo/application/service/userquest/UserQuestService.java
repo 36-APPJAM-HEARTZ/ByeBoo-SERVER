@@ -1,5 +1,7 @@
 package com.heartz.byeboo.application.service.userquest;
 
+import com.heartz.byeboo.adapter.out.FCMNotificationPersistenceAdapter;
+import com.heartz.byeboo.adapter.out.persistence.entity.UserQuestEntity;
 import com.heartz.byeboo.application.port.in.dto.response.SignedUrlResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyResponseDto;
@@ -8,6 +10,7 @@ import com.heartz.byeboo.application.command.*;
 import com.heartz.byeboo.application.command.userquest.*;
 import com.heartz.byeboo.application.port.in.usecase.UserQuestUseCase;
 import com.heartz.byeboo.application.port.out.*;
+import com.heartz.byeboo.application.port.out.notificationtoken.RetrieveNotificationTokenPort;
 import com.heartz.byeboo.application.port.out.quest.RetrieveQuestPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
@@ -31,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.heartz.byeboo.constants.QuestConstants.QUEST_COUNT_MAX;
@@ -49,6 +53,8 @@ public class UserQuestService implements UserQuestUseCase {
     private final RetrieveObjectPort retrieveGcsPort;
     private final RetrieveUserJourneyPort retrieveUserJourneyPort;
     private final UpdateUserJourneyPort updateUserJourneyPort;
+    private final RetrieveNotificationTokenPort retrieveNotificationTokenPort;
+    private final FCMNotificationPersistenceAdapter fCMNotificationPersistenceAdapter;
 
     @Override
     @Transactional
@@ -173,6 +179,23 @@ public class UserQuestService implements UserQuestUseCase {
     private void isJourneyAlreadyStart(UserJourney userJourney){
          if (userJourney.getJourneyStatus() != EJourneyStatus.NOT_COMPLETED){
             throw new CustomException(UserJourneyErrorCode.CONFLICT_USER_JOURNEY);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void sendQuestNotifications() {
+        LocalDateTime threshold = LocalDateTime.now().minusHours(24);
+        List<UserQuestEntity> userQuests = retrieveUserQuestPort.findUnnotifiedQuestsBefore(threshold);
+
+        for (UserQuestEntity quest : userQuests) {
+            boolean alarmEnabled = retrieveUserPort.isAlarmEnabledById(quest.getUserId());
+
+            if (alarmEnabled) {
+                retrieveNotificationTokenPort.findByUserId(quest.getUserId()).ifPresent(token ->
+                        fCMNotificationPersistenceAdapter.sendMessage(token.getFcmToken())
+                );
+            }
+            quest.updateNotified(true);
         }
     }
 }
