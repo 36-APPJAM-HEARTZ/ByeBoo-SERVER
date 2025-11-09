@@ -3,7 +3,6 @@ package com.heartz.byeboo.application.service.userquest;
 import com.heartz.byeboo.adapter.out.FCMNotificationPersistenceAdapter;
 import com.heartz.byeboo.adapter.out.persistence.entity.NotificationTokenEntity;
 import com.heartz.byeboo.adapter.out.persistence.entity.UserEntity;
-import com.heartz.byeboo.adapter.out.persistence.entity.UserQuestEntity;
 import com.heartz.byeboo.application.port.in.dto.response.SignedUrlResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyResponseDto;
@@ -205,9 +204,9 @@ public class UserQuestService implements UserQuestUseCase {
 
                 for (NotificationTokenEntity token : tokens) {
                     try {
-                        fCMNotificationPersistenceAdapter.sendMessage(token.getFcmToken());
+                        fCMNotificationPersistenceAdapter.sendMessage(token.getNotificationToken());
                     } catch (Exception e) {
-                        log.info("FCM 전송 실패: token={}", token.getFcmToken(), e);
+                        log.info("FCM 전송 실패: token={}", token.getNotificationToken(), e);
                     }
                 }
             }

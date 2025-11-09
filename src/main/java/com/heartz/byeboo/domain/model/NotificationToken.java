@@ -10,13 +10,13 @@ import java.time.LocalDateTime;
 public class NotificationToken {
 
     private Long id;
-    private String fcmToken;
+    private String notificationToken;
     private LocalDateTime timeStamp;
     private User user;
 
-    public static NotificationToken of(Long id, String fcmToken, LocalDateTime timeStamp, User user){
+    public static NotificationToken of(Long id, String notificationToken, LocalDateTime timeStamp, User user){
         return NotificationToken.builder()
-                .fcmToken(fcmToken)
+                .notificationToken(notificationToken)
                 .timeStamp(timeStamp)
                 .user(user)
                 .id(id)

@@ -1,6 +1,5 @@
 package com.heartz.byeboo.adapter.out.persistence.entity;
 
-import com.heartz.byeboo.domain.model.NotificationToken;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "fcm_token")
+@Table(name = "notification_token")
 public class NotificationTokenEntity {
 
     @Id
@@ -20,8 +19,8 @@ public class NotificationTokenEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "fcm_token", nullable = false)
-    private String fcmToken;
+    @Column(name = "notification_token", nullable = false)
+    private String notificationToken;
 
     @Column(name = "time_stamp", nullable = false)
     private LocalDateTime timeStamp;
@@ -30,24 +29,24 @@ public class NotificationTokenEntity {
     private Long userId;
 
     @Builder
-    public NotificationTokenEntity(Long id, String fcmToken, LocalDateTime timeStamp, Long userId) {
-        this.fcmToken = fcmToken;
+    public NotificationTokenEntity(Long id, String notificationToken, LocalDateTime timeStamp, Long userId) {
+        this.notificationToken = notificationToken;
         this.userId = userId;
         this.timeStamp = timeStamp;
         this.id = id;
     }
 
-    public static NotificationTokenEntity create(String fcmToken, LocalDateTime timeStamp, Long userId) {
+    public static NotificationTokenEntity create(String notificationToken, LocalDateTime timeStamp, Long userId) {
         return NotificationTokenEntity.builder()
-                .fcmToken(fcmToken)
+                .notificationToken(notificationToken)
                 .timeStamp(timeStamp)
                 .userId(userId)
                 .build();
     }
 
-    public static NotificationTokenEntity createForUpdate(Long id,String fcmToken, LocalDateTime timeStamp, Long userId){
+    public static NotificationTokenEntity createForUpdate(Long id,String notificationToken, LocalDateTime timeStamp, Long userId){
         return NotificationTokenEntity.builder()
-                .fcmToken(fcmToken)
+                .notificationToken(notificationToken)
                 .id(id)
                 .timeStamp(timeStamp)
                 .userId(userId)

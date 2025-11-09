@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NotificationTokenRepository extends JpaRepository<NotificationTokenEntity, Long> {
-    Optional<NotificationTokenEntity> findByFcmTokenAndUserId(String notificationToken, Long userId);
-    void deleteByFcmTokenAndUserId(String notificationToken, Long userId);
+    Optional<NotificationTokenEntity> findByNotificationTokenAndUserId(String notificationToken, Long userId);
+    void deleteByNotificationTokenAndUserId(String notificationToken, Long userId);
     List<NotificationTokenEntity> findAllByUserId(Long userId);
     void deleteAllByUserId(Long userId);
     void deleteByTimeStampBefore(LocalDateTime threshold);

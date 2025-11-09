@@ -32,7 +32,7 @@ public class FCMTokenPersistenceAdapter implements CreateNotificationTokenPort, 
 
     @Override
     public NotificationToken getNotificationTokenByToken(String notificationToken, User user) {
-        NotificationTokenEntity notificationTokenEntity = notificationTokenRepository.findByFcmTokenAndUserId(notificationToken, user.getId())
+        NotificationTokenEntity notificationTokenEntity = notificationTokenRepository.findByNotificationTokenAndUserId(notificationToken, user.getId())
                 .orElseThrow(() -> new CustomException(NotificationTokenErrorCode.NOTIFICATION_TOKEN_NOT_FOUND));
 
         return NotificationTokenMapper.toDomain(notificationTokenEntity, user);
@@ -51,7 +51,7 @@ public class FCMTokenPersistenceAdapter implements CreateNotificationTokenPort, 
 
     @Override
     public void deleteNotificationToken(String notificationToken, Long userId) {
-        notificationTokenRepository.deleteByFcmTokenAndUserId(notificationToken, userId);
+        notificationTokenRepository.deleteByNotificationTokenAndUserId(notificationToken, userId);
     }
 
     @Override
