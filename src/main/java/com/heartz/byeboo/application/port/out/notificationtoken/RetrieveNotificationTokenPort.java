@@ -4,9 +4,10 @@ import com.heartz.byeboo.adapter.out.persistence.entity.NotificationTokenEntity;
 import com.heartz.byeboo.domain.model.NotificationToken;
 import com.heartz.byeboo.domain.model.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RetrieveNotificationTokenPort {
     NotificationToken getNotificationTokenByToken(String notificationToken, User user);
-    Optional<NotificationTokenEntity> findByUserId(Long userId);
+    List<NotificationTokenEntity> findAllByUserId(Long userId);
 }
