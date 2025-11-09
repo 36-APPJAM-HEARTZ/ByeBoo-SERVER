@@ -1,6 +1,8 @@
 package com.heartz.byeboo.application.service.userquest;
 
 import com.heartz.byeboo.adapter.out.FCMNotificationPersistenceAdapter;
+import com.heartz.byeboo.adapter.out.persistence.entity.NotificationTokenEntity;
+import com.heartz.byeboo.adapter.out.persistence.entity.UserEntity;
 import com.heartz.byeboo.adapter.out.persistence.entity.UserQuestEntity;
 import com.heartz.byeboo.application.port.in.dto.response.SignedUrlResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
@@ -31,6 +33,7 @@ import com.heartz.byeboo.domain.type.EQuestStyle;
 import com.heartz.byeboo.mapper.JourneyStyleMapper;
 import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +44,7 @@ import static com.heartz.byeboo.constants.QuestConstants.QUEST_COUNT_MAX;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserQuestService implements UserQuestUseCase {
 
     private final RetrieveUserPort retrieveUserPort;
@@ -184,18 +188,29 @@ public class UserQuestService implements UserQuestUseCase {
 
     @Transactional(readOnly = true)
     public void sendQuestNotifications() {
-        LocalDateTime threshold = LocalDateTime.now().minusHours(24);
-        List<UserQuestEntity> userQuests = retrieveUserQuestPort.findUnnotifiedQuestsBefore(threshold);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime thresholdEnd = now.minusHours(24);
+        LocalDateTime thresholdStart = thresholdEnd.minusMinutes(1);
 
-        for (UserQuestEntity quest : userQuests) {
-            boolean alarmEnabled = retrieveUserPort.isAlarmEnabledById(quest.getUserId());
+        log.info("[Scheduler] Quest 알림 스케줄러 실행됨 - now={}, start={}, end={}", now, thresholdStart, thresholdEnd);
 
-            if (alarmEnabled) {
-                retrieveNotificationTokenPort.findByUserId(quest.getUserId()).ifPresent(token ->
-                        fCMNotificationPersistenceAdapter.sendMessage(token.getFcmToken())
-                );
+        List<UserEntity> userEntities = retrieveUserPort.findUsersWithExpiredQuest(thresholdStart, thresholdEnd);
+        log.info("[Scheduler] 만료된 퀘스트 유저 수: {}", userEntities.size());
+
+        for (UserEntity user: userEntities) {
+            log.info("[Scheduler] 유저 처리: id={}, currentNumber={}, alarmEnabled={}",
+                    user.getId(), user.getCurrentNumber(), user.isAlarmEnabled());
+            if(user.getCurrentNumber() != 31) {
+                List<NotificationTokenEntity> tokens = retrieveNotificationTokenPort.findAllByUserId(user.getId());
+
+                for (NotificationTokenEntity token : tokens) {
+                    try {
+                        fCMNotificationPersistenceAdapter.sendMessage(token.getFcmToken());
+                    } catch (Exception e) {
+                        log.info("FCM 전송 실패: token={}", token.getFcmToken(), e);
+                    }
+                }
             }
-            quest.updateNotified(true);
         }
     }
 }
