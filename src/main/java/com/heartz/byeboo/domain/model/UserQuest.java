@@ -17,7 +17,6 @@ public class UserQuest {
     private User user;
     private Quest quest;
     private LocalDateTime createdDate;
-    private boolean notified;
 
     public static UserQuest of(
             Long id,
@@ -26,8 +25,7 @@ public class UserQuest {
             EQuestEmotionState questEmotionState,
             User user,
             Quest quest,
-            LocalDateTime createdDate,
-            boolean notified
+            LocalDateTime createdDate
     ){
         return UserQuest.builder()
                 .id(id)
@@ -37,7 +35,6 @@ public class UserQuest {
                 .user(user)
                 .quest(quest)
                 .createdDate(createdDate)
-                .notified(notified)
                 .build();
     }
 
@@ -47,8 +44,7 @@ public class UserQuest {
             EQuestEmotionState questEmotionState,
             User user,
             Quest quest,
-            LocalDateTime createdDate,
-            boolean notified
+            LocalDateTime createdDate
     ){
         return UserQuest.builder()
                 .id(id)
@@ -57,7 +53,6 @@ public class UserQuest {
                 .user(user)
                 .quest(quest)
                 .createdDate(createdDate)
-                .notified(notified)
                 .build();
     }
 }
