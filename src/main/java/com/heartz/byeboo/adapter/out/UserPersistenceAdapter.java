@@ -14,6 +14,8 @@ import com.heartz.byeboo.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -82,7 +84,7 @@ public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort,
     public Long countAllUsers() { return userRepository.count();}
 
     @Override
-    public boolean isAlarmEnabledById(Long userId) {
-        return userRepository.isAlarmEnabledById(userId);
+    public List<UserEntity> findUsersWithExpiredQuest(LocalDateTime thresholdStart, LocalDateTime thresholdEnd) {
+        return userRepository.findUsersWithExpiredQuest(thresholdStart, thresholdEnd);
     }
 }

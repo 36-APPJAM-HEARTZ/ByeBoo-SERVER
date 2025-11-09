@@ -11,5 +11,4 @@ import java.util.List;
 public interface RetrieveUserQuestPort {
     UserQuest getUserQuestByUserAndQuest( User user, Quest quest);
     UserQuest getRecentUserQuestByUserAndQuest(User user, Quest quest);
-    List<UserQuestEntity> findUnnotifiedQuestsBefore(LocalDateTime threshold);
 }
