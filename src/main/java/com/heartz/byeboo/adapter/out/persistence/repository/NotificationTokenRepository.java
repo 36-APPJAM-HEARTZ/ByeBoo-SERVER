@@ -5,13 +5,13 @@ import com.heartz.byeboo.domain.model.NotificationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface NotificationTokenRepository extends JpaRepository<NotificationTokenEntity, Long> {
     Optional<NotificationTokenEntity> findByFcmTokenAndUserId(String notificationToken, Long userId);
     void deleteByFcmTokenAndUserId(String notificationToken, Long userId);
-    Optional<NotificationTokenEntity> findByUserId(Long userId);
+    List<NotificationTokenEntity> findAllByUserId(Long userId);
     void deleteAllByUserId(Long userId);
-
     void deleteByTimeStampBefore(LocalDateTime threshold);
 }
