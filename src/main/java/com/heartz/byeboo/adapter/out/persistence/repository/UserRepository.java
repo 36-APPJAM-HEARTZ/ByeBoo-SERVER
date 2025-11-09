@@ -6,7 +6,24 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findByPlatformAndSerialId(EPlatform platform, String serialId);
-    @Query("SELECT u.alarmEnabled FROM UserEntity u WHERE u.id = :userId")
-    boolean isAlarmEnabledById(@Param("userId") Long userId);}
+
+    @Query("""
+    SELECT u
+    FROM UserEntity u
+    JOIN UserQuestEntity q
+      ON u.id = q.userId
+     AND q.questId = (u.currentNumber - 1)
+    WHERE u.alarmEnabled = true
+      AND q.createdDate BETWEEN :thresholdStart AND :thresholdEnd
+""")
+    List<UserEntity> findUsersWithExpiredQuest(
+            @Param("thresholdStart") LocalDateTime thresholdStart,
+            @Param("thresholdEnd") LocalDateTime thresholdEnd
+    );
+
+}
