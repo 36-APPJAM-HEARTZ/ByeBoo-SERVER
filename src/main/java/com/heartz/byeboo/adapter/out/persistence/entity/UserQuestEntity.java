@@ -35,24 +35,19 @@ public class UserQuestEntity extends BaseEntity{
     @Column(name = "quest_id", nullable = false)
     private Long questId;
 
-    @Column(name = "notified", nullable = false)
-    private boolean notified = false;
-
     @Builder
     public UserQuestEntity(
             String answer,
             UUID imageKey,
             EQuestEmotionState questEmotionState,
             Long userId,
-            Long questId,
-            boolean notified
+            Long questId
     ) {
         this.answer = answer;
         this.imageKey = imageKey;
         this.questEmotionState = questEmotionState;
         this.userId = userId;
         this.questId = questId;
-        this.notified = notified;
     }
 
     public static UserQuestEntity create(
@@ -60,8 +55,7 @@ public class UserQuestEntity extends BaseEntity{
             UUID imageKey,
             EQuestEmotionState questEmotionState,
             Long userId,
-            Long questId,
-            boolean notified
+            Long questId
     ) {
         return UserQuestEntity.builder()
                 .answer(answer)
@@ -69,11 +63,6 @@ public class UserQuestEntity extends BaseEntity{
                 .questEmotionState(questEmotionState)
                 .userId(userId)
                 .questId(questId)
-                .notified(notified)
                 .build();
-    }
-
-    public void updateNotified(boolean notified){
-        this.notified = notified;
     }
 }
