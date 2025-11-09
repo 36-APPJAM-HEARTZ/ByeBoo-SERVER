@@ -52,11 +52,6 @@ public class UserQuestPersistenceAdapter implements CreateUserQuestPort, Retriev
         return UserQuestMapper.toDomain(userQuestEntity, user, quest);
     }
 
-    @Override
-    public List<UserQuestEntity> findUnnotifiedQuestsBefore(LocalDateTime threshold) {
-        return userQuestRepository.findUnnotifiedQuestsBefore(threshold);
-    }
-
     private UserQuest isActiveOrRecording(Quest quest, UserQuestEntity userQuestEntity, User user){
         if (quest.getQuestStyle() == EQuestStyle.ACTIVE){
             return UserQuestMapper.toDomainActive(userQuestEntity, user, quest);
