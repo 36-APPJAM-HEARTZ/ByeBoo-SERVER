@@ -1,5 +1,9 @@
 package com.heartz.byeboo.application.service.userquest;
 
+import com.heartz.byeboo.adapter.out.FCMNotificationPersistenceAdapter;
+import com.heartz.byeboo.adapter.out.persistence.entity.NotificationTokenEntity;
+import com.heartz.byeboo.adapter.out.persistence.entity.UserEntity;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserIdCurrentNumberProjection;
 import com.heartz.byeboo.application.port.in.dto.response.SignedUrlResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyResponseDto;
@@ -8,6 +12,7 @@ import com.heartz.byeboo.application.command.*;
 import com.heartz.byeboo.application.command.userquest.*;
 import com.heartz.byeboo.application.port.in.usecase.UserQuestUseCase;
 import com.heartz.byeboo.application.port.out.*;
+import com.heartz.byeboo.application.port.out.notificationtoken.RetrieveNotificationTokenPort;
 import com.heartz.byeboo.application.port.out.quest.RetrieveQuestPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
@@ -28,15 +33,18 @@ import com.heartz.byeboo.domain.type.EQuestStyle;
 import com.heartz.byeboo.mapper.JourneyStyleMapper;
 import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.heartz.byeboo.constants.QuestConstants.QUEST_COUNT_MAX;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserQuestService implements UserQuestUseCase {
 
     private final RetrieveUserPort retrieveUserPort;
@@ -49,6 +57,8 @@ public class UserQuestService implements UserQuestUseCase {
     private final RetrieveObjectPort retrieveGcsPort;
     private final RetrieveUserJourneyPort retrieveUserJourneyPort;
     private final UpdateUserJourneyPort updateUserJourneyPort;
+    private final RetrieveNotificationTokenPort retrieveNotificationTokenPort;
+    private final FCMNotificationPersistenceAdapter fCMNotificationPersistenceAdapter;
 
     @Override
     @Transactional
@@ -173,6 +183,33 @@ public class UserQuestService implements UserQuestUseCase {
     private void isJourneyAlreadyStart(UserJourney userJourney){
          if (userJourney.getJourneyStatus() != EJourneyStatus.NOT_COMPLETED){
             throw new CustomException(UserJourneyErrorCode.CONFLICT_USER_JOURNEY);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void sendQuestNotifications() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime thresholdEnd = now.minusHours(24);
+        LocalDateTime thresholdStart = thresholdEnd.minusMinutes(1);
+
+        log.info("[Scheduler] Quest 알림 스케줄러 실행됨 - now={}, start={}, end={}", now, thresholdStart, thresholdEnd);
+
+        List<UserIdCurrentNumberProjection> userIdCurrentNumberProjections = retrieveUserPort.findUsersWithExpiredQuest(thresholdStart, thresholdEnd);
+        log.info("[Scheduler] 만료된 퀘스트 유저 수: {}", userIdCurrentNumberProjections.size());
+
+        for (UserIdCurrentNumberProjection projection: userIdCurrentNumberProjections) {
+            log.info("[Scheduler] 유저 처리: id={}, currentNumber={}",projection.getId(), projection.getCurrentNumber());
+            if(projection.getCurrentNumber() != 31) {
+                List<NotificationTokenEntity> tokens = retrieveNotificationTokenPort.findAllByUserId(projection.getId());
+
+                for (NotificationTokenEntity token : tokens) {
+                    try {
+                        fCMNotificationPersistenceAdapter.sendMessage(token.getNotificationToken());
+                    } catch (Exception e) {
+                        log.info("FCM 전송 실패: token={}", token.getNotificationToken(), e);
+                    }
+                }
+            }
         }
     }
 }

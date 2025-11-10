@@ -219,6 +219,7 @@ public class UserService implements UserUseCase {
 
         currentUser.updateAlarmState(!currentUser.isAlarmEnabled());
         updateUserPort.updateAlarmEnabled(currentUser);
+        
         return AlarmEnabledResponse.of(currentUser.isAlarmEnabled());
     }
 

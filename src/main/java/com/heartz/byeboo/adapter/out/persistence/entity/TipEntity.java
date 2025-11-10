@@ -26,7 +26,7 @@ public class TipEntity {
     private Long questId;
 
     @Builder
-    public TipEntity(Integer tipStep, String tipQuestion, String tipAnswer, Long questId) {
+    public TipEntity(Integer tipStep, String tipAnswer, Long questId) {
         this.tipStep = tipStep;
         this.tipAnswer = tipAnswer;
         this.questId = questId;

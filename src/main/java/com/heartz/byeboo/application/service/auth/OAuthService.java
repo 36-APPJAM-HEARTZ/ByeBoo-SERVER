@@ -6,6 +6,7 @@ import com.heartz.byeboo.application.port.in.dto.response.auth.UserInfoResponse;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserLoginResponse;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserReissueResponse;
 import com.heartz.byeboo.application.port.in.usecase.OAuthUseCase;
+import com.heartz.byeboo.application.port.out.notificationtoken.DeleteNotificationTokenPort;
 import com.heartz.byeboo.application.port.out.token.CreateTokenPort;
 import com.heartz.byeboo.application.port.out.token.DeleteTokenPort;
 import com.heartz.byeboo.application.port.out.token.RetrieveTokenPort;
@@ -48,6 +49,7 @@ public class OAuthService implements OAuthUseCase {
     private final DeleteUserPort deleteUserPort;
     private final DeleteUserQuestPort deleteUserQuestPort;
     private final DeleteUserJourneyPort deleteUserJourneyPort;
+    private final DeleteNotificationTokenPort deleteNotificationTokenPort;
 
 
     @Transactional
@@ -101,6 +103,7 @@ public class OAuthService implements OAuthUseCase {
         deleteUserQuestPort.deleteAllByUserId(findUser.getId());
         deleteUserJourneyPort.deleteAllByUserId(findUser.getId());
         deleteUserPort.deleteUserById(findUser.getId());
+        deleteNotificationTokenPort.deleteAllByUserId(findUser.getId());
         //findUser.softDelete();
         //updateUserPort.updateUser(findUser);
         return null;
