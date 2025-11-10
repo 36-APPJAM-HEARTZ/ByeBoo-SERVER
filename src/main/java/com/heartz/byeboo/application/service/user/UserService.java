@@ -72,7 +72,7 @@ public class UserService implements UserUseCase {
 
         List<UserJourney> userJourneyList = UserJourney.initializeUserJourney(currentUser);
         createUserJourneyPort.createUserJourney(userJourneyList);
-        discordClient.sendAlarm(DiscordMessageDto.signUp(List.of(EmbedDto.signUp(currentUser.getName(), retrieveUserPort.countAllUsers()))));
+        discordClient.sendAlarm(DiscordMessageDto.signUp(List.of(EmbedDto.signUp(currentUser.getName(), retrieveUserPort.countAllUsers(), currentUser.getId()))));
 
         return UserCreateResponseDto.of(currentUser.getId(), currentUser.getName());
     }
