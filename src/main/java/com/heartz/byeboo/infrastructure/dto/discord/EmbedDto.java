@@ -32,10 +32,11 @@ public record EmbedDto(
         );
     }
 
-    public static EmbedDto signUp(String username, Long totalMemberCount){
+    public static EmbedDto signUp(String username, Long totalMemberCount, Long userId){
         return new EmbedDto(
                 "🎉 신규 회원 가입",
                 "### 👤 사용자명\n" + username + "\n" +
+                        "### 👩‍🌾사용자 ID\n: " +userId + "\n" +
                         "### 👥 총 회원 수\n" + totalMemberCount + "명\n" +
                         "### 🕖 가입 시간\n" + LocalDateTime.now()
         );
