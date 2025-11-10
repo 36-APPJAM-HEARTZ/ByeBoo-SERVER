@@ -1,6 +1,7 @@
 package com.heartz.byeboo.application.port.out.user;
 
 import com.heartz.byeboo.adapter.out.persistence.entity.UserEntity;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserIdCurrentNumberProjection;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.type.EPlatform;
 
@@ -12,5 +13,5 @@ public interface RetrieveUserPort {
     User getUserById(Long userId);
     Optional<User> findUserByPlatFormAndSeralId(EPlatform platform, String serialId);
     Long countAllUsers();
-    List<UserEntity> findUsersWithExpiredQuest(LocalDateTime thresholdStart, LocalDateTime thresholdEnd);
+    List<UserIdCurrentNumberProjection> findUsersWithExpiredQuest(LocalDateTime thresholdStart, LocalDateTime thresholdEnd);
 }

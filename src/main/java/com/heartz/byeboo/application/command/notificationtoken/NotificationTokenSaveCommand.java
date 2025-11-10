@@ -7,7 +7,7 @@ public record NotificationTokenSaveCommand(
         Long userId,
         String notificationToken
 ) {
-    public static NotificationTokenSaveCommand from(Long userId, String notificationToken){
+    public static NotificationTokenSaveCommand of(Long userId, String notificationToken){
         return NotificationTokenSaveCommand.builder()
                 .notificationToken(notificationToken)
                 .userId(userId)

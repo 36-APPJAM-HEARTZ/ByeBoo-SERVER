@@ -2,6 +2,7 @@ package com.heartz.byeboo.adapter.out;
 
 import com.heartz.byeboo.adapter.out.persistence.entity.UserEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.UserRepository;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserIdCurrentNumberProjection;
 import com.heartz.byeboo.application.port.out.user.CreateUserPort;
 import com.heartz.byeboo.application.port.out.user.DeleteUserPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
@@ -84,7 +85,7 @@ public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort,
     public Long countAllUsers() { return userRepository.count();}
 
     @Override
-    public List<UserEntity> findUsersWithExpiredQuest(LocalDateTime thresholdStart, LocalDateTime thresholdEnd) {
+    public List<UserIdCurrentNumberProjection> findUsersWithExpiredQuest(LocalDateTime thresholdStart, LocalDateTime thresholdEnd) {
         return userRepository.findUsersWithExpiredQuest(thresholdStart, thresholdEnd);
     }
 }

@@ -22,7 +22,7 @@ public class NotificationTokenController {
             @UserId Long userId,
             @RequestBody NotificationTokenRequestDto requestDto
             ){
-        return BaseResponse.success(notificationTokenUseCase.saveToken(NotificationTokenSaveCommand.from(userId, requestDto.token())));
+        return BaseResponse.success(notificationTokenUseCase.saveToken(NotificationTokenSaveCommand.of(userId, requestDto.token())));
     }
 
     @PatchMapping
@@ -30,7 +30,7 @@ public class NotificationTokenController {
             @UserId Long userId,
             @RequestBody NotificationTokenRequestDto requestDto
     ){
-        return BaseResponse.success(notificationTokenUseCase.updateTimeStamp(NotificationTokenUpdateCommand.from(userId, requestDto.token())));
+        return BaseResponse.success(notificationTokenUseCase.updateTimeStamp(NotificationTokenUpdateCommand.of(userId, requestDto.token())));
     }
 
     @DeleteMapping
@@ -38,6 +38,6 @@ public class NotificationTokenController {
             @UserId Long userId,
             @RequestBody NotificationTokenRequestDto requestDto
     ){
-        return BaseResponse.success(notificationTokenUseCase.deleteToken(NotificationTokenDeleteCommand.from(userId, requestDto.token())));
+        return BaseResponse.success(notificationTokenUseCase.deleteToken(NotificationTokenDeleteCommand.of(userId, requestDto.token())));
     }
 }

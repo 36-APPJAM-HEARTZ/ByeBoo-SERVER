@@ -3,6 +3,7 @@ package com.heartz.byeboo.application.service.userquest;
 import com.heartz.byeboo.adapter.out.FCMNotificationPersistenceAdapter;
 import com.heartz.byeboo.adapter.out.persistence.entity.NotificationTokenEntity;
 import com.heartz.byeboo.adapter.out.persistence.entity.UserEntity;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserIdCurrentNumberProjection;
 import com.heartz.byeboo.application.port.in.dto.response.SignedUrlResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyResponseDto;
@@ -193,14 +194,13 @@ public class UserQuestService implements UserQuestUseCase {
 
         log.info("[Scheduler] Quest 알림 스케줄러 실행됨 - now={}, start={}, end={}", now, thresholdStart, thresholdEnd);
 
-        List<UserEntity> userEntities = retrieveUserPort.findUsersWithExpiredQuest(thresholdStart, thresholdEnd);
-        log.info("[Scheduler] 만료된 퀘스트 유저 수: {}", userEntities.size());
+        List<UserIdCurrentNumberProjection> userIdCurrentNumberProjections = retrieveUserPort.findUsersWithExpiredQuest(thresholdStart, thresholdEnd);
+        log.info("[Scheduler] 만료된 퀘스트 유저 수: {}", userIdCurrentNumberProjections.size());
 
-        for (UserEntity user: userEntities) {
-            log.info("[Scheduler] 유저 처리: id={}, currentNumber={}, alarmEnabled={}",
-                    user.getId(), user.getCurrentNumber(), user.isAlarmEnabled());
-            if(user.getCurrentNumber() != 31) {
-                List<NotificationTokenEntity> tokens = retrieveNotificationTokenPort.findAllByUserId(user.getId());
+        for (UserIdCurrentNumberProjection projection: userIdCurrentNumberProjections) {
+            log.info("[Scheduler] 유저 처리: id={}, currentNumber={}",projection.getId(), projection.getCurrentNumber());
+            if(projection.getCurrentNumber() != 31) {
+                List<NotificationTokenEntity> tokens = retrieveNotificationTokenPort.findAllByUserId(projection.getId());
 
                 for (NotificationTokenEntity token : tokens) {
                     try {
