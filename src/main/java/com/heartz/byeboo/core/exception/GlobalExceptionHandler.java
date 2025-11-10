@@ -11,6 +11,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -70,6 +72,7 @@ public class GlobalExceptionHandler {
         String name = e.getName();
         String value = String.valueOf(e.getValue());
         String message = String.format("요청 파라미터 [%s]의 값 [%s]은 올바른 형식이 아닙니다.", name, value);
+
         return convert(GlobalErrorCode.TYPE_MISMATCH, message);
     }
 
@@ -157,7 +160,9 @@ public class GlobalExceptionHandler {
     }
 
     private DiscordMessageDto createMessage(Exception e, WebRequest request) {
-        EmbedDto embed = EmbedDto.error(createRequestFullPath(request), getStackTrace(e).substring(0, 1000));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        EmbedDto embed = EmbedDto.error(createRequestFullPath(request), getStackTrace(e).substring(0, 1000), authentication);
         return DiscordMessageDto.error(List.of(embed));
     }
 
