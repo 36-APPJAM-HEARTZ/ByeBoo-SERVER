@@ -1,9 +1,12 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
+import com.heartz.byeboo.adapter.in.web.dto.request.AdminLoginRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.UserLoginRequestDto;
 import com.heartz.byeboo.application.command.auth.ReissueCommand;
+import com.heartz.byeboo.application.command.user.AdminLoginCommand;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserLoginResponse;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserReissueResponse;
+import com.heartz.byeboo.application.port.in.dto.response.user.AdminLoginResponseDto;
 import com.heartz.byeboo.constants.AuthConstants;
 import com.heartz.byeboo.core.annotation.UserId;
 import com.heartz.byeboo.core.common.BaseResponse;
@@ -25,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth/")
 @Tag(name = "AUTH API", description = "AUTH 대한 API입니다.")
-public class OAuthController {
+public class AuthController {
 
     private final OAuthUseCase oAuthUseCase;
 
@@ -144,4 +147,30 @@ public class OAuthController {
         return BaseResponse.success(oAuthUseCase.reissue(ReissueCommand.of(refreshToken)));
     }
 
+
+    @Operation(
+            summary = "관리자 로그인",
+            description = "관리자 로그인하는 API 입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "관리자 로그인 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @PostMapping("/admin/login")
+    public BaseResponse<AdminLoginResponseDto> adminLogin(
+            @RequestBody final AdminLoginRequestDto requestDto
+    ){
+        AdminLoginCommand command = AdminLoginCommand.of(requestDto.id(), requestDto.password());
+        return BaseResponse.success(oAuthUseCase.adminLogin(command));
+    }
 }
