@@ -1,5 +1,6 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
+import com.heartz.byeboo.adapter.in.web.dto.request.AdminLoginRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.UserCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.UserNameUpdateRequestDto;
 import com.heartz.byeboo.application.command.user.*;
@@ -9,7 +10,6 @@ import com.heartz.byeboo.application.port.in.dto.response.user.*;
 import com.heartz.byeboo.core.annotation.UserId;
 import com.heartz.byeboo.core.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -253,8 +253,8 @@ public class UserController {
                     )
             }
     )
-    @PatchMapping("/api/v1/users/alarm")
-    public BaseResponse<AlarmEnabledResponse> updateAlarmPermission(
+    @PatchMapping("/users/alarm")
+    public BaseResponse<AlarmEnabledResponseDto> updateAlarmPermission(
             @UserId final Long userId
     ){
         AlarmPermissionCommand alarmPermissionCommand = AlarmPermissionCommand.of(userId);

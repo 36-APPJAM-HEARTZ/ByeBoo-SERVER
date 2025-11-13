@@ -21,11 +21,13 @@ import com.heartz.byeboo.infrastructure.api.discord.DiscordOnboardingFeignClient
 import com.heartz.byeboo.infrastructure.dto.discord.DiscordMessageDto;
 import com.heartz.byeboo.infrastructure.dto.discord.EmbedDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.heartz.byeboo.domain.type.EUserStatus.ACTIVE;
 
@@ -221,13 +223,13 @@ public class UserService implements UserUseCase {
 
     @Override
     @Transactional
-    public AlarmEnabledResponse updateAlarmPermission(AlarmPermissionCommand alarmPermissionCommand) {
+    public AlarmEnabledResponseDto updateAlarmPermission(AlarmPermissionCommand alarmPermissionCommand) {
         User currentUser = retrieveUserPort.getUserById(alarmPermissionCommand.getUserId());
 
         currentUser.updateAlarmState(!currentUser.isAlarmEnabled());
         updateUserPort.updateAlarmEnabled(currentUser);
         
-        return AlarmEnabledResponse.of(currentUser.isAlarmEnabled());
+        return AlarmEnabledResponseDto.of(currentUser.isAlarmEnabled());
     }
 
     private Boolean isBeforeStart(User user) {
