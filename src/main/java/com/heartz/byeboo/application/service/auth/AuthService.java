@@ -2,9 +2,11 @@ package com.heartz.byeboo.application.service.auth;
 
 import com.heartz.byeboo.adapter.out.OAuthUserInfoAdapter;
 import com.heartz.byeboo.application.command.auth.*;
+import com.heartz.byeboo.application.command.user.AdminLoginCommand;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserInfoResponse;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserLoginResponse;
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserReissueResponse;
+import com.heartz.byeboo.application.port.in.dto.response.user.AdminLoginResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.OAuthUseCase;
 import com.heartz.byeboo.application.port.out.notificationtoken.DeleteNotificationTokenPort;
 import com.heartz.byeboo.application.port.out.token.CreateTokenPort;
@@ -13,9 +15,12 @@ import com.heartz.byeboo.application.port.out.token.RetrieveTokenPort;
 import com.heartz.byeboo.application.port.out.token.UpdateTokenPort;
 import com.heartz.byeboo.application.port.out.user.*;
 import com.heartz.byeboo.application.port.out.userquest.DeleteUserQuestPort;
+import com.heartz.byeboo.core.exception.CustomException;
+import com.heartz.byeboo.domain.exception.UserErrorCode;
 import com.heartz.byeboo.domain.model.Token;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
+import com.heartz.byeboo.domain.type.EPlatform;
 import com.heartz.byeboo.domain.type.ERole;
 import com.heartz.byeboo.infrastructure.dto.SocialInfoResponse;
 import com.heartz.byeboo.mapper.UserMapper;
@@ -24,6 +29,7 @@ import com.heartz.byeboo.security.jwt.JwtValidator;
 import com.heartz.byeboo.security.jwt.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +40,7 @@ import static com.heartz.byeboo.domain.type.EUserStatus.ACTIVE;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class OAuthService implements OAuthUseCase {
+public class AuthService implements OAuthUseCase {
 
     private final OAuthUserInfoAdapter oAuthUserInfoAdapter;
     private final RetrieveUserPort retrieveUserPort;
@@ -51,6 +57,12 @@ public class OAuthService implements OAuthUseCase {
     private final DeleteUserJourneyPort deleteUserJourneyPort;
     private final DeleteNotificationTokenPort deleteNotificationTokenPort;
 
+
+    @Value("${admin.login.id}")
+    private String adminId;
+
+    @Value("${admin.login.pw}")
+    private String adminPW;
 
     @Transactional
     @Override
@@ -125,6 +137,56 @@ public class OAuthService implements OAuthUseCase {
         return UserReissueResponse.from(issuedTokenResponse);
     }
 
+    @Override
+    @Transactional
+    public AdminLoginResponseDto adminLogin(AdminLoginCommand adminLoginCommand) {
+        if (!validateAdministor(adminLoginCommand.getId(), adminLoginCommand.getPassword())) {
+            throw new CustomException(UserErrorCode.ADMIN_LOGIN_ERROR);
+        }
+
+        Optional<User> adminUser = retrieveUserPort.findUserByPlatFormAndSeralId(
+                EPlatform.KAKAO,
+                "ADMIN_TEST"
+        );
+
+        boolean isRegistered = isRegistered(adminUser);
+        User user = adminUser.orElseGet(() -> {
+            User newAdmin = User.ofAdmin();
+            return createUserPort.createUser(newAdmin);
+        });
+
+        TokenResponse issuedTokenResponse = jwtProvider.issueTokens(
+                user.getId(),
+                getUserRole(user.getId())
+        );
+
+        Token token = Token.of(user.getId(), issuedTokenResponse.refreshToken());
+        createTokenPort.createToken(token);
+
+        if(isRegistered){
+            UserJourney userJourney = retrieveUserJourneyPort.getUserJourneyByUserAndJourney(user, user.getJourney());
+
+            return AdminLoginResponseDto.of(
+                    issuedTokenResponse,
+                    isRegistered,
+                    user.getName(),
+                    userJourney.getJourney(),
+                    userJourney.getJourneyStatus(),
+                    user.getId()
+            );
+        }
+
+        return AdminLoginResponseDto.of(
+                issuedTokenResponse,
+                isRegistered,
+                null,
+                null,
+                null,
+                user.getId()
+        );
+
+    }
+
     private boolean isRegistered(final Optional<User> user) {
         return user.map(u -> u.getStatus() == ACTIVE)
                 .orElse(false);
@@ -143,4 +205,7 @@ public class OAuthService implements OAuthUseCase {
         return retrieveUserPort.getUserById(userId).getRole().getValue();
     }
 
+    private Boolean validateAdministor(String id, String password){
+        return id.equals(adminId) && password.equals(adminPW);
+    }
 }
