@@ -42,6 +42,16 @@ public class User {
                 .build();
     }
 
+    public static User ofAdmin(){
+        return User.builder()
+                .serialId("ADMIN_TEST")
+                .platform(EPlatform.KAKAO)
+                .role(ERole.ADMIN)
+                .refreshToken(null)
+                .build();
+    }
+
+
     public void initializeCurrentNumber() {
         this.currentNumber = 0L;
     }
