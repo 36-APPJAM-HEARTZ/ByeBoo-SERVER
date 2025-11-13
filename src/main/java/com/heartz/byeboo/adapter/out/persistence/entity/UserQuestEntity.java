@@ -1,5 +1,6 @@
 package com.heartz.byeboo.adapter.out.persistence.entity;
 
+import com.heartz.byeboo.domain.model.UserQuest;
 import com.heartz.byeboo.domain.type.EQuestEmotionState;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -37,12 +38,14 @@ public class UserQuestEntity extends BaseEntity{
 
     @Builder
     public UserQuestEntity(
+            Long id,
             String answer,
             UUID imageKey,
             EQuestEmotionState questEmotionState,
             Long userId,
             Long questId
     ) {
+        this.id = id;
         this.answer = answer;
         this.imageKey = imageKey;
         this.questEmotionState = questEmotionState;
@@ -63,6 +66,17 @@ public class UserQuestEntity extends BaseEntity{
                 .questEmotionState(questEmotionState)
                 .userId(userId)
                 .questId(questId)
+                .build();
+    }
+
+    public static UserQuestEntity from(UserQuest userQuest) {
+        return UserQuestEntity.builder()
+                .id(userQuest.getId())
+                .answer(userQuest.getAnswer())
+                .imageKey(userQuest.getImageKey())
+                .questEmotionState(userQuest.getQuestEmotionState())
+                .userId(userQuest.getUser().getId())
+                .questId(userQuest.getQuest().getId())
                 .build();
     }
 }

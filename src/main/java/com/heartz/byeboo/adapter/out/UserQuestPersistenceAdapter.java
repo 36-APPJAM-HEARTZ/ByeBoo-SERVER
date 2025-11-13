@@ -5,6 +5,7 @@ import com.heartz.byeboo.adapter.out.persistence.repository.UserQuestRepository;
 import com.heartz.byeboo.application.port.out.userquest.CreateUserQuestPort;
 import com.heartz.byeboo.application.port.out.userquest.DeleteUserQuestPort;
 import com.heartz.byeboo.application.port.out.userquest.RetrieveUserQuestPort;
+import com.heartz.byeboo.application.port.out.userquest.UpdateUserQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
 import com.heartz.byeboo.domain.model.Quest;
@@ -15,12 +16,9 @@ import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @RequiredArgsConstructor
 @Component
-public class UserQuestPersistenceAdapter implements CreateUserQuestPort, RetrieveUserQuestPort, DeleteUserQuestPort {
+public class UserQuestPersistenceAdapter implements CreateUserQuestPort, RetrieveUserQuestPort, DeleteUserQuestPort, UpdateUserQuestPort {
 
     private final UserQuestRepository userQuestRepository;
 
@@ -63,5 +61,12 @@ public class UserQuestPersistenceAdapter implements CreateUserQuestPort, Retriev
     @Override
     public void deleteAllByUserId(Long userId) {
         userQuestRepository.deleteAllByUserId(userId);
+    }
+
+    @Override
+    public void updateUserQuest(UserQuest userQuest) {
+        UserQuestEntity userQuestEntity = UserQuestMapper.toEntityForUpdate(userQuest);
+
+        userQuestRepository.save(userQuestEntity);
     }
 }

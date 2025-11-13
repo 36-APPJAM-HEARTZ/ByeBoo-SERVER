@@ -1,9 +1,10 @@
 package com.heartz.byeboo.adapter.out;
 
 import com.google.cloud.storage.*;
-import com.heartz.byeboo.application.port.out.CreateObjectPort;
-import com.heartz.byeboo.application.port.out.RetrieveObjectPort;
-import com.heartz.byeboo.application.port.out.ValidateObjectPort;
+import com.heartz.byeboo.application.port.out.gcs.CreateObjectPort;
+import com.heartz.byeboo.application.port.out.gcs.DeleteObjectPort;
+import com.heartz.byeboo.application.port.out.gcs.RetrieveObjectPort;
+import com.heartz.byeboo.application.port.out.gcs.ValidateObjectPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Component
-public class GcsAdapter implements ValidateObjectPort, CreateObjectPort, RetrieveObjectPort {
+public class GcsAdapter implements ValidateObjectPort, CreateObjectPort, RetrieveObjectPort, DeleteObjectPort {
 
     private final Storage storage;
 
@@ -60,4 +61,8 @@ public class GcsAdapter implements ValidateObjectPort, CreateObjectPort, Retriev
         return signedUrl.toString();
     }
 
+    @Override
+    public void deleteObject(String imageKey) {
+        storage.delete(BlobId.of(bucketName, imageKey));
+    }
 }
