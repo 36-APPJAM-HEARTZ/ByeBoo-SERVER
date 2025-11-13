@@ -16,10 +16,7 @@ import com.heartz.byeboo.domain.model.Quest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserJourney;
 import com.heartz.byeboo.domain.model.UserQuest;
-import com.heartz.byeboo.domain.type.ECharacterDialogue;
-import com.heartz.byeboo.domain.type.EJourney;
-import com.heartz.byeboo.domain.type.EJourneyStatus;
-import com.heartz.byeboo.domain.type.EUserCurrentStatus;
+import com.heartz.byeboo.domain.type.*;
 import com.heartz.byeboo.infrastructure.api.discord.DiscordOnboardingFeignClient;
 import com.heartz.byeboo.infrastructure.dto.discord.DiscordMessageDto;
 import com.heartz.byeboo.infrastructure.dto.discord.EmbedDto;
@@ -187,29 +184,39 @@ public class UserService implements UserUseCase {
     ) {
         User currentUser = retrieveUserPort.getUserById(userCharacterDialogueCommand.getId());
         ECharacterDialogue dialogue;
+        ECharacterTapDialogue tapDialogue;
 
         if (isBeforeStart(currentUser))
             return UserCharacterResponseDto.of(
-                    ECharacterDialogue.BEFORE_START.getDialogue(currentUser.getName())
+                    ECharacterDialogue.BEFORE_START.getDialogue(currentUser.getName()),
+                    ECharacterTapDialogue.BEFORE_START.getTapDialogue(currentUser.getName())
             );
         if (isInitialStart(currentUser))
             return UserCharacterResponseDto.of(
-                    ECharacterDialogue.START.getDialogue(currentUser.getName())
+                    ECharacterDialogue.START.getDialogue(currentUser.getName()),
+                    ECharacterTapDialogue.START.getTapDialogue(currentUser.getName())
             );
 
         if (isCompleted(currentUser)) {
             return UserCharacterResponseDto.of(
-                    ECharacterDialogue.COMPLETED.getDialogue(currentUser.getName())
+                    ECharacterDialogue.COMPLETED.getDialogue(currentUser.getName()),
+                    ECharacterTapDialogue.COMPLETED.getTapDialogue(currentUser.getName())
             );
         }
 
         if(!isTodayCompleted(getRecentUserQuestByUser(currentUser))) {
             dialogue = ECharacterDialogue.START;
+            tapDialogue = ECharacterTapDialogue.START;
+
         } else {
             dialogue = ECharacterDialogue.IN_PROGRESS;
+            tapDialogue = ECharacterTapDialogue.IN_PROGRESS;
         }
 
-        return UserCharacterResponseDto.of(dialogue.getDialogue(currentUser.getName()));
+        return UserCharacterResponseDto.of(
+                dialogue.getDialogue(currentUser.getName()),
+                tapDialogue.getTapDialogue(currentUser.getName())
+        );
     }
 
     @Override
