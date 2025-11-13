@@ -55,4 +55,16 @@ public class UserQuest {
                 .createdDate(createdDate)
                 .build();
     }
+
+    public void updateImageKey(UUID imageKey){
+        this.imageKey = imageKey;
+    }
+
+    public void updateAnswer(String answer){
+        this.answer = answer;
+    }
+
+    public void updateEQuestEmotionState(EQuestEmotionState questEmotionState){
+        this.questEmotionState = questEmotionState;
+    }
 }

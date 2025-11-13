@@ -2,16 +2,18 @@ package com.heartz.byeboo.application.service.userquest;
 
 import com.heartz.byeboo.adapter.out.FCMNotificationPersistenceAdapter;
 import com.heartz.byeboo.adapter.out.persistence.entity.NotificationTokenEntity;
-import com.heartz.byeboo.adapter.out.persistence.entity.UserEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserIdCurrentNumberProjection;
+import com.heartz.byeboo.application.command.SignedUrlCreateCommand;
+import com.heartz.byeboo.application.command.userquest.*;
 import com.heartz.byeboo.application.port.in.dto.response.SignedUrlResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.UserQuestDetailResponseDto;
-import com.heartz.byeboo.application.command.*;
-import com.heartz.byeboo.application.command.userquest.*;
 import com.heartz.byeboo.application.port.in.usecase.UserQuestUseCase;
-import com.heartz.byeboo.application.port.out.*;
+import com.heartz.byeboo.application.port.out.gcs.CreateObjectPort;
+import com.heartz.byeboo.application.port.out.gcs.DeleteObjectPort;
+import com.heartz.byeboo.application.port.out.gcs.RetrieveObjectPort;
+import com.heartz.byeboo.application.port.out.gcs.ValidateObjectPort;
 import com.heartz.byeboo.application.port.out.notificationtoken.RetrieveNotificationTokenPort;
 import com.heartz.byeboo.application.port.out.quest.RetrieveQuestPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
@@ -20,6 +22,7 @@ import com.heartz.byeboo.application.port.out.user.UpdateUserJourneyPort;
 import com.heartz.byeboo.application.port.out.user.UpdateUserPort;
 import com.heartz.byeboo.application.port.out.userquest.CreateUserQuestPort;
 import com.heartz.byeboo.application.port.out.userquest.RetrieveUserQuestPort;
+import com.heartz.byeboo.application.port.out.userquest.UpdateUserQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.QuestErrorCode;
 import com.heartz.byeboo.domain.exception.UserJourneyErrorCode;
@@ -59,6 +62,8 @@ public class UserQuestService implements UserQuestUseCase {
     private final UpdateUserJourneyPort updateUserJourneyPort;
     private final RetrieveNotificationTokenPort retrieveNotificationTokenPort;
     private final FCMNotificationPersistenceAdapter fCMNotificationPersistenceAdapter;
+    private final UpdateUserQuestPort updateUserQuestPort;
+    private final DeleteObjectPort deleteObjectPort;
 
     @Override
     @Transactional
@@ -211,5 +216,40 @@ public class UserQuestService implements UserQuestUseCase {
                 }
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public void updateRecordingQuest(RecordingQuestCreateCommand command) {
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
+        Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
+        UserQuest userQuest = retrieveUserQuestPort.getUserQuestByUserAndQuest(findUser, findQuest);
+
+        userQuest.updateAnswer(command.getAnswer());
+        userQuest.updateEQuestEmotionState(command.getQuestEmotionState());
+
+        updateUserQuestPort.updateUserQuest(userQuest);
+
+        isUserJourneyCompleted(findUser);
+    }
+
+    @Override
+    @Transactional
+    public void updateActiveQuest(ActiveQuestCreateCommand command) {
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
+        Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
+        UserQuest userQuest = retrieveUserQuestPort.getUserQuestByUserAndQuest(findUser, findQuest);
+        String imageKeyToDelete = userQuest.getImageKey().toString();
+
+        validateObjectExist(command.getImageKey().toString());
+
+        userQuest.updateImageKey(command.getImageKey());
+        userQuest.updateAnswer(command.getAnswer());
+        userQuest.updateEQuestEmotionState(command.getQuestEmotionState());
+
+        if(!command.getImageKey().toString().equals(imageKeyToDelete))
+            deleteObjectPort.deleteObject(imageKeyToDelete);
+
+        updateUserQuestPort.updateUserQuest(userQuest);
     }
 }

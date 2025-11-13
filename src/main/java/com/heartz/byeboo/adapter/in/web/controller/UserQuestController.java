@@ -217,4 +217,75 @@ public class UserQuestController {
         return BaseResponse.success(null);
     }
 
+    @Operation(
+            summary = "퀘스트 답변 수정(질문/답변형)",
+            description = "질문/답변형 퀘스트에 대한 답변을 수정하는 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "질문형 퀘스트 답변 수정 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일떄"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "퀘스트 답변 길이가 500 초과일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "퀘스트 답변 길이가 10보다 작을때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @PatchMapping("/{questId}/recording")
+    public BaseResponse<Void> updateRecordingQuest(
+            @UserId final Long userId,
+            @RequestBody final RecordingQuestRequestDto recordingQuestRequestDto,
+            @PathVariable final Long questId){
+        RecordingQuestCreateCommand command = RecordingQuestCreateCommand.from(recordingQuestRequestDto, questId, userId);
+        userQuestUseCase.updateRecordingQuest(command);
+        return BaseResponse.success(null);
+    }
+
+    @Operation(
+            summary = "퀘스트 답변 저장(행동형)",
+            description = "퀘스트에 대한 답변을 저장하는 API입니다. (사진 제외, 텍스트만!)",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "퀘스트 팁 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "퀘스트 답변 길이가 200 초과일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "버킷에서 이미지를 찾을 수 없을때"
+                    )
+            }
+    )
+    @PatchMapping("/{questId}/active")
+    public BaseResponse<Void> updateActiveQuest(
+            @UserId final Long userId,
+            @RequestBody final ActiveQuestRequestDto activeQuestRequestDto,
+            @PathVariable final Long questId){
+        ActiveQuestCreateCommand command = ActiveQuestCreateCommand.from(activeQuestRequestDto, questId, userId);
+        userQuestUseCase.updateActiveQuest(command);
+        return BaseResponse.success(null);
+    }
 }

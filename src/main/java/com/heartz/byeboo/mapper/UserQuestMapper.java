@@ -72,4 +72,8 @@ public class UserQuestMapper {
         );
     }
 
+    public static UserQuestEntity toEntityForUpdate(UserQuest userQuest) {
+        return UserQuestEntity.from(userQuest);
+    }
+
 }
