@@ -3,11 +3,11 @@ package com.heartz.byeboo.application.port.in.dto.response.user;
 import lombok.Builder;
 
 @Builder
-public record AlarmEnabledResponse(
+public record AlarmEnabledResponseDto(
         boolean alarmEnabled
 ) {
-    public static AlarmEnabledResponse of(boolean alarmState){
-        return AlarmEnabledResponse.builder()
+    public static AlarmEnabledResponseDto of(boolean alarmState){
+        return AlarmEnabledResponseDto.builder()
                 .alarmEnabled(alarmState)
                 .build();
     }

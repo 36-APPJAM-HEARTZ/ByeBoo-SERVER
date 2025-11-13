@@ -1,9 +1,10 @@
 package com.heartz.byeboo.application.port.in.dto.response.user;
 
 public record UserCharacterResponseDto(
-        String dialogue
+        String dialogue,
+        String tapDialogue
 ) {
-    public static UserCharacterResponseDto of(String dialogue) {
-        return new UserCharacterResponseDto(dialogue);
+    public static UserCharacterResponseDto of(String dialogue, String tapDialogue) {
+        return new UserCharacterResponseDto(dialogue, tapDialogue);
     }
 }

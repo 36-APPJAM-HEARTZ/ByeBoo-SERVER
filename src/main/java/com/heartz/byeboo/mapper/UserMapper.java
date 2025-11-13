@@ -59,9 +59,6 @@ public class UserMapper {
         );
     }
 
-
-
-
     public static User userInfoToDomain(String serialId, EPlatform platform, ERole role, String refreshToken){
         return User.builder()
                 .serialId(serialId)
