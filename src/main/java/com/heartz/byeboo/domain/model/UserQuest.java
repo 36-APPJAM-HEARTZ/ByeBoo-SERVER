@@ -63,8 +63,4 @@ public class UserQuest {
     public void updateAnswer(String answer){
         this.answer = answer;
     }
-
-    public void updateEQuestEmotionState(EQuestEmotionState questEmotionState){
-        this.questEmotionState = questEmotionState;
-    }
 }
