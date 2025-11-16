@@ -1,6 +1,6 @@
 package com.heartz.byeboo.application.command.userquest;
 
-import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestCreateRequestDto;
 import com.heartz.byeboo.constants.QuestConstants;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
@@ -17,12 +17,12 @@ public class RecordingQuestCreateCommand {
     private Long questId;
     private Long userId;
 
-    public static RecordingQuestCreateCommand from(RecordingQuestRequestDto recordingQuestRequestDto, Long questId, Long userId) {
-        validateAnswerLength(recordingQuestRequestDto.answer());
+    public static RecordingQuestCreateCommand from(RecordingQuestCreateRequestDto recordingQuestCreateRequestDto, Long questId, Long userId) {
+        validateAnswerLength(recordingQuestCreateRequestDto.answer());
         try {
             return RecordingQuestCreateCommand.builder()
-                    .answer(recordingQuestRequestDto.answer())
-                    .questEmotionState(EQuestEmotionState.valueOf(recordingQuestRequestDto.questEmotionState()))
+                    .answer(recordingQuestCreateRequestDto.answer())
+                    .questEmotionState(EQuestEmotionState.valueOf(recordingQuestCreateRequestDto.questEmotionState()))
                     .questId(questId)
                     .userId(userId)
                     .build();

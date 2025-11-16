@@ -1,6 +1,6 @@
 package com.heartz.byeboo.application.command.userquest;
 
-import com.heartz.byeboo.adapter.in.web.dto.request.ActiveQuestRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.ActiveQuestCreateRequestDto;
 import com.heartz.byeboo.constants.QuestConstants;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
@@ -20,13 +20,13 @@ public class ActiveQuestCreateCommand {
     private Long questId;
     private Long userId;
 
-    public static ActiveQuestCreateCommand from(ActiveQuestRequestDto activeQuestRequestDto, Long questId, Long userId) {
-        validateAnswerLength(activeQuestRequestDto.answer());
+    public static ActiveQuestCreateCommand from(ActiveQuestCreateRequestDto activeQuestCreateRequestDto, Long questId, Long userId) {
+        validateAnswerLength(activeQuestCreateRequestDto.answer());
         try {
             return ActiveQuestCreateCommand.builder()
-                    .answer(activeQuestRequestDto.answer())
-                    .questEmotionState(EQuestEmotionState.valueOf(activeQuestRequestDto.questEmotionState()))
-                    .imageKey(activeQuestRequestDto.imageKey())
+                    .answer(activeQuestCreateRequestDto.answer())
+                    .questEmotionState(EQuestEmotionState.valueOf(activeQuestCreateRequestDto.questEmotionState()))
+                    .imageKey(activeQuestCreateRequestDto.imageKey())
                     .questId(questId)
                     .userId(userId)
                     .build();
