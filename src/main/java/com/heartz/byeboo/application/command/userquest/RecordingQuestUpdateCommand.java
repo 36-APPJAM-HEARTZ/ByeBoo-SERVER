@@ -1,28 +1,25 @@
 package com.heartz.byeboo.application.command.userquest;
 
-import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestCreateRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestUpdateRequestDto;
 import com.heartz.byeboo.constants.QuestConstants;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
-import com.heartz.byeboo.domain.type.EQuestEmotionState;
 import com.heartz.byeboo.utils.TextUtil;
 import lombok.Builder;
 import lombok.Getter;
 
 @Builder
 @Getter
-public class RecordingQuestCreateCommand {
+public class RecordingQuestUpdateCommand {
     private String answer;
-    private EQuestEmotionState questEmotionState;
     private Long questId;
     private Long userId;
 
-    public static RecordingQuestCreateCommand from(RecordingQuestCreateRequestDto recordingQuestCreateRequestDto, Long questId, Long userId) {
-        validateAnswerLength(recordingQuestCreateRequestDto.answer());
+    public static RecordingQuestUpdateCommand from(RecordingQuestUpdateRequestDto recordingQuestRequestDto, Long questId, Long userId) {
+        validateAnswerLength(recordingQuestRequestDto.answer());
         try {
-            return RecordingQuestCreateCommand.builder()
-                    .answer(recordingQuestCreateRequestDto.answer())
-                    .questEmotionState(EQuestEmotionState.valueOf(recordingQuestCreateRequestDto.questEmotionState()))
+            return RecordingQuestUpdateCommand.builder()
+                    .answer(recordingQuestRequestDto.answer())
                     .questId(questId)
                     .userId(userId)
                     .build();

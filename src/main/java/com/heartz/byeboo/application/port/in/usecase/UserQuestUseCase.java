@@ -13,6 +13,6 @@ public interface UserQuestUseCase {
     UserQuestDetailResponseDto getDetailQuest(UserQuestDetailCommand command);
     JourneyListResponseDto getCompletedJourney(CompletedJourneyCommand command);
     void updateJourneyStatus(JourneyUpdateCommand command);
-    void updateRecordingQuest(RecordingQuestCreateCommand command);
-    void updateActiveQuest(ActiveQuestCreateCommand command);
+    void updateRecordingQuest(RecordingQuestUpdateCommand command);
+    void updateActiveQuest(ActiveQuestUpdateCommand command);
 }

@@ -1,8 +1,6 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
-import com.heartz.byeboo.adapter.in.web.dto.request.ActiveQuestRequestDto;
-import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestRequestDto;
-import com.heartz.byeboo.adapter.in.web.dto.request.SignedUrlRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.*;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.UserQuestDetailResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.SignedUrlResponseDto;
@@ -52,9 +50,9 @@ public class UserQuestController {
     @PostMapping("/{questId}/recording")
     public BaseResponse<Void> createRecordingQuest(
             @UserId final Long userId,
-            @RequestBody final RecordingQuestRequestDto recordingQuestRequestDto,
+            @RequestBody final RecordingQuestCreateRequestDto recordingQuestCreateRequestDto,
             @PathVariable final Long questId){
-        RecordingQuestCreateCommand command = RecordingQuestCreateCommand.from(recordingQuestRequestDto, questId, userId);
+        RecordingQuestCreateCommand command = RecordingQuestCreateCommand.from(recordingQuestCreateRequestDto, questId, userId);
         userQuestUseCase.createRecordingQuest(command);
         return BaseResponse.success(null);
     }
@@ -88,9 +86,9 @@ public class UserQuestController {
     @PostMapping("/{questId}/active")
     public BaseResponse<Void> createActiveQuest(
             @UserId final Long userId,
-            @RequestBody final ActiveQuestRequestDto activeQuestRequestDto,
+            @RequestBody final ActiveQuestCreateRequestDto activeQuestCreateRequestDto,
             @PathVariable final Long questId){
-        ActiveQuestCreateCommand command = ActiveQuestCreateCommand.from(activeQuestRequestDto, questId, userId);
+        ActiveQuestCreateCommand command = ActiveQuestCreateCommand.from(activeQuestCreateRequestDto, questId, userId);
         userQuestUseCase.createActiveQuest(command);
         return BaseResponse.success(null);
     }
@@ -246,9 +244,9 @@ public class UserQuestController {
     @PatchMapping("/{questId}/recording")
     public BaseResponse<Void> updateRecordingQuest(
             @UserId final Long userId,
-            @RequestBody final RecordingQuestRequestDto recordingQuestRequestDto,
+            @RequestBody final RecordingQuestUpdateRequestDto recordingQuestUpdateRequestDto,
             @PathVariable final Long questId){
-        RecordingQuestCreateCommand command = RecordingQuestCreateCommand.from(recordingQuestRequestDto, questId, userId);
+        RecordingQuestUpdateCommand command = RecordingQuestUpdateCommand.from(recordingQuestUpdateRequestDto, questId, userId);
         userQuestUseCase.updateRecordingQuest(command);
         return BaseResponse.success(null);
     }
@@ -282,9 +280,9 @@ public class UserQuestController {
     @PatchMapping("/{questId}/active")
     public BaseResponse<Void> updateActiveQuest(
             @UserId final Long userId,
-            @RequestBody final ActiveQuestRequestDto activeQuestRequestDto,
+            @RequestBody final ActiveQuestUpdateRequestDto activeQuestUpdateRequestDto,
             @PathVariable final Long questId){
-        ActiveQuestCreateCommand command = ActiveQuestCreateCommand.from(activeQuestRequestDto, questId, userId);
+        ActiveQuestUpdateCommand command = ActiveQuestUpdateCommand.from(activeQuestUpdateRequestDto, questId, userId);
         userQuestUseCase.updateActiveQuest(command);
         return BaseResponse.success(null);
     }

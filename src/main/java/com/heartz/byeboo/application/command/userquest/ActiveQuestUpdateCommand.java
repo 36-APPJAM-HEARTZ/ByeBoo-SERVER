@@ -1,10 +1,9 @@
 package com.heartz.byeboo.application.command.userquest;
 
-import com.heartz.byeboo.adapter.in.web.dto.request.ActiveQuestCreateRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.ActiveQuestUpdateRequestDto;
 import com.heartz.byeboo.constants.QuestConstants;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
-import com.heartz.byeboo.domain.type.EQuestEmotionState;
 import com.heartz.byeboo.utils.TextUtil;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,19 +12,17 @@ import java.util.UUID;
 
 @Builder
 @Getter
-public class ActiveQuestCreateCommand {
+public class ActiveQuestUpdateCommand {
     private String answer;
-    private EQuestEmotionState questEmotionState;
     private UUID imageKey;
     private Long questId;
     private Long userId;
 
-    public static ActiveQuestCreateCommand from(ActiveQuestCreateRequestDto activeQuestCreateRequestDto, Long questId, Long userId) {
+    public static ActiveQuestUpdateCommand from(ActiveQuestUpdateRequestDto activeQuestCreateRequestDto, Long questId, Long userId) {
         validateAnswerLength(activeQuestCreateRequestDto.answer());
         try {
-            return ActiveQuestCreateCommand.builder()
+            return ActiveQuestUpdateCommand.builder()
                     .answer(activeQuestCreateRequestDto.answer())
-                    .questEmotionState(EQuestEmotionState.valueOf(activeQuestCreateRequestDto.questEmotionState()))
                     .imageKey(activeQuestCreateRequestDto.imageKey())
                     .questId(questId)
                     .userId(userId)
