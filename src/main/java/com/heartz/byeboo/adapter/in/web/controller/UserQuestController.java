@@ -63,7 +63,7 @@ public class UserQuestController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "퀘스트 팁 조회 성공"
+                            description = "퀘스트 답변 저장 성공"
                     ),
                     @ApiResponse(
                             responseCode = "404",
@@ -100,7 +100,7 @@ public class UserQuestController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "퀘스트 팁 조회 성공"
+                            description = "Signed URL 요청 성공"
                     ),
                     @ApiResponse(
                             responseCode = "404",
@@ -131,7 +131,7 @@ public class UserQuestController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "퀘스트 팁 조회 성공"
+                            description = "작성된 퀘스트 상세 조회 성공"
                     ),
                     @ApiResponse(
                             responseCode = "404",
@@ -189,7 +189,7 @@ public class UserQuestController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "퀘스트 팁 조회 성공"
+                            description = "새로운 여정 시작 성공"
                     ),
                     @ApiResponse(
                             responseCode = "404",
@@ -252,12 +252,12 @@ public class UserQuestController {
     }
 
     @Operation(
-            summary = "퀘스트 답변 저장(행동형)",
-            description = "퀘스트에 대한 답변을 저장하는 API입니다. (사진 제외, 텍스트만!)",
+            summary = "퀘스트 답변 수정(행동형)",
+            description = "퀘스트에 대한 답변을 수정하는 API입니다.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "퀘스트 팁 조회 성공"
+                            description = "행동형 퀘스트 답변 수정 성공"
                     ),
                     @ApiResponse(
                             responseCode = "404",
