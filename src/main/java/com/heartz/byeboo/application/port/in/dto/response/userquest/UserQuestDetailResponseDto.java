@@ -38,7 +38,7 @@ public record UserQuestDetailResponseDto(
                 quest.getQuestion(),
                 userQuest.getAnswer(),
                 userQuest.getQuestEmotionState().getLabel(),
-                userQuest.getImageKey().toString(),
+                null,
                 null,
                 userQuest.getQuestEmotionState().getDescription()
         );
