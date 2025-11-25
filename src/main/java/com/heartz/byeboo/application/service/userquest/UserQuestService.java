@@ -221,13 +221,12 @@ public class UserQuestService implements UserQuestUseCase {
 
     @Override
     @Transactional
-    public void updateRecordingQuest(RecordingQuestCreateCommand command) {
+    public void updateRecordingQuest(RecordingQuestUpdateCommand command) {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
         UserQuest userQuest = retrieveUserQuestPort.getUserQuestByUserAndQuest(findUser, findQuest);
 
         userQuest.updateAnswer(command.getAnswer());
-        userQuest.updateEQuestEmotionState(command.getQuestEmotionState());
 
         updateUserQuestPort.updateUserQuest(userQuest);
 
@@ -236,7 +235,7 @@ public class UserQuestService implements UserQuestUseCase {
 
     @Override
     @Transactional
-    public void updateActiveQuest(ActiveQuestCreateCommand command) {
+    public void updateActiveQuest(ActiveQuestUpdateCommand command) {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
         Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
         UserQuest userQuest = retrieveUserQuestPort.getUserQuestByUserAndQuest(findUser, findQuest);
@@ -246,7 +245,6 @@ public class UserQuestService implements UserQuestUseCase {
 
         userQuest.updateImageKey(command.getImageKey());
         userQuest.updateAnswer(command.getAnswer());
-        userQuest.updateEQuestEmotionState(command.getQuestEmotionState());
 
         if(!command.getImageKey().toString().equals(imageKeyToDelete))
             deleteObjectPort.deleteObject(imageKeyToDelete);

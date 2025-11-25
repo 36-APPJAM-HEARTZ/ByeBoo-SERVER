@@ -111,7 +111,9 @@ public class AuthService implements OAuthUseCase {
     @Transactional
     public Void withdraw(OAuthWithdrawCommand command) {
         User findUser = retrieveUserPort.getUserById(command.userId());
-        oAuthUserInfoAdapter.revoke(findUser.getPlatform(), findUser.getRefreshToken(), findUser.getSerialId());
+        if (findUser.getRole() != ERole.ADMIN) {
+            oAuthUserInfoAdapter.revoke(findUser.getPlatform(), findUser.getRefreshToken(), findUser.getSerialId());
+        }
         deleteUserQuestPort.deleteAllByUserId(findUser.getId());
         deleteUserJourneyPort.deleteAllByUserId(findUser.getId());
         deleteUserPort.deleteUserById(findUser.getId());

@@ -12,6 +12,7 @@ public record UserQuestDetailResponseDto(
         String question,
         String answer,
         String questEmotionState,
+        String imageKey,
         String imageUrl,
         String emotionDescription
 ) {
@@ -23,6 +24,7 @@ public record UserQuestDetailResponseDto(
                 quest.getQuestion(),
                 userQuest.getAnswer(),
                 userQuest.getQuestEmotionState().getLabel(),
+                userQuest.getImageKey().toString(),
                 signedUrl,
                 userQuest.getQuestEmotionState().getDescription()
                 );
@@ -36,6 +38,7 @@ public record UserQuestDetailResponseDto(
                 quest.getQuestion(),
                 userQuest.getAnswer(),
                 userQuest.getQuestEmotionState().getLabel(),
+                null,
                 null,
                 userQuest.getQuestEmotionState().getDescription()
         );
