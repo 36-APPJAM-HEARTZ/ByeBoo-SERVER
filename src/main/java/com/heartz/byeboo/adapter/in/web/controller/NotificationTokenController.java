@@ -89,7 +89,7 @@ public class NotificationTokenController {
                     )
             }
     )
-    @DeleteMapping
+    @PutMapping
     public BaseResponse<Void> deleteToken(
             @UserId Long userId,
             @RequestBody NotificationTokenRequestDto requestDto
