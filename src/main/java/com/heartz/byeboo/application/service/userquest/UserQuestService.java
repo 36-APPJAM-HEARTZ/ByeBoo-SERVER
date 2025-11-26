@@ -195,7 +195,7 @@ public class UserQuestService implements UserQuestUseCase {
     public void sendQuestNotifications() {
         LocalDateTime now = LocalDateTime.now();
         //LocalDateTime thresholdEnd = now.minusHours(24);
-        LocalDateTime thresholdEnd = now.minusMinutes(5);
+        LocalDateTime thresholdEnd = now.minusMinutes(2);
         LocalDateTime thresholdStart = thresholdEnd.minusMinutes(1);
 
         log.info("[Scheduler] Quest 알림 스케줄러 실행됨 - now={}, start={}, end={}", now, thresholdStart, thresholdEnd);
