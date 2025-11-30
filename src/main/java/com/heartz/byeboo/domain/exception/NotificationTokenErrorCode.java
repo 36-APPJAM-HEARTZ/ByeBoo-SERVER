@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum NotificationTokenErrorCode implements ErrorCode {
     NOTIFICATION_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰을 찾을 수 없습니다."),
+    ALREADY_EXIST_TOKEN(HttpStatus.CONFLICT, "이미 존재하는 토큰 입니다")
     ;
 
     private final HttpStatus status;

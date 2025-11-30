@@ -44,6 +44,11 @@ public class FCMTokenPersistenceAdapter implements CreateNotificationTokenPort, 
     }
 
     @Override
+    public boolean existsByNotificationToken(String notificationToken) {
+        return notificationTokenRepository.existsByNotificationToken(notificationToken);
+    }
+
+    @Override
     public void updateTimeStamp(NotificationToken notificationToken, User user) {
         NotificationTokenEntity notificationTokenEntity = NotificationTokenMapper.toEntityForUpdate(notificationToken, user);
         notificationTokenRepository.save(notificationTokenEntity);

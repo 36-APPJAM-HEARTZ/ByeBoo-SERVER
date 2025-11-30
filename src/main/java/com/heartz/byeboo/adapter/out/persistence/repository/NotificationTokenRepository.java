@@ -14,4 +14,5 @@ public interface NotificationTokenRepository extends JpaRepository<NotificationT
     List<NotificationTokenEntity> findAllByUserId(Long userId);
     void deleteAllByUserId(Long userId);
     void deleteByTimeStampBefore(LocalDateTime threshold);
+    boolean existsByNotificationToken(String notificationToken);
 }
