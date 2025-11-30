@@ -9,6 +9,8 @@ import com.heartz.byeboo.application.port.out.notificationtoken.DeleteNotificati
 import com.heartz.byeboo.application.port.out.notificationtoken.RetrieveNotificationTokenPort;
 import com.heartz.byeboo.application.port.out.notificationtoken.UpdateNotificationTokenPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
+import com.heartz.byeboo.core.exception.CustomException;
+import com.heartz.byeboo.domain.exception.NotificationTokenErrorCode;
 import com.heartz.byeboo.domain.model.NotificationToken;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.mapper.NotificationTokenMapper;
@@ -32,6 +34,7 @@ public class NotificationTokenService implements NotificationTokenUseCase {
     public Void saveToken(NotificationTokenSaveCommand command) {
         User currentUser = retrieveUserPort.getUserById(command.userId());
         NotificationToken notificationToken = NotificationTokenMapper.commandToDomain(command, currentUser);
+        isNotificationTokenExist(command.notificationToken());
         createNotificationTokenPort.createNotificationToken(notificationToken);
         return null;
     }
@@ -59,5 +62,11 @@ public class NotificationTokenService implements NotificationTokenUseCase {
     public void cleanUpOldNotificationTokens() {
         LocalDateTime limitDate = LocalDateTime.now().minusDays(30);
         deleteNotificationTokenPort.deleteByConnectedAtBefore(limitDate);
+    }
+
+    void isNotificationTokenExist(String notificationToken){
+        if(retrieveNotificationTokenPort.existsByNotificationToken(notificationToken)){
+            throw new CustomException(NotificationTokenErrorCode.ALREADY_EXIST_TOKEN);
+        }
     }
 }
