@@ -44,8 +44,8 @@ public class FCMTokenPersistenceAdapter implements CreateNotificationTokenPort, 
     }
 
     @Override
-    public boolean existsByNotificationToken(String notificationToken) {
-        return notificationTokenRepository.existsByNotificationToken(notificationToken);
+    public boolean existsByNotificationToken(String notificationToken, Long userId) {
+        return notificationTokenRepository.existsByNotificationTokenAndUserId(notificationToken, userId);
     }
 
     @Override

@@ -34,7 +34,7 @@ public class NotificationTokenService implements NotificationTokenUseCase {
     public Void saveToken(NotificationTokenSaveCommand command) {
         User currentUser = retrieveUserPort.getUserById(command.userId());
         NotificationToken notificationToken = NotificationTokenMapper.commandToDomain(command, currentUser);
-        isNotificationTokenExist(command.notificationToken());
+        isNotificationTokenExist(command.notificationToken(), currentUser.getId());
         createNotificationTokenPort.createNotificationToken(notificationToken);
         return null;
     }
@@ -64,8 +64,8 @@ public class NotificationTokenService implements NotificationTokenUseCase {
         deleteNotificationTokenPort.deleteByConnectedAtBefore(limitDate);
     }
 
-    void isNotificationTokenExist(String notificationToken){
-        if(retrieveNotificationTokenPort.existsByNotificationToken(notificationToken)){
+    void isNotificationTokenExist(String notificationToken, Long userId){
+        if(retrieveNotificationTokenPort.existsByNotificationToken(notificationToken, userId)){
             throw new CustomException(NotificationTokenErrorCode.ALREADY_EXIST_TOKEN);
         }
     }
