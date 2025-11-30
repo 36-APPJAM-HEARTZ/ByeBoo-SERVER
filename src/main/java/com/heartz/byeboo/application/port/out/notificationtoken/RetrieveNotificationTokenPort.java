@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface RetrieveNotificationTokenPort {
     NotificationToken getNotificationTokenByToken(String notificationToken, User user);
     List<NotificationTokenEntity> findAllByUserId(Long userId);
-    boolean existsByNotificationToken(String notificationToken);
+    boolean existsByNotificationToken(String notificationToken, Long userId);
 }
