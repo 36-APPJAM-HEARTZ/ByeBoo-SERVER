@@ -20,8 +20,8 @@ public class FCMNotificationPersistenceAdapter implements SendNotificationPort{
                         .setTitle(NotificationConstants.notificationTitle)
                         .setBody(NotificationConstants.notificationBody)
                         .build())
+                .putData("destination", "questHome")
                 .build();
-
         try {
             String response = FirebaseMessaging.getInstance().send(message);
             log.info("FCM 발송 성공: " + response);
