@@ -1,6 +1,7 @@
 package com.heartz.byeboo.application.service.usercommonquest;
 
 import com.heartz.byeboo.application.command.usercommonquest.CommonQuestCreateCommand;
+import com.heartz.byeboo.application.command.usercommonquest.CommonQuestDeleteCommand;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
 import com.heartz.byeboo.application.port.out.commonquest.RetrieveCommonQuestPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
@@ -44,6 +45,15 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
 
         UserCommonQuest userCommonQuest = UserCommonQuestMapper.commandToDomain(command, findUser, findCommonQuest);
         createUserCommonQuestPort.createUserCommonQuest(userCommonQuest);
+
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public Void deleteCommonQuest(CommonQuestDeleteCommand command) {
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
+        retrieveUserCommonQuestPort.deleteByUserIdAndId(command.getAnswerId(), findUser);
 
         return null;
     }

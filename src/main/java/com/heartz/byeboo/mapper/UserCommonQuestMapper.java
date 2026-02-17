@@ -22,4 +22,14 @@ public class UserCommonQuestMapper {
                 userCommonQuest.getCommonQuest().getId()
         );
     }
+
+    public static UserCommonQuest toDomain(UserCommonQuestEntity userCommonQuestEntity, User user, CommonQuest commonQuest){
+        return UserCommonQuest.of(
+                userCommonQuestEntity.getId(),
+                userCommonQuestEntity.getAnswer(),
+                user,
+                commonQuest,
+                userCommonQuestEntity.getCreatedDate()
+        );
+    }
 }
