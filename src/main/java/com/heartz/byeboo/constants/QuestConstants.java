@@ -8,4 +8,6 @@ public class QuestConstants {
     public static final int QUEST_BEFORE_START_COUNT = 0;
     public static final int QUEST_INITIAL_START_COUNT = 1;
     public static final int QUEST_COUNT_MAX = 31;
+    public static final int COMMON_QUEST_MAX = 500;
+    public static final int COMMON_QUEST_MIN = 10;
 }
