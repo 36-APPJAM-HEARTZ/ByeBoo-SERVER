@@ -1,8 +1,5 @@
 package com.heartz.byeboo.adapter.out.persistence.entity;
 
-import com.heartz.byeboo.domain.type.EJourney;
-import com.heartz.byeboo.domain.type.EQuestStyle;
-import com.heartz.byeboo.domain.type.EStep;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
