@@ -2,8 +2,11 @@ package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.adapter.in.web.dto.request.CommonQuestCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestCreateRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestUpdateRequestDto;
 import com.heartz.byeboo.application.command.usercommonquest.CommonQuestCreateCommand;
+import com.heartz.byeboo.application.command.usercommonquest.CommonQuestDeleteCommand;
 import com.heartz.byeboo.application.command.userquest.RecordingQuestCreateCommand;
+import com.heartz.byeboo.application.command.userquest.RecordingQuestUpdateCommand;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
 import com.heartz.byeboo.core.annotation.UserId;
 import com.heartz.byeboo.core.common.BaseResponse;
@@ -54,6 +57,33 @@ public class UerCommonQuestController {
             @PathVariable final Long questId){
         CommonQuestCreateCommand command = CommonQuestCreateCommand.from(commonQuestCreateRequestDto, questId, userId);
         userCommonQuestUseCase.createCommonQuest(command);
+        return BaseResponse.success(null);
+    }
+
+    @Operation(
+            summary = "공통 퀘스트 답변 삭제",
+            description = "공통 퀘스트에 대한 답변을 삭제하는 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "공통 퀘스트 답변 삭제 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일떄"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @DeleteMapping("/{answerId}")
+    public BaseResponse<Void> deleteCommonQuest(
+            @UserId final Long userId,
+            @PathVariable final Long answerId){
+        CommonQuestDeleteCommand command = CommonQuestDeleteCommand.from(answerId, userId);
+        userCommonQuestUseCase.deleteCommonQuest(command);
         return BaseResponse.success(null);
     }
 }
