@@ -1,14 +1,11 @@
 package com.heartz.byeboo.adapter.out.persistence.entity;
 
-import com.heartz.byeboo.domain.model.UserQuest;
-import com.heartz.byeboo.domain.type.EQuestEmotionState;
+import com.heartz.byeboo.domain.model.UserCommonQuest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -55,12 +52,12 @@ public class UserCommonQuestEntity extends BaseEntity{
                 .build();
     }
 
-    public static UserCommonQuestEntity from(UserQuest userQuest) {
+    public static UserCommonQuestEntity from(UserCommonQuest userCommonQuest) {
         return UserCommonQuestEntity.builder()
-                .id(userQuest.getId())
-                .answer(userQuest.getAnswer())
-                .userId(userQuest.getUser().getId())
-                .commonQuestId(userQuest.getQuest().getId())
+                .id(userCommonQuest.getId())
+                .answer(userCommonQuest.getAnswer())
+                .userId(userCommonQuest.getUser().getId())
+                .commonQuestId(userCommonQuest.getCommonQuest().getId())
                 .build();
     }
 }
