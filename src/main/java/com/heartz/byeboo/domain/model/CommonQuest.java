@@ -22,4 +22,10 @@ public class CommonQuest {
                 .targetDate(targetDate)
                 .build();
     }
+
+    public static CommonQuest fromId(Long id){
+        return CommonQuest.builder()
+                .id(id)
+                .build();
+    }
 }
