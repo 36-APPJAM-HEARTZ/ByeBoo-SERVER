@@ -7,4 +7,5 @@ import com.heartz.byeboo.domain.model.UserCommonQuest;
 public interface RetrieveUserCommonQuestPort {
     boolean isUserCommonQuestExists(User user);
     void deleteByUserIdAndId(Long userCommonQuestId, User user);
+    UserCommonQuest getUserCommonQuestByUserAndId(User user, Long id);
 }

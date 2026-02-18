@@ -9,4 +9,6 @@ import java.util.Optional;
 
 public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuestEntity, Long> {
     boolean existsByUserIdAndCreatedDateBetween(Long userId, LocalDateTime start, LocalDateTime end);
-    long deleteByUserIdAndId(Long userId, Long id);}
+    long deleteByUserIdAndId(Long userId, Long id);
+    Optional<UserCommonQuestEntity> findByUserIdAndId(Long userId, Long id);
+}

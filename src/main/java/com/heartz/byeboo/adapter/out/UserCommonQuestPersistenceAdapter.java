@@ -4,6 +4,7 @@ import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.UserCommonQuestRepository;
 import com.heartz.byeboo.application.port.out.usercommonquest.CreateUserCommonQuestPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.RetrieveUserCommonQuestPort;
+import com.heartz.byeboo.application.port.out.usercommonquest.UpdateUserCommonQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserCommonQuestErrorCode;
 import com.heartz.byeboo.domain.model.CommonQuest;
@@ -19,7 +20,7 @@ import java.time.LocalTime;
 
 @RequiredArgsConstructor
 @Component
-public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestPort, RetrieveUserCommonQuestPort {
+public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestPort, RetrieveUserCommonQuestPort, UpdateUserCommonQuestPort {
 
     private final UserCommonQuestRepository userCommonQuestRepository;
 
@@ -44,5 +45,23 @@ public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestP
         if (deletedCount == 0) {
             throw new CustomException(UserCommonQuestErrorCode.USER_COMMON_QUEST_NOT_FOUND);
         }
+    }
+
+    @Override
+    public UserCommonQuest getUserCommonQuestByUserAndId(User user, Long id) {
+        UserCommonQuestEntity commonQuestEntity = userCommonQuestRepository.findByUserIdAndId(user.getId(), id)
+                .orElseThrow(() -> new CustomException(UserCommonQuestErrorCode.USER_COMMON_QUEST_NOT_FOUND));
+
+        // 엔티티 -> 도메인 매핑 문제! => 가짜 객체 주입
+        CommonQuest referenceQuest = CommonQuest.fromId(commonQuestEntity.getCommonQuestId());
+        return UserCommonQuestMapper.toDomain(commonQuestEntity, user, referenceQuest);
+
+    }
+
+    @Override
+    public void updateUserCommonQuest(UserCommonQuest userCommonQuest) {
+        UserCommonQuestEntity userCommonQuestEntity = UserCommonQuestMapper.toEntityForUpdate(userCommonQuest);
+
+        userCommonQuestRepository.save(userCommonQuestEntity);
     }
 }
