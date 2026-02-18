@@ -1,10 +1,12 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.adapter.in.web.dto.request.CommonQuestCreateRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.CommonQuestUpdateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestUpdateRequestDto;
 import com.heartz.byeboo.application.command.usercommonquest.CommonQuestCreateCommand;
 import com.heartz.byeboo.application.command.usercommonquest.CommonQuestDeleteCommand;
+import com.heartz.byeboo.application.command.usercommonquest.CommonQuestUpdateCommand;
 import com.heartz.byeboo.application.command.userquest.RecordingQuestCreateCommand;
 import com.heartz.byeboo.application.command.userquest.RecordingQuestUpdateCommand;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
@@ -84,6 +86,42 @@ public class UerCommonQuestController {
             @PathVariable final Long answerId){
         CommonQuestDeleteCommand command = CommonQuestDeleteCommand.from(answerId, userId);
         userCommonQuestUseCase.deleteCommonQuest(command);
+        return BaseResponse.success(null);
+    }
+
+    @Operation(
+            summary = "공통 퀘스트 답변 수정",
+            description = "공통 퀘스트에 대한 답변을 수정하는 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "공통 퀘스트 답변 수정 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일떄"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "공통 퀘스트 답변 길이가 500 초과일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "공통 퀘스트 답변 길이가 10보다 작을때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @PatchMapping("/{answerId}")
+    public BaseResponse<Void> updateCommonQuest(
+            @UserId final Long userId,
+            @RequestBody final CommonQuestUpdateRequestDto commonQuestUpdateRequestDto,
+            @PathVariable final Long answerId){
+        CommonQuestUpdateCommand command = CommonQuestUpdateCommand.from(commonQuestUpdateRequestDto, answerId, userId);
+        userCommonQuestUseCase.updateCommonQuest(command);
         return BaseResponse.success(null);
     }
 }
