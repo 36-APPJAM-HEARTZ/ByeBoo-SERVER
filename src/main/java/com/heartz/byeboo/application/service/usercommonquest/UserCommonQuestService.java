@@ -2,11 +2,13 @@ package com.heartz.byeboo.application.service.usercommonquest;
 
 import com.heartz.byeboo.application.command.usercommonquest.CommonQuestCreateCommand;
 import com.heartz.byeboo.application.command.usercommonquest.CommonQuestDeleteCommand;
+import com.heartz.byeboo.application.command.usercommonquest.CommonQuestUpdateCommand;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
 import com.heartz.byeboo.application.port.out.commonquest.RetrieveCommonQuestPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.CreateUserCommonQuestPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.RetrieveUserCommonQuestPort;
+import com.heartz.byeboo.application.port.out.usercommonquest.UpdateUserCommonQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserCommonQuestErrorCode;
 import com.heartz.byeboo.domain.model.CommonQuest;
@@ -29,6 +31,7 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
     private final RetrieveUserPort retrieveUserPort;
     private final RetrieveCommonQuestPort retrieveCommonQuestPort;
     private final RetrieveUserCommonQuestPort retrieveUserCommonQuestPort;
+    private final UpdateUserCommonQuestPort updateUserCommonQuestPort;
 
     @Override
     @Transactional
@@ -54,6 +57,18 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
     public Void deleteCommonQuest(CommonQuestDeleteCommand command) {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
         retrieveUserCommonQuestPort.deleteByUserIdAndId(command.getAnswerId(), findUser);
+
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public Void updateCommonQuest(CommonQuestUpdateCommand command) {
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
+        UserCommonQuest userCommonQuest = retrieveUserCommonQuestPort.getUserCommonQuestByUserAndId(findUser, command.getAnswerId());
+
+        userCommonQuest.updateAnswer(command.getAnswer());
+        updateUserCommonQuestPort.updateUserCommonQuest(userCommonQuest);
 
         return null;
     }
