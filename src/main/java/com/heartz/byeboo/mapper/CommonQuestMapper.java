@@ -11,4 +11,5 @@ public class CommonQuestMapper {
                 commonQuestEntity.getTargetDate()
         );
     }
+
 }
