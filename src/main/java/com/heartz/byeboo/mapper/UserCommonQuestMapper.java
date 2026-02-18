@@ -32,4 +32,8 @@ public class UserCommonQuestMapper {
                 userCommonQuestEntity.getCreatedDate()
         );
     }
+
+    public static UserCommonQuestEntity toEntityForUpdate(UserCommonQuest userCommonQuest) {
+        return UserCommonQuestEntity.from(userCommonQuest);
+    }
 }
