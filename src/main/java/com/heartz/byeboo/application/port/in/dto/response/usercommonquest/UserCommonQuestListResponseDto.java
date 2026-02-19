@@ -8,12 +8,12 @@ import java.util.List;
 public record UserCommonQuestListResponseDto(
         String question,
         boolean isAnswered,
-        int answerCount,
+        long answerCount,
         List<UserCommonQuestDetailResponseDto> answers,
         boolean hasNext,
         Long nextCursor
 ) {
-    public static UserCommonQuestListResponseDto from(String question, boolean isAnswered, int answerCount, List<UserCommonQuestDetailResponseDto> answers, boolean hasNext, Long nextCursor){
+    public static UserCommonQuestListResponseDto from(String question, boolean isAnswered, long answerCount, List<UserCommonQuestDetailResponseDto> answers, boolean hasNext, Long nextCursor){
         return UserCommonQuestListResponseDto.builder()
                 .answerCount(answerCount)
                 .answers(answers)
