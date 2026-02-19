@@ -1,11 +1,9 @@
 package com.heartz.byeboo.application.service.usercommonquest;
 
-import com.heartz.byeboo.application.command.usercommonquest.CommonQuestCreateCommand;
-import com.heartz.byeboo.application.command.usercommonquest.CommonQuestDeleteCommand;
-import com.heartz.byeboo.application.command.usercommonquest.CommonQuestListCommand;
-import com.heartz.byeboo.application.command.usercommonquest.CommonQuestUpdateCommand;
+import com.heartz.byeboo.application.command.usercommonquest.*;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestDetailResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestListResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
 import com.heartz.byeboo.application.port.out.commonquest.RetrieveCommonQuestPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
@@ -113,6 +111,18 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
                 hasNext,
                 nextCursor
         );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserCommonQuestResponseDto getDetailCommonQuest(CommonQuestDetailCommand command) {
+        retrieveUserPort.getUserById(command.getUserId());
+
+        UserCommonQuest findUserCommonQuest = retrieveUserCommonQuestPort.getUserCommonQuestById(command.getAnswerId());
+        CommonQuest findCommonQuest = retrieveCommonQuestPort.getCommonQuestById(findUserCommonQuest.getCommonQuest().getId());
+        User findUser = retrieveUserPort.getUserById(findUserCommonQuest.getUser().getId());
+
+        return UserCommonQuestResponseDto.from(findUserCommonQuest, findCommonQuest, findUser);
     }
 
     private void validateUserCanWriteCommonQuest(CommonQuest commonQuest){
