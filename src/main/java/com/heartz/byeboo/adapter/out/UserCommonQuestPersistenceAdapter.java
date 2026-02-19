@@ -60,7 +60,6 @@ public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestP
 
     }
 
-
     @Override
     public List<UserCommonQuest> getUserCommonQuestsByCreatedDate(LocalDate targetDate, Long cursor, int limit, CommonQuest commonQuest) {
         LocalDateTime startOfToday = targetDate.atStartOfDay();

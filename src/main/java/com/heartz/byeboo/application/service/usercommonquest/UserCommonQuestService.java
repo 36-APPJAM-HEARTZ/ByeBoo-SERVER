@@ -83,31 +83,36 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
     @Override
     @Transactional(readOnly = true)
     public UserCommonQuestListResponseDto getListCommonQuest(CommonQuestListCommand command) {
-        User findUser = retrieveUserPort.getUserById(command.getUserId());
-        boolean isAnswered = isUserAlreadyAnswered(findUser, command.getTargetDate());
+        validateNotFuture(command.getTargetDate());
 
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
         CommonQuest findCommonQuest = retrieveCommonQuestPort.getCommonQuestByTargetDate(command.getTargetDate());
 
+        // 답변 여부 및 전체 카운트 확인
+        boolean isAnswered = isUserAlreadyAnswered(findUser, command.getTargetDate());
+        long totalCount = retrieveUserCommonQuestPort.countByCreatedDateBetween(command.getTargetDate());
+
+        //무한 스크롤 데이터 조회 (limit + 1)
         int limitPlusOne = command.getLimit()+1;
         List<UserCommonQuest> userCommonQuestListPlusLimit = retrieveUserCommonQuestPort.getUserCommonQuestsByCreatedDate(command.getTargetDate(), command.getCursor(), limitPlusOne, findCommonQuest);
 
+        //페이징 가공 (데이터 자르기 및 다음 커서 추출)
         boolean hasNext = hasNextData(userCommonQuestListPlusLimit.size(), limitPlusOne); // 11개를 가져왔다면 다음 페이지가 있음
         List<UserCommonQuest> slicedQuestByDate = sliceUnderLimit(hasNext, userCommonQuestListPlusLimit, command.getLimit());
-
-        long totalCont = retrieveUserCommonQuestPort.countByCreatedDateBetween(command.getTargetDate());
         Long nextCursor = getNextCursor(slicedQuestByDate);
 
-        //TODO : id가져오기 메서드 분리
-        List<Long> userIds = slicedQuestByDate.stream().map(q -> q.getUser().getId()).toList();
-        Map<Long, User> writers = writerIndexingById(userIds);
+        //작성자 정보 인덱싱 및 매핑
+        Map<Long, User> writers = writerIndexingById(extractWriterIds(slicedQuestByDate));
+        List<UserCommonQuestDetailResponseDto> userCommonQuestDetailList = mapToDetailUserCommonQuest(slicedQuestByDate, writers);
 
         return UserCommonQuestListResponseDto.from(
                 findCommonQuest.getQuestion(),
                 isAnswered,
-                totalCont,
-
-        )
-
+                totalCount,
+                userCommonQuestDetailList,
+                hasNext,
+                nextCursor
+        );
     }
 
     private void validateUserCanWriteCommonQuest(CommonQuest commonQuest){
@@ -142,23 +147,20 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
                 .toList();
     }
 
-    //TODO : UserCommonQuestDetailResponseDto로 변환
-    private List<UserCommonQuestDetailResponseDto> mapToAnswerItems(List<UserCommonQuest> quests, Map<Long, User> writerMap) {
+    private List<UserCommonQuestDetailResponseDto> mapToDetailUserCommonQuest(List<UserCommonQuest> quests, Map<Long, User> writerMap) {
         return quests.stream()
-                .map(q -> {
-                    User writer = writerMap.get(q.getUser().getId());
-                    return UserCommonQuestDetailResponseDto.(q, writer);
+                .map(userCommonQuest -> {
+                    User writer = writerMap.get(userCommonQuest.getUser().getId());
+                    return UserCommonQuestDetailResponseDto.from(userCommonQuest, writer);
                 })
                 .toList();
     }
 
-    private boolean isUserAlreadyAnswered(User targetUser, LocalDate targetDay){
-        if (targetDay.isEqual(LocalDate.now())){
-            retrieveUserCommonQuestPort.isUserCommonQuestExistsToday(targetUser);
-            return false;
-        } else {
-            return true;
+    private boolean isUserAlreadyAnswered(User targetUser, LocalDate targetDay) {
+        if (targetDay.isEqual(LocalDate.now())) {
+            return retrieveUserCommonQuestPort.isUserCommonQuestExistsToday(targetUser);
         }
+        return true;
     }
 
     private Long getNextCursor(List<UserCommonQuest> slicedQuestByDate) {
@@ -166,6 +168,12 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
             return null;
         } else {
             return slicedQuestByDate.get(slicedQuestByDate.size() - 1).getId();
+        }
+    }
+
+    private void validateNotFuture(LocalDate targetDay){
+        if(targetDay.isAfter(LocalDate.now())){
+            throw new CustomException(UserCommonQuestErrorCode.USER_COMMON_QUEST_NOT_FUTURE);
         }
     }
 
