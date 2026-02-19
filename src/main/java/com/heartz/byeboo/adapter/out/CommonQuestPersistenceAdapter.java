@@ -10,6 +10,8 @@ import com.heartz.byeboo.mapper.CommonQuestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @RequiredArgsConstructor
 @Component
 public class CommonQuestPersistenceAdapter implements RetrieveCommonQuestPort {
@@ -19,6 +21,14 @@ public class CommonQuestPersistenceAdapter implements RetrieveCommonQuestPort {
     @Override
     public CommonQuest getCommonQuestById(Long commonQuestId) {
         CommonQuestEntity commonQuestEntity = commonQuestRepository.findById(commonQuestId)
+                .orElseThrow(() -> new CustomException(CommonQuestErrorCode.COMMON_QUEST_NOT_FOUND));
+
+        return CommonQuestMapper.toDomain(commonQuestEntity);
+    }
+
+    @Override
+    public CommonQuest getCommonQuestByTargetDate(LocalDate targetDate) {
+        CommonQuestEntity commonQuestEntity = commonQuestRepository.findByTargetDate(targetDate)
                 .orElseThrow(() -> new CustomException(CommonQuestErrorCode.COMMON_QUEST_NOT_FOUND));
 
         return CommonQuestMapper.toDomain(commonQuestEntity);

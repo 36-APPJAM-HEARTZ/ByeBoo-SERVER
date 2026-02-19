@@ -21,7 +21,8 @@ public class UserMapper {
                 user.getStatus(),
                 user.getDeletedAt(),
                 user.getRefreshToken(),
-                user.isAlarmEnabled()
+                user.isAlarmEnabled(),
+                user.getProfileIcon()
         );
     }
 
@@ -38,7 +39,8 @@ public class UserMapper {
                 userEntity.getStatus(),
                 userEntity.getDeletedAt(),
                 userEntity.getRefreshToken(),
-                userEntity.isAlarmEnabled()
+                userEntity.isAlarmEnabled(),
+                userEntity.getProfileIcon()
         );
     }
 
@@ -55,7 +57,8 @@ public class UserMapper {
                 user.getStatus(),
                 user.getDeletedAt(),
                 user.getRefreshToken(),
-                user.isAlarmEnabled()
+                user.isAlarmEnabled(),
+                user.getProfileIcon()
         );
     }
 

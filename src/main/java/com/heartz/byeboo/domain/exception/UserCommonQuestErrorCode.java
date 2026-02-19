@@ -13,6 +13,7 @@ public enum UserCommonQuestErrorCode implements ErrorCode {
     COMMON_QUEST_NOT_TODAY(HttpStatus.BAD_REQUEST, "작성 가능한 날이 아닙니다."),
     COMMON_QUEST_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 작성 완료 했습니다."),
     USER_COMMON_QUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "유저 퀘스트가 존재하지 않습니다."),
+    USER_COMMON_QUEST_NOT_FUTURE(HttpStatus.BAD_REQUEST, "오늘 날짜 이후의 날짜에 대해서는 조회할 수 없습니다.")
     ;
 
     private final HttpStatus status;

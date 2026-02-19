@@ -6,17 +6,25 @@ import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestCreateRequestD
 import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestUpdateRequestDto;
 import com.heartz.byeboo.application.command.usercommonquest.CommonQuestCreateCommand;
 import com.heartz.byeboo.application.command.usercommonquest.CommonQuestDeleteCommand;
+import com.heartz.byeboo.application.command.usercommonquest.CommonQuestListCommand;
 import com.heartz.byeboo.application.command.usercommonquest.CommonQuestUpdateCommand;
+import com.heartz.byeboo.application.command.userquest.CompletedJourneyCommand;
 import com.heartz.byeboo.application.command.userquest.RecordingQuestCreateCommand;
 import com.heartz.byeboo.application.command.userquest.RecordingQuestUpdateCommand;
+import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestListResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
 import com.heartz.byeboo.core.annotation.UserId;
 import com.heartz.byeboo.core.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -123,5 +131,34 @@ public class UerCommonQuestController {
         CommonQuestUpdateCommand command = CommonQuestUpdateCommand.from(commonQuestUpdateRequestDto, answerId, userId);
         userCommonQuestUseCase.updateCommonQuest(command);
         return BaseResponse.success(null);
+    }
+
+    @Operation(
+            summary = "날짜별 공통 퀘스트 전체 조회",
+            description = "날짜별 공통 퀘스트 전체 조회하는 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "공통 퀘스트 전체 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @GetMapping
+    public BaseResponse<UserCommonQuestListResponseDto> getCommonQuest(
+            @UserId final Long userId,
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(value = "cursor", required = false) Long cursor,
+            @RequestParam(value = "limit", defaultValue = "10") int limit
+    ){
+        CommonQuestListCommand command = CommonQuestListCommand.from(userId, date, cursor, limit);
+        return BaseResponse.success(userCommonQuestUseCase.getListCommonQuest(command));
     }
 }

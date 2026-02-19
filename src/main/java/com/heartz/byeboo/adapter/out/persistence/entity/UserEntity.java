@@ -57,8 +57,12 @@ public class UserEntity extends BaseEntity{
     @Column(name = "alarm_enabled", nullable = false)
     private boolean alarmEnabled = false;
 
+    @Column(name = "profile_icon")
+    @Enumerated(EnumType.STRING)
+    private EProfileIcon profileIcon;
+
     @Builder
-    public UserEntity(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber,EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken, boolean alarmEnabled) {
+    public UserEntity(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber,EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken, boolean alarmEnabled, EProfileIcon profileIcon) {
         this.id = id;
         this.name = name;
         this.questStyle = questStyle;
@@ -71,9 +75,10 @@ public class UserEntity extends BaseEntity{
         this.deletedAt = deletedAt;
         this.refreshToken = refreshToken;
         this.alarmEnabled = alarmEnabled;
+        this.profileIcon = profileIcon;
     }
 
-    public static UserEntity create(String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken, boolean alarmEnabled) {
+    public static UserEntity create(String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken, boolean alarmEnabled, EProfileIcon profileIcon) {
         return UserEntity.builder()
                 .name(name)
                 .questStyle(questStyle)
@@ -86,10 +91,11 @@ public class UserEntity extends BaseEntity{
                 .deletedAt(deletedAt)
                 .refreshToken(refreshToken)
                 .alarmEnabled(alarmEnabled)
+                .profileIcon(profileIcon)
                 .build();
     }
 
-    public static UserEntity createForUpdate(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken, boolean alarmEnabled) {
+    public static UserEntity createForUpdate(Long id, String name, EQuestStyle questStyle, EJourney journey,Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken, boolean alarmEnabled, EProfileIcon profileIcon) {
         return UserEntity.builder()
                 .id(id)
                 .name(name)
@@ -103,6 +109,7 @@ public class UserEntity extends BaseEntity{
                 .deletedAt(deletedAt)
                 .refreshToken(refreshToken)
                 .alarmEnabled(alarmEnabled)
+                .profileIcon(profileIcon)
                 .build();
     }
 }
