@@ -4,14 +4,12 @@ import com.heartz.byeboo.adapter.in.web.dto.request.CommonQuestCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.CommonQuestUpdateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestUpdateRequestDto;
-import com.heartz.byeboo.application.command.usercommonquest.CommonQuestCreateCommand;
-import com.heartz.byeboo.application.command.usercommonquest.CommonQuestDeleteCommand;
-import com.heartz.byeboo.application.command.usercommonquest.CommonQuestListCommand;
-import com.heartz.byeboo.application.command.usercommonquest.CommonQuestUpdateCommand;
+import com.heartz.byeboo.application.command.usercommonquest.*;
 import com.heartz.byeboo.application.command.userquest.CompletedJourneyCommand;
 import com.heartz.byeboo.application.command.userquest.RecordingQuestCreateCommand;
 import com.heartz.byeboo.application.command.userquest.RecordingQuestUpdateCommand;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestListResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
 import com.heartz.byeboo.core.annotation.UserId;
@@ -160,5 +158,32 @@ public class UerCommonQuestController {
     ){
         CommonQuestListCommand command = CommonQuestListCommand.from(userId, date, cursor, limit);
         return BaseResponse.success(userCommonQuestUseCase.getListCommonQuest(command));
+    }
+
+    @Operation(
+            summary = "공통 퀘스트 상세 조회",
+            description = "공통 퀘스트 상세 조회하는 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "공통 퀘스트 상세 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @GetMapping("/{answerId}")
+    public BaseResponse<UserCommonQuestResponseDto> getDetailCommonQuest(
+            @UserId final Long userId,
+            @PathVariable("answerId") final Long answerId
+    ){
+        CommonQuestDetailCommand command = CommonQuestDetailCommand.from(userId, answerId);
+        return BaseResponse.success(userCommonQuestUseCase.getDetailCommonQuest(command));
     }
 }
