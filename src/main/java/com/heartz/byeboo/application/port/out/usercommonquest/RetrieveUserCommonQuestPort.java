@@ -13,4 +13,5 @@ public interface RetrieveUserCommonQuestPort {
     UserCommonQuest getUserCommonQuestByUserAndId(User user, Long id);
     List<UserCommonQuest> getUserCommonQuestsByCreatedDate(LocalDate targetDate, Long cursor, int limit, CommonQuest commonQuest);
     long countByCreatedDateBetween(LocalDate targetDate);
+    UserCommonQuest getUserCommonQuestById(Long id);
 }
