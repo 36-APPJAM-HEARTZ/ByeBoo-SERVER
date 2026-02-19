@@ -19,8 +19,8 @@ public record UserCommonQuestDetailResponseDto(
         return UserCommonQuestDetailResponseDto.builder()
                 .answerId(userCommonQuest.getId())
                 .writer(user.getName())
-                .profileIcon(EProfileIcon.valueOf(user.getProfileIcon()))
-                .writtenAt(userCommonQuest.getCreatedDate()) //TODO:날짜 그냥 targetDate
+                .profileIcon(user.getProfileIcon().name())
+                .writtenAt(userCommonQuest.getCreatedDate().toLocalDate())
                 .content(userCommonQuest.getAnswer())
                 .build();
     }
