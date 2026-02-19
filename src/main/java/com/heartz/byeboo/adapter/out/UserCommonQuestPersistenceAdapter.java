@@ -12,11 +12,13 @@ import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserCommonQuest;
 import com.heartz.byeboo.mapper.UserCommonQuestMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Component
@@ -31,7 +33,7 @@ public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestP
     }
 
     @Override
-    public boolean isUserCommonQuestExists(User user) {
+    public boolean isUserCommonQuestExistsToday(User user) {
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime endOfToday = LocalDate.now().atTime(LocalTime.MAX);
 
@@ -56,6 +58,28 @@ public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestP
         CommonQuest referenceQuest = CommonQuest.fromId(commonQuestEntity.getCommonQuestId());
         return UserCommonQuestMapper.toDomain(commonQuestEntity, user, referenceQuest);
 
+    }
+
+    @Override
+    public List<UserCommonQuest> getUserCommonQuestsByCreatedDate(LocalDate targetDate, Long cursor, int limit, CommonQuest commonQuest) {
+        LocalDateTime startOfToday = targetDate.atStartOfDay();
+        LocalDateTime endOfToday = targetDate.atTime(LocalTime.MAX);
+
+        List<UserCommonQuestEntity> commonQuestEntityList = userCommonQuestRepository.findByDateAndCursor(
+                startOfToday, endOfToday, cursor, Limit.of(limit)
+        );
+
+        return commonQuestEntityList.stream().map(userCommonQuestEntity ->
+                UserCommonQuestMapper.toDomain(userCommonQuestEntity, User.fromId(userCommonQuestEntity.getUserId()), commonQuest))
+                .toList();
+    }
+
+    @Override
+    public long countByCreatedDateBetween(LocalDate targetDate) {
+        LocalDateTime startOfToday = targetDate.atStartOfDay();
+        LocalDateTime endOfToday = targetDate.atTime(LocalTime.MAX);
+
+        return userCommonQuestRepository.countByCreatedDateBetween(startOfToday, endOfToday);
     }
 
     @Override

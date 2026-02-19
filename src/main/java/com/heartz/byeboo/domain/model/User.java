@@ -24,8 +24,9 @@ public class User {
     private LocalDateTime deletedAt;
     private String refreshToken;
     private boolean alarmEnabled;
+    private EProfileIcon profileIcon;
 
-    public static User of(Long id, String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken, boolean alarmEnabled) {
+    public static User of(Long id, String name, EQuestStyle questStyle, EJourney journey, Long currentNumber, EPlatform platform, ERole role, String serialId, EUserStatus status, LocalDateTime deletedAt, String refreshToken, boolean alarmEnabled, EProfileIcon profileIcon) {
         return User.builder()
                 .id(id)
                 .name(name)
@@ -39,6 +40,7 @@ public class User {
                 .deletedAt(deletedAt)
                 .refreshToken(refreshToken)
                 .alarmEnabled(alarmEnabled)
+                .profileIcon(profileIcon)
                 .build();
     }
 
@@ -51,6 +53,11 @@ public class User {
                 .build();
     }
 
+    public static User fromId(Long id){
+        return User.builder()
+                .id(id)
+                .build();
+    }
 
     public void initializeCurrentNumber() {
         this.currentNumber = 0L;
@@ -97,5 +104,9 @@ public class User {
 
     public void updateAlarmState(boolean alarmState){
         this.alarmEnabled = alarmState;
+    }
+
+    public void updateProfileIcon(EProfileIcon profileIcon){
+        this.profileIcon = profileIcon;
     }
 }
