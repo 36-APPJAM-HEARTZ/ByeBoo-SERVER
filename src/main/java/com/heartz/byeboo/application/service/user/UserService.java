@@ -64,11 +64,11 @@ public class UserService implements UserUseCase {
         currentUser.updateQuestStyle(userCreateCommand.getQuestStyle());
         currentUser.updateJourney(initialJourney);
         currentUser.updateStatus(ACTIVE);
+        currentUser.updateProfileIcon(EProfileIcon.getRandom()); //프로필 아이콘 랜덤 뽑기
         currentUser.updateDeletedAt(null);
 
         //User savedUser = createUserPort.createUser(currentUser);
         updateUserPort.updateUser(currentUser);
-
         List<UserJourney> userJourneyList = UserJourney.initializeUserJourney(currentUser);
         createUserJourneyPort.createUserJourney(userJourneyList);
         discordClient.sendAlarm(DiscordMessageDto.signUp(List.of(EmbedDto.signUp(currentUser.getName(), retrieveUserPort.countAllUsers(), currentUser.getId()))));
