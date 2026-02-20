@@ -1,6 +1,7 @@
 package com.heartz.byeboo.application.service.usercommonquest;
 
 import com.heartz.byeboo.application.command.usercommonquest.*;
+import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.MyCommonQuestListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestDetailResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestResponseDto;
@@ -123,6 +124,14 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         User findUser = retrieveUserPort.getUserById(findUserCommonQuest.getUser().getId());
 
         return UserCommonQuestResponseDto.from(findUserCommonQuest, findCommonQuest, findUser);
+    }
+
+    @Override
+    public MyCommonQuestListResponseDto getMyCommonQuest(Long userId) {
+        User findUser = retrieveUserPort.getUserById(userId);
+        List<UserCommonQuest> myUserCommonQuestList = retrieveUserCommonQuestPort.getUserCommonQuestsByUserId(findUser);
+
+
     }
 
     private void validateUserCanWriteCommonQuest(CommonQuest commonQuest){
