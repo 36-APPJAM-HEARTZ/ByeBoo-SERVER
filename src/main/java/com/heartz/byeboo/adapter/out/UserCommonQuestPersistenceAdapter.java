@@ -2,6 +2,7 @@ package com.heartz.byeboo.adapter.out;
 
 import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.UserCommonQuestRepository;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQuestProjection;
 import com.heartz.byeboo.application.port.out.usercommonquest.CreateUserCommonQuestPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.RetrieveUserCommonQuestPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.UpdateUserCommonQuestPort;
@@ -90,6 +91,11 @@ public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestP
         CommonQuest referenceQuest = CommonQuest.fromId(userCommonQuestEntity.getCommonQuestId());
         User referenceUser = User.fromId(userCommonQuestEntity.getUserId());
         return UserCommonQuestMapper.toDomain(userCommonQuestEntity, referenceUser, referenceQuest);
+    }
+
+    @Override
+    public List<MyCommonQuestProjection> getMyCommonQuestsByUserId(User user, Long cursor, int limit) {
+        return userCommonQuestRepository.findMyQuestsByUserId(user.getId(), cursor, Limit.of(limit));
     }
 
     @Override
