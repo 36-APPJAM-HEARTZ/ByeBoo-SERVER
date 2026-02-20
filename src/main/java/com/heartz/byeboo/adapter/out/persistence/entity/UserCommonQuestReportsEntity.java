@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user_common_quest_reports")
-public class UserCommonQuestReportsEntity {
+public class UserCommonQuestReportsEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class UserCommonQuestReportsEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "report_status")
+    @Column(name = "report_status", length = 50)
     private EReportStatus reportStatus;
 
     @Column(name = "user_id", nullable = false)
