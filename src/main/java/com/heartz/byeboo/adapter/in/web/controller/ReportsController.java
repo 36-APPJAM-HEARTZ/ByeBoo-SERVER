@@ -1,6 +1,7 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.application.command.auth.OAuthLoginCommand;
+import com.heartz.byeboo.application.command.report.CommonQuestReportCreateCommand;
 import com.heartz.byeboo.application.port.in.usecase.ReportUseCase;
 import com.heartz.byeboo.core.annotation.UserId;
 import com.heartz.byeboo.core.common.BaseResponse;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Declaration API", description = "Declaration 대한 API입니다.")
 public class ReportsController {
 
-    private final ReportUseCase declarationUseCase;
+    private final ReportUseCase reportUseCase;
 
     @Operation(
             summary = "공통 퀘스트 게시글 신고",
@@ -38,9 +39,11 @@ public class ReportsController {
     )
     @PostMapping("/common-quests/{answerId}")
     public BaseResponse<Void> reportCommonQuest(
-            @UserId final Long userId
+            @UserId final Long userId,
+            @PathVariable("answerId") Long answerId
             ){
-        return BaseResponse.success(oAuthUseCase.login(OAuthLoginCommand.of(request.platform(), rawToken, code)));
+        CommonQuestReportCreateCommand commonQuestReportCreateCommand = CommonQuestReportCreateCommand.from(userId, answerId);
+        return BaseResponse.success(reportUseCase.reportCommonQuest(commonQuestReportCreateCommand));
     }
 
 }
