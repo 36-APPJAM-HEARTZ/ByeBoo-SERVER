@@ -23,9 +23,7 @@ public class UserCommonQuestReports {
                 .build();
     }
 
-    public static UserCommonQuestReports fromId(Long id){
-        return UserCommonQuestReports.builder()
-                .id(id)
-                .build();
+    public void updateReportStatus(EReportStatus newStatus) {
+        this.reportStatus = newStatus;
     }
 }
