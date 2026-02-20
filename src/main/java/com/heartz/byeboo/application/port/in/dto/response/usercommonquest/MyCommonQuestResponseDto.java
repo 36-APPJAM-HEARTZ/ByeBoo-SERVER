@@ -4,11 +4,12 @@ import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQ
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 public record MyCommonQuestResponseDto(
         Long answerId,
-        LocalDate writtenAt,
+        LocalDateTime writtenAt,
         String content,
         String question
 ) {

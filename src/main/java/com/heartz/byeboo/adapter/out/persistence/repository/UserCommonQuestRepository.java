@@ -28,7 +28,7 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
                                                   @Param("cursor") Long cursor, Limit limit);
 
 
-    @Query("SELECT uq.id AS answerId, uq.answer AS content, cq.question AS question, cq.targetDate as writtenAt " +
+    @Query("SELECT uq.id AS answerId, uq.answer AS content, cq.question AS question, uq.createdDate as writtenAt " +
             "FROM UserCommonQuestEntity uq JOIN CommonQuestEntity cq ON uq.commonQuestId = cq.id " +
             "WHERE uq.userId = :userId and (:cursor is null or uq.id < :cursor)" +
             "order by uq.id desc")

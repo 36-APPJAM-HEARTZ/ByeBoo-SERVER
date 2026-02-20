@@ -6,13 +6,14 @@ import com.heartz.byeboo.domain.type.EProfileIcon;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 public record UserCommonQuestDetailResponseDto(
         Long answerId,
         String writer,
         String profileIcon,
-        LocalDate writtenAt,
+        LocalDateTime writtenAt,
         String content
 ) {
     public static UserCommonQuestDetailResponseDto from(UserCommonQuest userCommonQuest, User user){
@@ -20,7 +21,7 @@ public record UserCommonQuestDetailResponseDto(
                 .answerId(userCommonQuest.getId())
                 .writer(user.getName())
                 .profileIcon(user.getProfileIcon().name())
-                .writtenAt(userCommonQuest.getCreatedDate().toLocalDate())
+                .writtenAt(userCommonQuest.getCreatedDate())
                 .content(userCommonQuest.getAnswer())
                 .build();
     }
