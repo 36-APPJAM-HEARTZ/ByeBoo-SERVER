@@ -13,5 +13,5 @@ public interface UserCommonQuestUseCase {
     Void updateCommonQuest(CommonQuestUpdateCommand command);
     UserCommonQuestListResponseDto getListCommonQuest(CommonQuestListCommand command);
     UserCommonQuestResponseDto getDetailCommonQuest(CommonQuestDetailCommand command);
-    MyCommonQuestListResponseDto getMyCommonQuest(Long userId);
+    MyCommonQuestListResponseDto getMyCommonQuest(MyCommonQuestCommand command);
 }

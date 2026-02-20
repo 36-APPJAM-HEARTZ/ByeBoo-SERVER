@@ -1,10 +1,8 @@
 package com.heartz.byeboo.application.service.usercommonquest;
 
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQuestProjection;
 import com.heartz.byeboo.application.command.usercommonquest.*;
-import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.MyCommonQuestListResponseDto;
-import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestDetailResponseDto;
-import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestListResponseDto;
-import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.*;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
 import com.heartz.byeboo.application.port.out.commonquest.RetrieveCommonQuestPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
@@ -26,6 +24,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -98,7 +97,7 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         //페이징 가공 (데이터 자르기 및 다음 커서 추출)
         boolean hasNext = hasNextData(userCommonQuestListPlusLimit.size(), limitPlusOne); // 11개를 가져왔다면 다음 페이지가 있음
         List<UserCommonQuest> slicedQuestByDate = sliceUnderLimit(hasNext, userCommonQuestListPlusLimit, command.getLimit());
-        Long nextCursor = getNextCursor(slicedQuestByDate);
+        Long nextCursor = getNextCursor(slicedQuestByDate, UserCommonQuest::getId);
 
         //작성자 정보 인덱싱 및 매핑
         Map<Long, User> writers = writerIndexingById(extractWriterIds(slicedQuestByDate));
@@ -127,11 +126,21 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
     }
 
     @Override
-    public MyCommonQuestListResponseDto getMyCommonQuest(Long userId) {
-        User findUser = retrieveUserPort.getUserById(userId);
-        List<UserCommonQuest> myUserCommonQuestList = retrieveUserCommonQuestPort.getUserCommonQuestsByUserId(findUser);
+    public MyCommonQuestListResponseDto getMyCommonQuest(MyCommonQuestCommand command) {
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
 
+        int limitPlusOne = command.getLimit()+1;
+        List<MyCommonQuestProjection> myCommonQuestProjectionList = retrieveUserCommonQuestPort.getMyCommonQuestsByUserId(findUser, command.getCursor(), limitPlusOne);
 
+        boolean hasNext = hasNextData(myCommonQuestProjectionList.size(), limitPlusOne); // 11개를 가져왔다면 다음 페이지가 있음
+        List<MyCommonQuestProjection> slicedQuestByDate = sliceUnderLimit(hasNext, myCommonQuestProjectionList, command.getLimit());
+        Long nextCursor = getNextCursor(slicedQuestByDate, MyCommonQuestProjection::getAnswerId);
+
+        List<MyCommonQuestResponseDto> myCommonQuestResponseDtoList = slicedQuestByDate.stream().map(
+                myCommonQuestProjection -> MyCommonQuestResponseDto.of(myCommonQuestProjection)
+                ).toList();
+
+        return MyCommonQuestListResponseDto.from(hasNext, nextCursor, myCommonQuestResponseDtoList);
     }
 
     private void validateUserCanWriteCommonQuest(CommonQuest commonQuest){
@@ -144,11 +153,11 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         return dataSize == limitPlusOne;
     }
 
-    private List<UserCommonQuest> sliceUnderLimit(boolean hasNext, List<UserCommonQuest> userCommonQuestListPlusLimit, int realLimit){
+    private <T> List<T> sliceUnderLimit(boolean hasNext, List<T> list, int realLimit){
         if (hasNext){
-            return userCommonQuestListPlusLimit.subList(0, realLimit);
+            return list.subList(0, realLimit);
         } else {
-            return userCommonQuestListPlusLimit;
+            return list;
         }
     }
 
@@ -182,11 +191,12 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         return true;
     }
 
-    private Long getNextCursor(List<UserCommonQuest> slicedQuestByDate) {
-        if (slicedQuestByDate.isEmpty()){
+    private <T> Long getNextCursor(List<T> list, Function<T, Long> idExtractor) {
+        if (list.isEmpty()) {
             return null;
         } else {
-            return slicedQuestByDate.get(slicedQuestByDate.size() - 1).getId();
+            // 마지막 객체를 꺼낸 뒤, 넘겨받은 추출 방식(idExtractor)으로 ID를 뽑아냄
+            return idExtractor.apply(list.get(list.size() - 1));
         }
     }
 
