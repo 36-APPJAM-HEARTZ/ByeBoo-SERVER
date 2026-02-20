@@ -10,11 +10,11 @@ public record MyCommonQuestListResponseDto(
         Long nextCursor,
         List<MyCommonQuestResponseDto> answers
 ) {
-    private MyCommonQuestListResponseDto from(boolean hasNext, Long nextCursor, MyCommonQuestResponseDto myCommonQuestResponseDto){
+    public static MyCommonQuestListResponseDto from(boolean hasNext, Long nextCursor, List<MyCommonQuestResponseDto> myCommonQuestResponseDto){
         return MyCommonQuestListResponseDto.builder()
                 .hasNext(hasNext)
                 .nextCursor(nextCursor)
-                .answers(answers)
+                .answers(myCommonQuestResponseDto)
                 .build();
     }
 }
