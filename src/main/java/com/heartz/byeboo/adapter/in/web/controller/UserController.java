@@ -4,6 +4,8 @@ import com.heartz.byeboo.adapter.in.web.dto.request.AdminLoginRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.UserCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.UserNameUpdateRequestDto;
 import com.heartz.byeboo.application.command.user.*;
+import com.heartz.byeboo.application.command.usercommonquest.CommonQuestListCommand;
+import com.heartz.byeboo.application.command.usercommonquest.MyCommonQuestCommand;
 import com.heartz.byeboo.application.command.userquest.CompletedCountCommand;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.MyCommonQuestListResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
@@ -284,7 +286,10 @@ public class UserController {
     )
     @GetMapping("/users/me/common-quests")
     public BaseResponse<MyCommonQuestListResponseDto> getMyCommonQuests(
-            @UserId final Long userId) {
-        return BaseResponse.success(userCommonQuestUseCase.getMyCommonQuest(userId));
+            @UserId final Long userId,
+            @RequestParam(value = "cursor", required = false) Long cursor,
+            @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        MyCommonQuestCommand command = MyCommonQuestCommand.from(userId, cursor, limit);
+        return BaseResponse.success(userCommonQuestUseCase.getMyCommonQuest(command));
     }
 }
