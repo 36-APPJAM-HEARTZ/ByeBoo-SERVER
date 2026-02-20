@@ -1,6 +1,7 @@
 package com.heartz.byeboo.adapter.out.persistence.repository;
 
 import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestEntity;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQuestProjection;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,4 +26,11 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
             "order by uq.id desc")
     List<UserCommonQuestEntity> findByDateAndCursor(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
                                                   @Param("cursor") Long cursor, Limit limit);
+
+
+    @Query("SELECT uq.id AS answerId, uq.answer AS content, cq.question AS question, cq.targetDate as writtenAt " +
+            "FROM UserCommonQuestEntity uq JOIN CommonQuestEntity cq ON uq.commonQuestId = cq.id " +
+            "WHERE uq.userId = :userId and (:cursor is null or uq.id < :cursor)" +
+            "order by uq.id desc")
+    List<MyCommonQuestProjection> findMyQuestsByUserId(@Param("userId") Long userId, @Param("cursor") Long cursor, Limit limit);
 }

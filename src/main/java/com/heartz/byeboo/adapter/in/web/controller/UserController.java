@@ -4,7 +4,11 @@ import com.heartz.byeboo.adapter.in.web.dto.request.AdminLoginRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.UserCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.UserNameUpdateRequestDto;
 import com.heartz.byeboo.application.command.user.*;
+import com.heartz.byeboo.application.command.usercommonquest.CommonQuestListCommand;
+import com.heartz.byeboo.application.command.usercommonquest.MyCommonQuestCommand;
 import com.heartz.byeboo.application.command.userquest.CompletedCountCommand;
+import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.MyCommonQuestListResponseDto;
+import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
 import com.heartz.byeboo.application.port.in.usecase.UserUseCase;
 import com.heartz.byeboo.application.port.in.dto.response.user.*;
 import com.heartz.byeboo.core.annotation.UserId;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public class UserController {
     private final UserUseCase userUseCase;
+    private final UserCommonQuestUseCase userCommonQuestUseCase;
 
     @Operation(
             summary = "온보딩",
@@ -259,5 +264,32 @@ public class UserController {
     ){
         AlarmPermissionCommand alarmPermissionCommand = AlarmPermissionCommand.of(userId);
         return BaseResponse.success(userUseCase.updateAlarmPermission(alarmPermissionCommand));
+    }
+
+    @Operation(
+            summary = "공통퀘스트 내 답변 조회",
+            description = "공통퀘스트 내 답변 조회하기 위한 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "공통퀘스트 내 답변 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @GetMapping("/users/me/common-quests")
+    public BaseResponse<MyCommonQuestListResponseDto> getMyCommonQuests(
+            @UserId final Long userId,
+            @RequestParam(value = "cursor", required = false) Long cursor,
+            @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        MyCommonQuestCommand command = MyCommonQuestCommand.from(userId, cursor, limit);
+        return BaseResponse.success(userCommonQuestUseCase.getMyCommonQuest(command));
     }
 }
