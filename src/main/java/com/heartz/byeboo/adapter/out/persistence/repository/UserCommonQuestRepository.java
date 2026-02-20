@@ -25,4 +25,6 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
             "order by uq.id desc")
     List<UserCommonQuestEntity> findByDateAndCursor(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
                                                   @Param("cursor") Long cursor, Limit limit);
+
+    List<UserCommonQuestEntity> findAllByUserId(Long userId);
 }

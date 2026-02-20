@@ -93,6 +93,15 @@ public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestP
     }
 
     @Override
+    public List<UserCommonQuest> getUserCommonQuestsByUserId(User user) {
+        List<UserCommonQuestEntity> userCommonQuestEntityList = userCommonQuestRepository.findAllByUserId(user.getId());
+
+        return userCommonQuestEntityList.stream().map(userCommonQuestEntity ->
+                UserCommonQuestMapper.toDomain(userCommonQuestEntity, user, CommonQuest.fromId(userCommonQuestEntity.getCommonQuestId())))
+                .toList();
+    }
+
+    @Override
     public void updateUserCommonQuest(UserCommonQuest userCommonQuest) {
         UserCommonQuestEntity userCommonQuestEntity = UserCommonQuestMapper.toEntityForUpdate(userCommonQuest);
 
