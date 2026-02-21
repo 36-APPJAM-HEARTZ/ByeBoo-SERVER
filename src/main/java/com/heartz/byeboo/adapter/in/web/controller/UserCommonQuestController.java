@@ -2,20 +2,13 @@ package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.adapter.in.web.dto.request.CommonQuestCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.CommonQuestUpdateRequestDto;
-import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestCreateRequestDto;
-import com.heartz.byeboo.adapter.in.web.dto.request.RecordingQuestUpdateRequestDto;
 import com.heartz.byeboo.application.command.usercommonquest.*;
-import com.heartz.byeboo.application.command.userquest.CompletedJourneyCommand;
-import com.heartz.byeboo.application.command.userquest.RecordingQuestCreateCommand;
-import com.heartz.byeboo.application.command.userquest.RecordingQuestUpdateCommand;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestResponseDto;
-import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
 import com.heartz.byeboo.core.annotation.UserId;
 import com.heartz.byeboo.core.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +21,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/common-quests")
 @Tag(name = "Common Quest API", description = "공통 퀘스트 대한 API입니다.")
-public class UerCommonQuestController {
+public class UserCommonQuestController {
 
     private final UserCommonQuestUseCase userCommonQuestUseCase;
 

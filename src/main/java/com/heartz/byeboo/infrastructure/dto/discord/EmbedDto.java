@@ -41,4 +41,15 @@ public record EmbedDto(
                         "### 🕖 가입 시간\n" + LocalDateTime.now()
         );
     }
+
+    public static EmbedDto reportNotification(Long reporterId, Long targetId, String content) {
+
+        return new EmbedDto(
+                "🚨 새로운 신고 접수",
+                "### 👩‍🌾 신고자 ID\n" + reporterId + "\n" +
+                        "### 👤 신고 게시물 ID\n" + targetId + "\n" +
+                        "### 🕖 신고 시간\n" + LocalDateTime.now() + "\n" +
+                        "### 📝신고 게시물 내용\n" + content
+        );
+    }
 }
