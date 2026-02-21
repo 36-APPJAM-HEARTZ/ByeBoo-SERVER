@@ -8,10 +8,16 @@ import com.heartz.byeboo.application.port.out.usercommonquest.RetrieveUserCommon
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserCommonQuest;
 import com.heartz.byeboo.domain.model.UserCommonQuestReports;
+import com.heartz.byeboo.infrastructure.api.discord.DiscordOnboardingFeignClient;
+import com.heartz.byeboo.infrastructure.api.discord.DiscordReportFeignClient;
+import com.heartz.byeboo.infrastructure.dto.discord.DiscordMessageDto;
+import com.heartz.byeboo.infrastructure.dto.discord.EmbedDto;
 import com.heartz.byeboo.mapper.UserCommonQuestReportMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +26,7 @@ public class ReportService implements ReportUseCase {
     private final RetrieveUserPort retrieveUserPort;
     private final RetrieveUserCommonQuestPort retrieveUserCommonQuestPort;
     private final CreateReportPort createReportPort;
+    private final DiscordReportFeignClient discordClient;
 
     @Override
     @Transactional
@@ -30,7 +37,8 @@ public class ReportService implements ReportUseCase {
         UserCommonQuestReports userCommonQuestReports = UserCommonQuestReportMapper.toPendingDomain(findUser, targetUserCommonQuest);
         createReportPort.createReport(userCommonQuestReports);
 
-        //TODO : 신고하면 디코 알림
+        //신고하면 디코 알림
+        discordClient.sendAlarm(DiscordMessageDto.report(List.of(EmbedDto.reportNotification(findUser.getId(), command.getTargetId(), targetUserCommonQuest.getAnswer()))));
 
         return null;
     }
