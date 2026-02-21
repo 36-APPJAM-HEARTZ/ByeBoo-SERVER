@@ -22,5 +22,11 @@ public record DiscordMessageDto(
                 "# 🚨 에러 발생 비이이사아앙 🚨", embeds
         );
     }
+
+    public static DiscordMessageDto report(List<EmbedDto> embeds){
+        return new DiscordMessageDto(
+                "# 🚨🚔👮‍♂️ 게시물 신고 접수 🚔👮🚨‍ ", embeds
+        );
+    }
 }
 
