@@ -3,6 +3,7 @@ package com.heartz.byeboo.adapter.out;
 import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.UserCommonQuestRepository;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQuestProjection;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestInfoProjection;
 import com.heartz.byeboo.application.port.out.usercommonquest.CreateUserCommonQuestPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.RetrieveUserCommonQuestPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.UpdateUserCommonQuestPort;
@@ -11,6 +12,7 @@ import com.heartz.byeboo.domain.exception.UserCommonQuestErrorCode;
 import com.heartz.byeboo.domain.model.CommonQuest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserCommonQuest;
+import com.heartz.byeboo.domain.type.EReportStatus;
 import com.heartz.byeboo.mapper.UserCommonQuestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Limit;
@@ -62,17 +64,13 @@ public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestP
     }
 
     @Override
-    public List<UserCommonQuest> getUserCommonQuestsByCreatedDate(LocalDate targetDate, Long cursor, int limit, CommonQuest commonQuest) {
+    public List<UserCommonQuestInfoProjection> getUserCommonQuestsByCreatedDate(LocalDate targetDate, Long cursor, int limit, CommonQuest commonQuest) {
         LocalDateTime startOfToday = targetDate.atStartOfDay();
         LocalDateTime endOfToday = targetDate.atTime(LocalTime.MAX);
 
-        List<UserCommonQuestEntity> commonQuestEntityList = userCommonQuestRepository.findByDateAndCursor(
-                startOfToday, endOfToday, cursor, Limit.of(limit)
+        return userCommonQuestRepository.findByDateAndCursor(
+                startOfToday, endOfToday, cursor, EReportStatus.BLOCKED, Limit.of(limit)
         );
-
-        return commonQuestEntityList.stream().map(userCommonQuestEntity ->
-                UserCommonQuestMapper.toDomain(userCommonQuestEntity, User.fromId(userCommonQuestEntity.getUserId()), commonQuest))
-                .toList();
     }
 
     @Override
@@ -80,7 +78,7 @@ public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestP
         LocalDateTime startOfToday = targetDate.atStartOfDay();
         LocalDateTime endOfToday = targetDate.atTime(LocalTime.MAX);
 
-        return userCommonQuestRepository.countByCreatedDateBetween(startOfToday, endOfToday);
+        return userCommonQuestRepository.countByCreatedDateBetween(startOfToday, endOfToday, EReportStatus.BLOCKED);
     }
 
     @Override
