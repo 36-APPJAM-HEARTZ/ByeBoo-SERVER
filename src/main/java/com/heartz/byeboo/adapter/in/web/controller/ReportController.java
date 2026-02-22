@@ -1,6 +1,5 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
-import com.heartz.byeboo.application.command.auth.OAuthLoginCommand;
 import com.heartz.byeboo.application.command.report.CommonQuestReportCreateCommand;
 import com.heartz.byeboo.application.port.in.usecase.ReportUseCase;
 import com.heartz.byeboo.core.annotation.UserId;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/reports")
 @Tag(name = "Report API", description = "Report 대한 API입니다.")
-public class ReportsController {
+public class ReportController {
 
     private final ReportUseCase reportUseCase;
 

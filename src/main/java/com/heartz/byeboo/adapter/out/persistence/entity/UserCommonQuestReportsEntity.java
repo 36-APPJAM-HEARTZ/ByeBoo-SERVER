@@ -1,8 +1,6 @@
 package com.heartz.byeboo.adapter.out.persistence.entity;
 
-import com.heartz.byeboo.domain.model.UserCommonQuest;
-import com.heartz.byeboo.domain.model.UserCommonQuestReports;
-import com.heartz.byeboo.domain.type.EQuestStyle;
+import com.heartz.byeboo.domain.model.UserCommonQuestReport;
 import com.heartz.byeboo.domain.type.EReportStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -56,12 +54,12 @@ public class UserCommonQuestReportsEntity extends BaseEntity {
                 .build();
     }
 
-    public static UserCommonQuestReportsEntity from(UserCommonQuestReports userCommonQuestReports) {
+    public static UserCommonQuestReportsEntity from(UserCommonQuestReport userCommonQuestReport) {
         return UserCommonQuestReportsEntity.builder()
-                .id(userCommonQuestReports.getId())
-                .userId(userCommonQuestReports.getUser().getId())
-                .userCommonQuestId(userCommonQuestReports.getUserCommonQuest().getId())
-                .reportStatus(userCommonQuestReports.getReportStatus())
+                .id(userCommonQuestReport.getId())
+                .userId(userCommonQuestReport.getUser().getId())
+                .userCommonQuestId(userCommonQuestReport.getUserCommonQuest().getId())
+                .reportStatus(userCommonQuestReport.getReportStatus())
                 .build();
     }
 }

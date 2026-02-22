@@ -11,8 +11,7 @@ import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.RetrieveUserCommonQuestPort;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserCommonQuest;
-import com.heartz.byeboo.domain.model.UserCommonQuestReports;
-import com.heartz.byeboo.infrastructure.api.discord.DiscordOnboardingFeignClient;
+import com.heartz.byeboo.domain.model.UserCommonQuestReport;
 import com.heartz.byeboo.infrastructure.api.discord.DiscordReportFeignClient;
 import com.heartz.byeboo.infrastructure.dto.discord.DiscordMessageDto;
 import com.heartz.byeboo.infrastructure.dto.discord.EmbedDto;
@@ -40,8 +39,8 @@ public class ReportService implements ReportUseCase {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
         UserCommonQuest targetUserCommonQuest = retrieveUserCommonQuestPort.getUserCommonQuestById(command.getTargetId());
 
-        UserCommonQuestReports userCommonQuestReports = UserCommonQuestReportMapper.toPendingDomain(findUser, targetUserCommonQuest);
-        UserCommonQuestReportsEntity userCommonQuestReportsEntity = createReportPort.createReport(userCommonQuestReports);
+        UserCommonQuestReport userCommonQuestReport = UserCommonQuestReportMapper.toPendingDomain(findUser, targetUserCommonQuest);
+        UserCommonQuestReportsEntity userCommonQuestReportsEntity = createReportPort.createReport(userCommonQuestReport);
 
         //신고하면 디코 알림
         discordClient.sendAlarm(DiscordMessageDto.report(List.of(EmbedDto.reportNotification(userCommonQuestReportsEntity.getId(), findUser.getId(), command.getTargetId(), targetUserCommonQuest.getAnswer()))));
@@ -51,10 +50,10 @@ public class ReportService implements ReportUseCase {
 
     @Override
     public Void updateReportStatus(ReportUpdateCommand command) {
-        UserCommonQuestReports targetUserCommonQuestReports = retrieveReportPort.getById(command.getReportId());
-        targetUserCommonQuestReports.updateReportStatus(command.getReportStatus());
+        UserCommonQuestReport targetUserCommonQuestReport = retrieveReportPort.getById(command.getReportId());
+        targetUserCommonQuestReport.updateReportStatus(command.getReportStatus());
 
-        updateReportPort.updateReport(targetUserCommonQuestReports);
+        updateReportPort.updateReport(targetUserCommonQuestReport);
         return null;
     }
 }

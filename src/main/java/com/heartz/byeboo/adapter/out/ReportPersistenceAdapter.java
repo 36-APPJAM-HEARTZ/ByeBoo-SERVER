@@ -7,11 +7,9 @@ import com.heartz.byeboo.application.port.out.report.RetrieveReportPort;
 import com.heartz.byeboo.application.port.out.report.UpdateReportPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.ReportErrorCode;
-import com.heartz.byeboo.domain.exception.UserCommonQuestErrorCode;
-import com.heartz.byeboo.domain.model.CommonQuest;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserCommonQuest;
-import com.heartz.byeboo.domain.model.UserCommonQuestReports;
+import com.heartz.byeboo.domain.model.UserCommonQuestReport;
 import com.heartz.byeboo.mapper.UserCommonQuestReportMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,13 +21,13 @@ public class ReportPersistenceAdapter implements CreateReportPort, RetrieveRepor
     private final UserCommonQuestReportRepository userCommonQuestReportRepository;
 
     @Override
-    public UserCommonQuestReportsEntity createReport(UserCommonQuestReports userCommonQuestReports) {
-        UserCommonQuestReportsEntity userCommonQuestReportsEntity = UserCommonQuestReportMapper.toEntity(userCommonQuestReports);
+    public UserCommonQuestReportsEntity createReport(UserCommonQuestReport userCommonQuestReport) {
+        UserCommonQuestReportsEntity userCommonQuestReportsEntity = UserCommonQuestReportMapper.toEntity(userCommonQuestReport);
         return userCommonQuestReportRepository.save(userCommonQuestReportsEntity);
     }
 
     @Override
-    public UserCommonQuestReports getById(Long reportId) {
+    public UserCommonQuestReport getById(Long reportId) {
         UserCommonQuestReportsEntity userCommonQuestReportsEntity = userCommonQuestReportRepository.findById(reportId)
                 .orElseThrow(() -> new CustomException( ReportErrorCode.REPORT_NOT_FOUND));
 
@@ -40,8 +38,8 @@ public class ReportPersistenceAdapter implements CreateReportPort, RetrieveRepor
     }
 
     @Override
-    public void updateReport(UserCommonQuestReports userCommonQuestReports) {
-        UserCommonQuestReportsEntity userCommonQuestReportsEntity = UserCommonQuestReportMapper.toEntityForUpdate(userCommonQuestReports);
+    public void updateReport(UserCommonQuestReport userCommonQuestReport) {
+        UserCommonQuestReportsEntity userCommonQuestReportsEntity = UserCommonQuestReportMapper.toEntityForUpdate(userCommonQuestReport);
         userCommonQuestReportRepository.save(userCommonQuestReportsEntity);
     }
 }

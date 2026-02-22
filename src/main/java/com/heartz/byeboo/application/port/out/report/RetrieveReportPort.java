@@ -1,7 +1,7 @@
 package com.heartz.byeboo.application.port.out.report;
 
-import com.heartz.byeboo.domain.model.UserCommonQuestReports;
+import com.heartz.byeboo.domain.model.UserCommonQuestReport;
 
 public interface RetrieveReportPort {
-    UserCommonQuestReports getById(Long reportId);
+    UserCommonQuestReport getById(Long reportId);
 }
