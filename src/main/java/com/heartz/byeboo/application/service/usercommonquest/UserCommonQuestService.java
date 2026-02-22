@@ -1,6 +1,7 @@
 package com.heartz.byeboo.application.service.usercommonquest;
 
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQuestProjection;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestInfoProjection;
 import com.heartz.byeboo.application.command.usercommonquest.*;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.*;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
@@ -104,16 +105,17 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
 
         //무한 스크롤 데이터 조회 (limit + 1)
         int limitPlusOne = command.getLimit()+1;
-        List<UserCommonQuest> userCommonQuestListPlusLimit = retrieveUserCommonQuestPort.getUserCommonQuestsByCreatedDate(command.getTargetDate(), command.getCursor(), limitPlusOne, findCommonQuest);
+        List<UserCommonQuestInfoProjection> userCommonQuestInfoProjectionListPlusLimit = retrieveUserCommonQuestPort.getUserCommonQuestsByCreatedDate(command.getTargetDate(), command.getCursor(), limitPlusOne, findCommonQuest);
 
         //페이징 가공 (데이터 자르기 및 다음 커서 추출)
-        boolean hasNext = hasNextData(userCommonQuestListPlusLimit.size(), limitPlusOne); // 11개를 가져왔다면 다음 페이지가 있음
-        List<UserCommonQuest> slicedQuestByDate = sliceUnderLimit(hasNext, userCommonQuestListPlusLimit, command.getLimit());
-        Long nextCursor = getNextCursor(slicedQuestByDate, UserCommonQuest::getId);
+        boolean hasNext = hasNextData(userCommonQuestInfoProjectionListPlusLimit.size(), limitPlusOne); // 11개를 가져왔다면 다음 페이지가 있음
+        List<UserCommonQuestInfoProjection> slicedQuestByDate = sliceUnderLimit(hasNext, userCommonQuestInfoProjectionListPlusLimit, command.getLimit());
+        Long nextCursor = getNextCursor(slicedQuestByDate, UserCommonQuestInfoProjection::getAnswerId);
 
-        //작성자 정보 인덱싱 및 매핑
-        Map<Long, User> writers = writerIndexingById(extractWriterIds(slicedQuestByDate));
-        List<UserCommonQuestDetailResponseDto> userCommonQuestDetailList = mapToDetailUserCommonQuest(slicedQuestByDate, writers);
+        //dto 변환
+        List<UserCommonQuestDetailResponseDto> userCommonQuestDetailList = slicedQuestByDate.stream().map(
+                userCommonQuestInfoProjection -> UserCommonQuestDetailResponseDto.of(userCommonQuestInfoProjection)
+        ).toList();
 
         return UserCommonQuestListResponseDto.from(
                 findCommonQuest.getQuestion(),
@@ -171,29 +173,6 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         } else {
             return list;
         }
-    }
-
-    // 유저 리스트 -> map<>을 활용해 id값으로 인덱싱
-    private Map<Long, User> writerIndexingById(List<Long> writerIds) {
-        if (writerIds.isEmpty()) return Collections.emptyMap();
-        return retrieveUserPort.findUsersById(writerIds).stream()
-                .collect(Collectors.toMap(User::getId, user -> user));
-    }
-
-    private List<Long> extractWriterIds(List<UserCommonQuest> quests) {
-        return quests.stream()
-                .map(q -> q.getUser().getId())
-                .distinct()
-                .toList();
-    }
-
-    private List<UserCommonQuestDetailResponseDto> mapToDetailUserCommonQuest(List<UserCommonQuest> quests, Map<Long, User> writerMap) {
-        return quests.stream()
-                .map(userCommonQuest -> {
-                    User writer = writerMap.get(userCommonQuest.getUser().getId());
-                    return UserCommonQuestDetailResponseDto.from(userCommonQuest, writer);
-                })
-                .toList();
     }
 
     private boolean isUserAlreadyAnswered(User targetUser, LocalDate targetDay) {

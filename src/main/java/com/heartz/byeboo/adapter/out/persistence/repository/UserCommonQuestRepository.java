@@ -2,6 +2,8 @@ package com.heartz.byeboo.adapter.out.persistence.repository;
 
 import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQuestProjection;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestInfoProjection;
+import com.heartz.byeboo.domain.type.EReportStatus;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,15 +19,18 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
     Optional<UserCommonQuestEntity> findByUserIdAndId(Long userId, Long id);
 
     @Query("select count(u) from UserCommonQuestEntity u " +
-            "where u.createdDate >= :start and u.createdDate <= :end ")
-    long countByCreatedDateBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+            "where u.createdDate >= :start and u.createdDate <= :end " +
+            "and not exists (select 1 from UserCommonQuestReportsEntity r where r.userCommonQuestId = u.id and r.reportStatus = :reportStatus) ")
+    long countByCreatedDateBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end, @Param("reportStatus") EReportStatus reportStatus);
 
-    @Query("select uq from UserCommonQuestEntity uq " +
+    @Query("select uq.id as answerId, uq.answer as content, uq.createdDate as writtenAt, u.profileIcon as profileIcon, u.name as writer " +
+            "from UserCommonQuestEntity uq join UserEntity u on uq.userId = u.id " +
             "where uq.createdDate >= :start and uq.createdDate <= :end " +
             "and (:cursor is null or uq.id < :cursor) " +
+            "and not exists (select 1 from UserCommonQuestReportsEntity r where r.userCommonQuestId = uq.id and r.reportStatus = :reportStatus) " +
             "order by uq.id desc")
-    List<UserCommonQuestEntity> findByDateAndCursor(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
-                                                  @Param("cursor") Long cursor, Limit limit);
+    List<UserCommonQuestInfoProjection> findByDateAndCursor(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
+                                                            @Param("cursor") Long cursor, @Param("reportStatus") EReportStatus reportStatus, Limit limit);
 
 
     @Query("SELECT uq.id AS answerId, uq.answer AS content, cq.question AS question, uq.createdDate as writtenAt " +

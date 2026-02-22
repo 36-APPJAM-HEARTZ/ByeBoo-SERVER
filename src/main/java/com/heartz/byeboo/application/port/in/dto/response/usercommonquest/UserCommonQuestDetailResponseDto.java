@@ -1,5 +1,6 @@
 package com.heartz.byeboo.application.port.in.dto.response.usercommonquest;
 
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestInfoProjection;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserCommonQuest;
 import com.heartz.byeboo.domain.type.EProfileIcon;
@@ -16,13 +17,13 @@ public record UserCommonQuestDetailResponseDto(
         LocalDateTime writtenAt,
         String content
 ) {
-    public static UserCommonQuestDetailResponseDto from(UserCommonQuest userCommonQuest, User user){
+    public static UserCommonQuestDetailResponseDto of(UserCommonQuestInfoProjection userCommonQuestInfoProjection){
         return UserCommonQuestDetailResponseDto.builder()
-                .answerId(userCommonQuest.getId())
-                .writer(user.getName())
-                .profileIcon(user.getProfileIcon().name())
-                .writtenAt(userCommonQuest.getCreatedDate())
-                .content(userCommonQuest.getAnswer())
+                .answerId(userCommonQuestInfoProjection.getAnswerId())
+                .writer(userCommonQuestInfoProjection.getWriter())
+                .profileIcon(userCommonQuestInfoProjection.getProfileIcon().name())
+                .writtenAt(userCommonQuestInfoProjection.getWrittenAt())
+                .content(userCommonQuestInfoProjection.getContent())
                 .build();
     }
 }
