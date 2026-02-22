@@ -13,7 +13,8 @@ public record UserCommonQuestResponseDto(
         String writer,
         String profileIcon,
         LocalDate writtenAt,
-        String content
+        String content,
+        Long writerId
 ) {
     public static UserCommonQuestResponseDto from(UserCommonQuest userCommonQuest, CommonQuest commonQuest, User user){
         return UserCommonQuestResponseDto.builder()
@@ -22,6 +23,7 @@ public record UserCommonQuestResponseDto(
                 .question(commonQuest.getQuestion())
                 .profileIcon(user.getProfileIcon().name())
                 .writer(user.getName())
+                .writerId(user.getId())
                 .build();
     }
 }
