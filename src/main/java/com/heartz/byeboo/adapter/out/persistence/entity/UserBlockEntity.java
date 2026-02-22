@@ -1,5 +1,6 @@
 package com.heartz.byeboo.adapter.out.persistence.entity;
 
+import com.heartz.byeboo.domain.type.EReportStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,7 +10,21 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "user_blocks")
+@Table(
+        name = "user_blocks",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_blocker_blocked",
+                        columnNames = {"blocker_user_id", "blocked_user_id"}
+                )
+        },
+        indexes = {
+                @Index(
+                        name = "idx_blocked_user",
+                        columnList = "blocked_user_id"
+                )
+        }
+        )
 public class UserBlockEntity extends BaseEntity{
 
     @Id
@@ -31,6 +46,16 @@ public class UserBlockEntity extends BaseEntity{
         this.id = id;
         this.blockedUserId = blockedUserId;
         this.blockerUserId = blockerUserId;
+    }
+
+    public static UserBlockEntity create(
+            Long blockerUserId,
+            Long blockedUserId
+    ) {
+        return UserBlockEntity.builder()
+                .blockerUserId(blockerUserId)
+                .blockedUserId(blockedUserId)
+                .build();
     }
 
 }
