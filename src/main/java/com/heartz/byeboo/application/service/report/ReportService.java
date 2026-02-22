@@ -1,8 +1,12 @@
 package com.heartz.byeboo.application.service.report;
 
+import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestReportsEntity;
 import com.heartz.byeboo.application.command.report.CommonQuestReportCreateCommand;
+import com.heartz.byeboo.application.command.report.ReportUpdateCommand;
 import com.heartz.byeboo.application.port.in.usecase.ReportUseCase;
 import com.heartz.byeboo.application.port.out.report.CreateReportPort;
+import com.heartz.byeboo.application.port.out.report.RetrieveReportPort;
+import com.heartz.byeboo.application.port.out.report.UpdateReportPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.RetrieveUserCommonQuestPort;
 import com.heartz.byeboo.domain.model.User;
@@ -27,6 +31,8 @@ public class ReportService implements ReportUseCase {
     private final RetrieveUserCommonQuestPort retrieveUserCommonQuestPort;
     private final CreateReportPort createReportPort;
     private final DiscordReportFeignClient discordClient;
+    private final RetrieveReportPort retrieveReportPort;
+    private final UpdateReportPort updateReportPort;
 
     @Override
     @Transactional
@@ -35,11 +41,20 @@ public class ReportService implements ReportUseCase {
         UserCommonQuest targetUserCommonQuest = retrieveUserCommonQuestPort.getUserCommonQuestById(command.getTargetId());
 
         UserCommonQuestReports userCommonQuestReports = UserCommonQuestReportMapper.toPendingDomain(findUser, targetUserCommonQuest);
-        createReportPort.createReport(userCommonQuestReports);
+        UserCommonQuestReportsEntity userCommonQuestReportsEntity = createReportPort.createReport(userCommonQuestReports);
 
         //신고하면 디코 알림
-        discordClient.sendAlarm(DiscordMessageDto.report(List.of(EmbedDto.reportNotification(findUser.getId(), command.getTargetId(), targetUserCommonQuest.getAnswer()))));
+        discordClient.sendAlarm(DiscordMessageDto.report(List.of(EmbedDto.reportNotification(userCommonQuestReportsEntity.getId(), findUser.getId(), command.getTargetId(), targetUserCommonQuest.getAnswer()))));
 
+        return null;
+    }
+
+    @Override
+    public Void updateReportStatus(ReportUpdateCommand command) {
+        UserCommonQuestReports targetUserCommonQuestReports = retrieveReportPort.getById(command.getReportId());
+        targetUserCommonQuestReports.updateReportStatus(command.getReportStatus());
+
+        updateReportPort.updateReport(targetUserCommonQuestReports);
         return null;
     }
 }

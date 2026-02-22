@@ -1,5 +1,6 @@
 package com.heartz.byeboo.mapper;
 
+import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestEntity;
 import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestReportsEntity;
 import com.heartz.byeboo.adapter.out.persistence.entity.UserQuestEntity;
 import com.heartz.byeboo.domain.model.User;
@@ -12,6 +13,7 @@ public class UserCommonQuestReportMapper {
 
     public static UserCommonQuestReports toDomain(User user, UserCommonQuest userCommonQuest, UserCommonQuestReportsEntity userCommonQuestReportsEntity) {
         return UserCommonQuestReports.builder()
+                .id(userCommonQuestReportsEntity.getId())
                 .user(user)
                 .userCommonQuest(userCommonQuest)
                 .reportStatus(userCommonQuestReportsEntity.getReportStatus())
@@ -32,6 +34,10 @@ public class UserCommonQuestReportMapper {
                 userCommonQuestReports.getUserCommonQuest().getId(),
                 userCommonQuestReports.getReportStatus()
         );
+    }
+
+    public static UserCommonQuestReportsEntity toEntityForUpdate(UserCommonQuestReports userCommonQuestReports) {
+        return UserCommonQuestReportsEntity.from(userCommonQuestReports);
     }
 
 }
