@@ -4,6 +4,7 @@ import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQ
 import com.heartz.byeboo.application.command.usercommonquest.*;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.*;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
+import com.heartz.byeboo.core.common.out.port.ProfanityCheckPort;
 import com.heartz.byeboo.application.port.out.commonquest.RetrieveCommonQuestPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.CreateUserCommonQuestPort;
@@ -37,6 +38,7 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
     private final RetrieveCommonQuestPort retrieveCommonQuestPort;
     private final RetrieveUserCommonQuestPort retrieveUserCommonQuestPort;
     private final UpdateUserCommonQuestPort updateUserCommonQuestPort;
+    private final ProfanityCheckPort profanityCheckPort;
 
     @Override
     @Transactional
@@ -49,6 +51,11 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         //유저가 오늘 작성했는지 여부 체크
         if(retrieveUserCommonQuestPort.isUserCommonQuestExistsToday(findUser)){
             throw new CustomException(UserCommonQuestErrorCode.COMMON_QUEST_ALREADY_EXIST);
+        }
+
+        //욕설 포함 여부 체크
+        if(profanityCheckPort.containsBadWord(command.getAnswer())){
+            throw new CustomException(UserCommonQuestErrorCode.USER_COMMON_QUEST_BAD_WORDS);
         }
 
         UserCommonQuest userCommonQuest = UserCommonQuestMapper.commandToDomain(command, findUser, findCommonQuest);
@@ -71,6 +78,11 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
     public Void updateCommonQuest(CommonQuestUpdateCommand command) {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
         UserCommonQuest userCommonQuest = retrieveUserCommonQuestPort.getUserCommonQuestByUserAndId(findUser, command.getAnswerId());
+
+        //욕설 포함 여부 체크
+        if(profanityCheckPort.containsBadWord(command.getAnswer())){
+            throw new CustomException(UserCommonQuestErrorCode.USER_COMMON_QUEST_BAD_WORDS);
+        }
 
         userCommonQuest.updateAnswer(command.getAnswer());
         updateUserCommonQuestPort.updateUserCommonQuest(userCommonQuest);
