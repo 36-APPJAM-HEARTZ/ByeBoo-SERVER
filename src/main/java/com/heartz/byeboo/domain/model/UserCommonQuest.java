@@ -31,6 +31,11 @@ public class UserCommonQuest {
                 .build();
     }
 
+    public static UserCommonQuest fromId(Long id){
+        return UserCommonQuest.builder()
+                .id(id)
+                .build();
+    }
 
     public void updateAnswer(String answer){
         this.answer = answer;
