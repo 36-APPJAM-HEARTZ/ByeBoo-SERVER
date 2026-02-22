@@ -1,6 +1,6 @@
 package com.heartz.byeboo.adapter.out;
 
-import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestReportsEntity;
+import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestReportEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.UserCommonQuestReportRepository;
 import com.heartz.byeboo.application.port.out.report.CreateReportPort;
 import com.heartz.byeboo.application.port.out.report.RetrieveReportPort;
@@ -21,25 +21,25 @@ public class ReportPersistenceAdapter implements CreateReportPort, RetrieveRepor
     private final UserCommonQuestReportRepository userCommonQuestReportRepository;
 
     @Override
-    public UserCommonQuestReportsEntity createReport(UserCommonQuestReport userCommonQuestReport) {
-        UserCommonQuestReportsEntity userCommonQuestReportsEntity = UserCommonQuestReportMapper.toEntity(userCommonQuestReport);
-        return userCommonQuestReportRepository.save(userCommonQuestReportsEntity);
+    public UserCommonQuestReportEntity createReport(UserCommonQuestReport userCommonQuestReport) {
+        UserCommonQuestReportEntity userCommonQuestReportEntity = UserCommonQuestReportMapper.toEntity(userCommonQuestReport);
+        return userCommonQuestReportRepository.save(userCommonQuestReportEntity);
     }
 
     @Override
     public UserCommonQuestReport getById(Long reportId) {
-        UserCommonQuestReportsEntity userCommonQuestReportsEntity = userCommonQuestReportRepository.findById(reportId)
+        UserCommonQuestReportEntity userCommonQuestReportEntity = userCommonQuestReportRepository.findById(reportId)
                 .orElseThrow(() -> new CustomException( ReportErrorCode.REPORT_NOT_FOUND));
 
-        UserCommonQuest referenceUserCommonQuest = UserCommonQuest.fromId(userCommonQuestReportsEntity.getUserCommonQuestId());
-        User referenceUser = User.fromId(userCommonQuestReportsEntity.getUserId());
+        UserCommonQuest referenceUserCommonQuest = UserCommonQuest.fromId(userCommonQuestReportEntity.getUserCommonQuestId());
+        User referenceUser = User.fromId(userCommonQuestReportEntity.getUserId());
 
-        return UserCommonQuestReportMapper.toDomain(referenceUser, referenceUserCommonQuest, userCommonQuestReportsEntity);
+        return UserCommonQuestReportMapper.toDomain(referenceUser, referenceUserCommonQuest, userCommonQuestReportEntity);
     }
 
     @Override
     public void updateReport(UserCommonQuestReport userCommonQuestReport) {
-        UserCommonQuestReportsEntity userCommonQuestReportsEntity = UserCommonQuestReportMapper.toEntityForUpdate(userCommonQuestReport);
-        userCommonQuestReportRepository.save(userCommonQuestReportsEntity);
+        UserCommonQuestReportEntity userCommonQuestReportEntity = UserCommonQuestReportMapper.toEntityForUpdate(userCommonQuestReport);
+        userCommonQuestReportRepository.save(userCommonQuestReportEntity);
     }
 }

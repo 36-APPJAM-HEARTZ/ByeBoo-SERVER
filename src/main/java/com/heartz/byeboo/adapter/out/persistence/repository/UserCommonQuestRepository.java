@@ -20,14 +20,14 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
 
     @Query("select count(u) from UserCommonQuestEntity u " +
             "where u.createdDate >= :start and u.createdDate <= :end " +
-            "and not exists (select 1 from UserCommonQuestReportsEntity r where r.userCommonQuestId = u.id and r.reportStatus = :reportStatus) ")
+            "and not exists (select 1 from UserCommonQuestReportEntity r where r.userCommonQuestId = u.id and r.reportStatus = :reportStatus) ")
     long countByCreatedDateBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end, @Param("reportStatus") EReportStatus reportStatus);
 
     @Query("select uq.id as answerId, uq.answer as content, uq.createdDate as writtenAt, u.profileIcon as profileIcon, u.name as writer " +
             "from UserCommonQuestEntity uq join UserEntity u on uq.userId = u.id " +
             "where uq.createdDate >= :start and uq.createdDate <= :end " +
             "and (:cursor is null or uq.id < :cursor) " +
-            "and not exists (select 1 from UserCommonQuestReportsEntity r where r.userCommonQuestId = uq.id and r.reportStatus = :reportStatus) " +
+            "and not exists (select 1 from UserCommonQuestReportEntity r where r.userCommonQuestId = uq.id and r.reportStatus = :reportStatus) " +
             "order by uq.id desc")
     List<UserCommonQuestInfoProjection> findByDateAndCursor(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
                                                             @Param("cursor") Long cursor, @Param("reportStatus") EReportStatus reportStatus, Limit limit);

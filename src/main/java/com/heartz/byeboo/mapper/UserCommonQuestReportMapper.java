@@ -1,6 +1,6 @@
 package com.heartz.byeboo.mapper;
 
-import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestReportsEntity;
+import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestReportEntity;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserCommonQuest;
 import com.heartz.byeboo.domain.model.UserCommonQuestReport;
@@ -8,12 +8,12 @@ import com.heartz.byeboo.domain.type.EReportStatus;
 
 public class UserCommonQuestReportMapper {
 
-    public static UserCommonQuestReport toDomain(User user, UserCommonQuest userCommonQuest, UserCommonQuestReportsEntity userCommonQuestReportsEntity) {
+    public static UserCommonQuestReport toDomain(User user, UserCommonQuest userCommonQuest, UserCommonQuestReportEntity userCommonQuestReportEntity) {
         return UserCommonQuestReport.builder()
-                .id(userCommonQuestReportsEntity.getId())
+                .id(userCommonQuestReportEntity.getId())
                 .user(user)
                 .userCommonQuest(userCommonQuest)
-                .reportStatus(userCommonQuestReportsEntity.getReportStatus())
+                .reportStatus(userCommonQuestReportEntity.getReportStatus())
                 .build();
     }
 
@@ -25,16 +25,16 @@ public class UserCommonQuestReportMapper {
                 .build();
     }
 
-    public static UserCommonQuestReportsEntity toEntity(UserCommonQuestReport userCommonQuestReport) {
-        return UserCommonQuestReportsEntity.create(
+    public static UserCommonQuestReportEntity toEntity(UserCommonQuestReport userCommonQuestReport) {
+        return UserCommonQuestReportEntity.create(
                 userCommonQuestReport.getUser().getId(),
                 userCommonQuestReport.getUserCommonQuest().getId(),
                 userCommonQuestReport.getReportStatus()
         );
     }
 
-    public static UserCommonQuestReportsEntity toEntityForUpdate(UserCommonQuestReport userCommonQuestReport) {
-        return UserCommonQuestReportsEntity.from(userCommonQuestReport);
+    public static UserCommonQuestReportEntity toEntityForUpdate(UserCommonQuestReport userCommonQuestReport) {
+        return UserCommonQuestReportEntity.from(userCommonQuestReport);
     }
 
 }

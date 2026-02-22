@@ -1,6 +1,6 @@
 package com.heartz.byeboo.application.service.report;
 
-import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestReportsEntity;
+import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestReportEntity;
 import com.heartz.byeboo.application.command.report.CommonQuestReportCreateCommand;
 import com.heartz.byeboo.application.command.report.ReportUpdateCommand;
 import com.heartz.byeboo.application.port.in.usecase.ReportUseCase;
@@ -40,10 +40,10 @@ public class ReportService implements ReportUseCase {
         UserCommonQuest targetUserCommonQuest = retrieveUserCommonQuestPort.getUserCommonQuestById(command.getTargetId());
 
         UserCommonQuestReport userCommonQuestReport = UserCommonQuestReportMapper.toPendingDomain(findUser, targetUserCommonQuest);
-        UserCommonQuestReportsEntity userCommonQuestReportsEntity = createReportPort.createReport(userCommonQuestReport);
+        UserCommonQuestReportEntity userCommonQuestReportEntity = createReportPort.createReport(userCommonQuestReport);
 
         //신고하면 디코 알림
-        discordClient.sendAlarm(DiscordMessageDto.report(List.of(EmbedDto.reportNotification(userCommonQuestReportsEntity.getId(), findUser.getId(), command.getTargetId(), targetUserCommonQuest.getAnswer()))));
+        discordClient.sendAlarm(DiscordMessageDto.report(List.of(EmbedDto.reportNotification(userCommonQuestReportEntity.getId(), findUser.getId(), command.getTargetId(), targetUserCommonQuest.getAnswer()))));
 
         return null;
     }
