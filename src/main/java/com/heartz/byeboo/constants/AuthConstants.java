@@ -51,6 +51,7 @@ public class AuthConstants {
             "/api-docs/**",
             "/v3/api-docs/**",
             "/api/v1/auth/kakao/access",
-            "/api/v1/auth/admin/login"
+            "/api/v1/auth/admin/login",
+            "/api/v1/admin/reports/common-quests/*"
     );
 }
