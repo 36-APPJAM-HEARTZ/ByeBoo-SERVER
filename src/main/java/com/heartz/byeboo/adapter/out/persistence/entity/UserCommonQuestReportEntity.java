@@ -1,8 +1,6 @@
 package com.heartz.byeboo.adapter.out.persistence.entity;
 
-import com.heartz.byeboo.domain.model.UserCommonQuest;
-import com.heartz.byeboo.domain.model.UserCommonQuestReports;
-import com.heartz.byeboo.domain.type.EQuestStyle;
+import com.heartz.byeboo.domain.model.UserCommonQuestReport;
 import com.heartz.byeboo.domain.type.EReportStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user_common_quest_reports")
-public class UserCommonQuestReportsEntity extends BaseEntity {
+public class UserCommonQuestReportEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +30,7 @@ public class UserCommonQuestReportsEntity extends BaseEntity {
     private Long userCommonQuestId;
 
     @Builder
-    public UserCommonQuestReportsEntity(
+    public UserCommonQuestReportEntity(
             Long id,
             EReportStatus reportStatus,
             Long userId,
@@ -44,24 +42,24 @@ public class UserCommonQuestReportsEntity extends BaseEntity {
         this.userCommonQuestId = userCommonQuestId;
     }
 
-    public static UserCommonQuestReportsEntity create(
+    public static UserCommonQuestReportEntity create(
             Long userId,
             Long userCommonQuestId,
             EReportStatus reportStatus
     ) {
-        return UserCommonQuestReportsEntity.builder()
+        return UserCommonQuestReportEntity.builder()
                 .userId(userId)
                 .userCommonQuestId(userCommonQuestId)
                 .reportStatus(reportStatus)
                 .build();
     }
 
-    public static UserCommonQuestReportsEntity from(UserCommonQuestReports userCommonQuestReports) {
-        return UserCommonQuestReportsEntity.builder()
-                .id(userCommonQuestReports.getId())
-                .userId(userCommonQuestReports.getUser().getId())
-                .userCommonQuestId(userCommonQuestReports.getUserCommonQuest().getId())
-                .reportStatus(userCommonQuestReports.getReportStatus())
+    public static UserCommonQuestReportEntity from(UserCommonQuestReport userCommonQuestReport) {
+        return UserCommonQuestReportEntity.builder()
+                .id(userCommonQuestReport.getId())
+                .userId(userCommonQuestReport.getUser().getId())
+                .userCommonQuestId(userCommonQuestReport.getUserCommonQuest().getId())
+                .reportStatus(userCommonQuestReport.getReportStatus())
                 .build();
     }
 }

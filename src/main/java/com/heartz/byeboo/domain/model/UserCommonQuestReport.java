@@ -4,18 +4,16 @@ import com.heartz.byeboo.domain.type.EReportStatus;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
-
 @Builder
 @Getter
-public class UserCommonQuestReports {
+public class UserCommonQuestReport {
     private Long id;
     private EReportStatus reportStatus;
     private User user;
     private UserCommonQuest userCommonQuest;
 
-    public static UserCommonQuestReports of(Long id, EReportStatus reportStatus, User user, UserCommonQuest userCommonQuest) {
-        return UserCommonQuestReports.builder()
+    public static UserCommonQuestReport of(Long id, EReportStatus reportStatus, User user, UserCommonQuest userCommonQuest) {
+        return UserCommonQuestReport.builder()
                 .id(id)
                 .reportStatus(reportStatus)
                 .user(user)

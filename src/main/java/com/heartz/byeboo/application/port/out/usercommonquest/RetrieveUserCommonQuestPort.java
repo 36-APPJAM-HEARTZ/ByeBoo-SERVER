@@ -13,8 +13,8 @@ public interface RetrieveUserCommonQuestPort {
     boolean isUserCommonQuestExistsToday(User user);
     void deleteByUserIdAndId(Long userCommonQuestId, User user);
     UserCommonQuest getUserCommonQuestByUserAndId(User user, Long id);
-    List<UserCommonQuestInfoProjection> getUserCommonQuestsByCreatedDate(LocalDate targetDate, Long cursor, int limit, CommonQuest commonQuest);
-    long countByCreatedDateBetween(LocalDate targetDate);
+    List<UserCommonQuestInfoProjection> getUserCommonQuestsByCreatedDate(LocalDate targetDate, Long cursor, int limit, Long userId);
+    long countByCreatedDateBetween(LocalDate targetDate, Long userId);
     UserCommonQuest getUserCommonQuestById(Long id);
     List<MyCommonQuestProjection> getMyCommonQuestsByUserId(User user, Long cursor, int limit);
 }
