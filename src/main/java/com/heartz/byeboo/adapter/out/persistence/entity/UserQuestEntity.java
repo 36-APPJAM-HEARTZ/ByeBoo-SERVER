@@ -30,6 +30,9 @@ public class UserQuestEntity extends BaseEntity{
     @Column(name = "quest_emotion_state", nullable = false, length = 50)
     private EQuestEmotionState questEmotionState;
 
+    @Column(name = "ai_answer")
+    private String aiAnswer;
+
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
@@ -42,6 +45,7 @@ public class UserQuestEntity extends BaseEntity{
             String answer,
             UUID imageKey,
             EQuestEmotionState questEmotionState,
+            String aiAnswer,
             Long userId,
             Long questId
     ) {
@@ -49,6 +53,7 @@ public class UserQuestEntity extends BaseEntity{
         this.answer = answer;
         this.imageKey = imageKey;
         this.questEmotionState = questEmotionState;
+        this.aiAnswer = aiAnswer;
         this.userId = userId;
         this.questId = questId;
     }
@@ -57,6 +62,7 @@ public class UserQuestEntity extends BaseEntity{
             String answer,
             UUID imageKey,
             EQuestEmotionState questEmotionState,
+            String aiAnswer,
             Long userId,
             Long questId
     ) {
@@ -64,6 +70,7 @@ public class UserQuestEntity extends BaseEntity{
                 .answer(answer)
                 .imageKey(imageKey)
                 .questEmotionState(questEmotionState)
+                .aiAnswer(aiAnswer)
                 .userId(userId)
                 .questId(questId)
                 .build();
@@ -75,6 +82,7 @@ public class UserQuestEntity extends BaseEntity{
                 .answer(userQuest.getAnswer())
                 .imageKey(userQuest.getImageKey())
                 .questEmotionState(userQuest.getQuestEmotionState())
+                .aiAnswer(userQuest.getAiAnswer())
                 .userId(userQuest.getUser().getId())
                 .questId(userQuest.getQuest().getId())
                 .build();
