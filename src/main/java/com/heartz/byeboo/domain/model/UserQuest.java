@@ -14,6 +14,7 @@ public class UserQuest {
     private String answer;
     private UUID imageKey;
     private EQuestEmotionState questEmotionState;
+    private String aiAnswer;
     private User user;
     private Quest quest;
     private LocalDateTime createdDate;
@@ -62,5 +63,9 @@ public class UserQuest {
 
     public void updateAnswer(String answer){
         this.answer = answer;
+    }
+
+    public void updateAiAnswer(String aiAnswer) {
+        this.aiAnswer = aiAnswer;
     }
 }
