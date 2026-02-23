@@ -1,6 +1,7 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.adapter.in.web.dto.request.*;
+import com.heartz.byeboo.application.port.in.dto.response.userquest.AiAnswerResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.UserQuestDetailResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.SignedUrlResponseDto;
@@ -285,5 +286,23 @@ public class UserQuestController {
         ActiveQuestUpdateCommand command = ActiveQuestUpdateCommand.from(activeQuestUpdateRequestDto, questId, userId);
         userQuestUseCase.updateActiveQuest(command);
         return BaseResponse.success(null);
+    }
+
+    @PostMapping("/{questId}/ai-answer")
+    public BaseResponse<AiAnswerResponseDto> createAiAnswer(
+            @UserId final Long userId,
+            @PathVariable final Long questId
+    ){
+        AiAnswerCreateCommand command = AiAnswerCreateCommand.of(userId, questId);
+        return BaseResponse.success(userQuestUseCase.createAiAnswer(command));
+    }
+
+    @GetMapping("/{questId}/ai-answer")
+    public BaseResponse<AiAnswerResponseDto> getAiAnswer(
+            @UserId final Long userId,
+            @PathVariable final Long questId
+    ){
+        AiAnswerCommand command = AiAnswerCommand.of(userId, questId);
+        return BaseResponse.success(userQuestUseCase.getAiAnswer(command));
     }
 }
