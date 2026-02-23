@@ -101,11 +101,11 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
 
         // 답변 여부 및 전체 카운트 확인
         boolean isAnswered = isUserAlreadyAnswered(findUser, command.getTargetDate());
-        long totalCount = retrieveUserCommonQuestPort.countByCreatedDateBetween(command.getTargetDate());
+        long totalCount = retrieveUserCommonQuestPort.countByCreatedDateBetween(command.getTargetDate(), findUser.getId());
 
         //무한 스크롤 데이터 조회 (limit + 1)
         int limitPlusOne = command.getLimit()+1;
-        List<UserCommonQuestInfoProjection> userCommonQuestInfoProjectionListPlusLimit = retrieveUserCommonQuestPort.getUserCommonQuestsByCreatedDate(command.getTargetDate(), command.getCursor(), limitPlusOne, findCommonQuest);
+        List<UserCommonQuestInfoProjection> userCommonQuestInfoProjectionListPlusLimit = retrieveUserCommonQuestPort.getUserCommonQuestsByCreatedDate(command.getTargetDate(), command.getCursor(), limitPlusOne, findUser.getId());
 
         //페이징 가공 (데이터 자르기 및 다음 커서 추출)
         boolean hasNext = hasNextData(userCommonQuestInfoProjectionListPlusLimit.size(), limitPlusOne); // 11개를 가져왔다면 다음 페이지가 있음
