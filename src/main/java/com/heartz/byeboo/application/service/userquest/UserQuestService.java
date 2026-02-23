@@ -1,14 +1,17 @@
 package com.heartz.byeboo.application.service.userquest;
 
+import com.heartz.byeboo.adapter.in.web.dto.request.gemini.AiAnswerRequestDto;
 import com.heartz.byeboo.adapter.out.FCMNotificationPersistenceAdapter;
 import com.heartz.byeboo.adapter.out.persistence.entity.NotificationTokenEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserIdCurrentNumberProjection;
 import com.heartz.byeboo.application.command.SignedUrlCreateCommand;
 import com.heartz.byeboo.application.command.userquest.*;
 import com.heartz.byeboo.application.port.in.dto.response.SignedUrlResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.userquest.AiAnswerResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.UserQuestDetailResponseDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.gemini.GeminiResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.UserQuestUseCase;
 import com.heartz.byeboo.application.port.out.gcs.CreateObjectPort;
 import com.heartz.byeboo.application.port.out.gcs.DeleteObjectPort;
@@ -39,6 +42,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,6 +68,7 @@ public class UserQuestService implements UserQuestUseCase {
     private final FCMNotificationPersistenceAdapter fCMNotificationPersistenceAdapter;
     private final UpdateUserQuestPort updateUserQuestPort;
     private final DeleteObjectPort deleteObjectPort;
+    private final RestClient geminiRestClient;
 
     @Override
     @Transactional
@@ -194,6 +199,7 @@ public class UserQuestService implements UserQuestUseCase {
     @Transactional(readOnly = true)
     public void sendQuestNotifications() {
         LocalDateTime now = LocalDateTime.now();
+        //LocalDateTime thresholdEnd = now.minusMinutes(1);
         LocalDateTime thresholdEnd = now.minusHours(24);
         LocalDateTime thresholdStart = thresholdEnd.minusMinutes(1);
 
@@ -249,5 +255,35 @@ public class UserQuestService implements UserQuestUseCase {
             deleteObjectPort.deleteObject(imageKeyToDelete);
 
         updateUserQuestPort.updateUserQuest(userQuest);
+    }
+
+    @Override
+    @Transactional
+    public AiAnswerResponseDto createAiAnswer(AiAnswerCreateCommand command){
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
+        Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
+        UserQuest userQuest = retrieveUserQuestPort.getUserQuestByUserAndQuest(findUser, findQuest);
+
+        GeminiResponseDto response = geminiRestClient.post()
+                .body(AiAnswerRequestDto.from(userQuest))
+                .retrieve()
+                .body(GeminiResponseDto.class);
+
+        String aiAnswer = response.candidates().get(0).content().parts().get(0).text();
+        log.info(aiAnswer);
+
+        userQuest.updateAiAnswer(aiAnswer);
+        updateUserQuestPort.updateUserQuest(userQuest);
+
+        return AiAnswerResponseDto.of(aiAnswer);
+    }
+
+    @Transactional
+    public AiAnswerResponseDto getAiAnswer(AiAnswerCommand command){
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
+        Quest findQuest = retrieveQuestPort.getQuestById(command.getQuestId());
+        UserQuest userQuest = retrieveUserQuestPort.getUserQuestByUserAndQuest(findUser, findQuest);
+
+        return AiAnswerResponseDto.of(userQuest.getAiAnswer());
     }
 }

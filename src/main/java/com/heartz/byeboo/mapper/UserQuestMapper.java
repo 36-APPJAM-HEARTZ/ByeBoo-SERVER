@@ -13,6 +13,7 @@ public class UserQuestMapper {
                 userQuest.getAnswer(),
                 userQuest.getImageKey(),
                 userQuest.getQuestEmotionState(),
+                userQuest.getAiAnswer(),
                 userQuest.getUser().getId(),
                 userQuest.getQuest().getId()
         );

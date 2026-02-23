@@ -1,6 +1,7 @@
 package com.heartz.byeboo.application.port.in.usecase;
 
 import com.heartz.byeboo.application.port.in.dto.response.SignedUrlResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.userquest.AiAnswerResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.JourneyListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.userquest.UserQuestDetailResponseDto;
 import com.heartz.byeboo.application.command.*;
@@ -15,4 +16,6 @@ public interface UserQuestUseCase {
     void updateJourneyStatus(JourneyUpdateCommand command);
     void updateRecordingQuest(RecordingQuestUpdateCommand command);
     void updateActiveQuest(ActiveQuestUpdateCommand command);
+    AiAnswerResponseDto createAiAnswer(AiAnswerCreateCommand command);
+    AiAnswerResponseDto getAiAnswer(AiAnswerCommand command);
 }
