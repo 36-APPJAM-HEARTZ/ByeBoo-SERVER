@@ -24,6 +24,7 @@ public class UserBlockService implements UserBlockUseCase {
         UserBlock userBlock = UserBlockMapper.usersToDomain(blockedUser, blockerUser);
         createUserBlockPort.createUserBlock(userBlock);
 
+        //TODO: 사용자 차단 시 차단한 사용자 상호 활동 숨김 처리
         return null;
     }
 }
