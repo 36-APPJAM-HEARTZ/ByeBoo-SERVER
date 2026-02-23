@@ -64,21 +64,21 @@ public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestP
     }
 
     @Override
-    public List<UserCommonQuestInfoProjection> getUserCommonQuestsByCreatedDate(LocalDate targetDate, Long cursor, int limit, CommonQuest commonQuest) {
+    public List<UserCommonQuestInfoProjection> getUserCommonQuestsByCreatedDate(LocalDate targetDate, Long cursor, int limit, Long userId) {
         LocalDateTime startOfToday = targetDate.atStartOfDay();
         LocalDateTime endOfToday = targetDate.atTime(LocalTime.MAX);
 
         return userCommonQuestRepository.findByDateAndCursor(
-                startOfToday, endOfToday, cursor, EReportStatus.BLOCKED, Limit.of(limit)
+                startOfToday, endOfToday, cursor, EReportStatus.BLOCKED, userId, Limit.of(limit)
         );
     }
 
     @Override
-    public long countByCreatedDateBetween(LocalDate targetDate) {
+    public long countByCreatedDateBetween(LocalDate targetDate, Long userId) {
         LocalDateTime startOfToday = targetDate.atStartOfDay();
         LocalDateTime endOfToday = targetDate.atTime(LocalTime.MAX);
 
-        return userCommonQuestRepository.countByCreatedDateBetween(startOfToday, endOfToday, EReportStatus.BLOCKED);
+        return userCommonQuestRepository.countByCreatedDateBetween(startOfToday, endOfToday, EReportStatus.BLOCKED, userId);
     }
 
     @Override
