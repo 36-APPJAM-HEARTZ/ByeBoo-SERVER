@@ -14,9 +14,10 @@ public record UserQuestDetailResponseDto(
         String questEmotionState,
         String imageKey,
         String imageUrl,
-        String emotionDescription
+        String emotionDescription,
+        Boolean aiAnswerExists
 ) {
-    public static UserQuestDetailResponseDto of(UserQuest userQuest, Quest quest, String signedUrl){
+    public static UserQuestDetailResponseDto of(UserQuest userQuest, Quest quest, String signedUrl, boolean aiAnswerExists){
         return new UserQuestDetailResponseDto(
                 quest.getStep().getStepNumber(),
                 quest.getQuestNumber(),
@@ -26,11 +27,12 @@ public record UserQuestDetailResponseDto(
                 userQuest.getQuestEmotionState().getLabel(),
                 userQuest.getImageKey().toString(),
                 signedUrl,
-                userQuest.getQuestEmotionState().getDescription()
+                userQuest.getQuestEmotionState().getDescription(),
+                aiAnswerExists
                 );
     }
 
-    public static UserQuestDetailResponseDto of(UserQuest userQuest, Quest quest){
+    public static UserQuestDetailResponseDto of(UserQuest userQuest, Quest quest, boolean aiAnswerExists){
         return new UserQuestDetailResponseDto(
                 quest.getStep().getStepNumber(),
                 quest.getQuestNumber(),
@@ -40,7 +42,8 @@ public record UserQuestDetailResponseDto(
                 userQuest.getQuestEmotionState().getLabel(),
                 null,
                 null,
-                userQuest.getQuestEmotionState().getDescription()
+                userQuest.getQuestEmotionState().getDescription(),
+                aiAnswerExists
         );
     }
 }
