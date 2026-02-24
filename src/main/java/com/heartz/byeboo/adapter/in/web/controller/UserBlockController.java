@@ -1,6 +1,7 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.application.command.userblock.UserBlockCommand;
+import com.heartz.byeboo.application.command.userblock.UserBlockDeleteCommand;
 import com.heartz.byeboo.application.port.in.dto.response.userblock.UserBlockListResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.UserBlockUseCase;
 import com.heartz.byeboo.core.annotation.UserId;
@@ -69,6 +70,33 @@ public class UserBlockController {
             @UserId final Long userId
     ){
         return BaseResponse.success(userBlockUseCase.getUserBlockList(userId));
+    }
+
+    @Operation(
+            summary = "사용자 차단 해제",
+            description = "사용자 차단 해제하는 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "사용자 차단 해제 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일떄"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @DeleteMapping({"/{blockId}"})
+    public BaseResponse<Void> unblock(
+            @UserId final Long userId,
+            @PathVariable final Long blockId
+    ){
+        UserBlockDeleteCommand userBlockDeleteCommand = UserBlockDeleteCommand.from(userId, blockId);
+        return BaseResponse.success(userBlockUseCase.unblock(userBlockDeleteCommand));
     }
 
 }
