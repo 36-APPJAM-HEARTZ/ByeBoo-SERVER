@@ -14,5 +14,4 @@ public interface RetrieveUserPort {
     Optional<User> findUserByPlatFormAndSeralId(EPlatform platform, String serialId);
     Long countAllUsers();
     List<UserIdCurrentNumberProjection> findUsersWithExpiredQuest(LocalDateTime thresholdStart, LocalDateTime thresholdEnd);
-    List<User> findUsersById(List<Long> userIds);
 }
