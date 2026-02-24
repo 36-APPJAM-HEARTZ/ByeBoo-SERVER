@@ -75,7 +75,6 @@ public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort,
         userRepository.save(userEntity);
     }
 
-
     @Override
     public void deleteUserById(Long userId) {
         userRepository.deleteById(userId);
@@ -87,11 +86,5 @@ public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort,
     @Override
     public List<UserIdCurrentNumberProjection> findUsersWithExpiredQuest(LocalDateTime thresholdStart, LocalDateTime thresholdEnd) {
         return userRepository.findUsersWithExpiredQuest(thresholdStart, thresholdEnd);
-    }
-
-    @Override
-    public List<User> findUsersById(List<Long> userIds) {
-        return userRepository.findAllByIdIn(userIds).stream().map(userEntity ->
-                UserMapper.toDomain(userEntity)).toList();
     }
 }
