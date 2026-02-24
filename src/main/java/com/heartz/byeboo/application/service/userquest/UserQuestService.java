@@ -118,11 +118,13 @@ public class UserQuestService implements UserQuestUseCase {
 
         UserQuest userQuest = retrieveUserQuestPort.getUserQuestByUserAndQuest(findUser, findQuest);
 
+        boolean aiAnswerExists = userQuest.getAiAnswer() != null;
+
         if (findQuest.getQuestStyle() == EQuestStyle.ACTIVE) {
             String signedUrl = retrieveGcsPort.getSignedUrl(userQuest.getImageKey().toString());
-            return UserQuestDetailResponseDto.of(userQuest, findQuest, signedUrl);
+            return UserQuestDetailResponseDto.of(userQuest, findQuest, signedUrl, aiAnswerExists);
         }
-        return UserQuestDetailResponseDto.of(userQuest, findQuest);
+        return UserQuestDetailResponseDto.of(userQuest, findQuest, aiAnswerExists);
     }
 
     @Override
