@@ -26,7 +26,4 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
             @Param("thresholdStart") LocalDateTime thresholdStart,
             @Param("thresholdEnd") LocalDateTime thresholdEnd
     );
-
-    @Query("SELECT u FROM UserEntity u WHERE u.id in :ids")
-    List<UserEntity> findAllByIdIn(List<Long> ids);
 }
