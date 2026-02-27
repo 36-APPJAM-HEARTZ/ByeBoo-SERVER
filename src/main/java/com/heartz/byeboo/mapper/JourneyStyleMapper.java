@@ -9,13 +9,7 @@ public class JourneyStyleMapper {
         return switch (journey){
             case FACE_EMOTION -> EQuestStyle.RECORDING;
             case PROCESS_EMOTION -> EQuestStyle.ACTIVE;
-        };
-    }
-
-    public static EJourney questStyleToJourney(EQuestStyle questStyle){
-        return switch (questStyle){
-            case ACTIVE -> EJourney.PROCESS_EMOTION;
-            case RECORDING -> EJourney.FACE_EMOTION;
+            case PREPARE_REUNION -> EQuestStyle.ACTIVE; //TODO: 임의 추가
         };
     }
 }

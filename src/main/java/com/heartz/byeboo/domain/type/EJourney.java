@@ -7,10 +7,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum EJourney {
     FACE_EMOTION(
-            "감정 직면",
+            "이별 극복 여정",
             """
                        너무 힘든 시간을 보내고 있는 당신에게,
-                       ‘감정 직면 여정’을 추천해요.
+                       ‘이별 극복 여정’을 추천해요.
                        
                        이 여정은 감정을 직면하고,
                        상황을 정리하며,
