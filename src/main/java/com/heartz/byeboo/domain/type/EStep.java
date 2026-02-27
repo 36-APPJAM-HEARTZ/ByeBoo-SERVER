@@ -15,7 +15,12 @@ public enum EStep {
     TO_BE_ALONE("혼자 있는 힘 기르기", 2L),
     NAMING_EMOTION("감정에 이름 붙이기", 3L),
     SMALL_ROUTINE("나를 위한 루틴 만들기", 4L),
-    TREATING_SELF("스스로에게 대접하기", 5L)
+    TREATING_SELF("스스로에게 대접하기", 5L),
+    MIND_CHECK("마음 확인하기", 1L),
+    REASON_ANALYSIS("이유 찾기", 2L),
+    SELF_IMPROVEMENT("변화할 점 찾기", 3L),
+    EX_CHANGES("X의 변화", 4L),
+    REUNION_APPROACH("재회로 나아가기", 5L);
     ;
 
     private final String label;
