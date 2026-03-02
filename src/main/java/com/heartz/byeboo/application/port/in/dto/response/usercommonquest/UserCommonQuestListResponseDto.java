@@ -11,9 +11,10 @@ public record UserCommonQuestListResponseDto(
         long answerCount,
         List<UserCommonQuestDetailResponseDto> answers,
         boolean hasNext,
-        Long nextCursor
+        Long nextCursor,
+        Long questId
 ) {
-    public static UserCommonQuestListResponseDto from(String question, boolean isAnswered, long answerCount, List<UserCommonQuestDetailResponseDto> answers, boolean hasNext, Long nextCursor){
+    public static UserCommonQuestListResponseDto from(String question, boolean isAnswered, long answerCount, List<UserCommonQuestDetailResponseDto> answers, boolean hasNext, Long nextCursor, Long questId){
         return UserCommonQuestListResponseDto.builder()
                 .answerCount(answerCount)
                 .answers(answers)
@@ -21,6 +22,7 @@ public record UserCommonQuestListResponseDto(
                 .question(question)
                 .hasNext(hasNext)
                 .nextCursor(nextCursor)
+                .questId(questId)
                 .build();
     }
 }
