@@ -288,4 +288,5 @@ public class UserQuestService implements UserQuestUseCase {
 
         return AiAnswerResponseDto.of(userQuest.getAiAnswer());
     }
+
 }

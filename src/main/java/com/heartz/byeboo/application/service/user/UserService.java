@@ -46,6 +46,7 @@ public class UserService implements UserUseCase {
 
     @Override
     @Transactional
+    @Deprecated
     public UserCreateResponseDto updateUser(UserCreateCommand userCreateCommand) {
         User currentUser = retrieveUserPort.getUserById(userCreateCommand.getUserId());
        //User currentUser = UserMapper.commandToDomain(userCreateCommand);
@@ -57,6 +58,7 @@ public class UserService implements UserUseCase {
         EJourney initialJourney = switch (userCreateCommand.getQuestStyle()) {
             case RECORDING -> EJourney.FACE_EMOTION;
             case ACTIVE -> EJourney.PROCESS_EMOTION;
+            case REUNION -> throw new CustomException(UserErrorCode.INVALID_REQUEST_PARAMETER);
         };
 
         currentUser.initializeCurrentNumber();
@@ -230,6 +232,40 @@ public class UserService implements UserUseCase {
         updateUserPort.updateAlarmEnabled(currentUser);
         
         return AlarmEnabledResponseDto.of(currentUser.isAlarmEnabled());
+    }
+
+    @Override
+    @Transactional
+    public UserCreateResponseDto updateUser(UserCreateV2Command command) {
+        User currentUser = retrieveUserPort.getUserById(command.getUserId());
+        //User currentUser = UserMapper.commandToDomain(userCreateCommand);
+
+        if(currentUser.getStatus() == ACTIVE){
+            throw new CustomException(UserErrorCode.ALREADY_PROCEED_ONBOARDING);
+        }
+
+        EJourney initialJourney = switch (command.getQuestStyle()) {
+            case RECORDING -> EJourney.FACE_EMOTION;   // 이별 극복
+            case REUNION -> EJourney.PREPARE_REUNION;  // 재회 준비
+
+            case ACTIVE -> throw new CustomException(UserErrorCode.INVALID_REQUEST_PARAMETER);
+        };
+
+        currentUser.initializeCurrentNumber();
+        currentUser.updateName(command.getName());
+        currentUser.updateQuestStyle(command.getQuestStyle());
+        currentUser.updateJourney(initialJourney);
+        currentUser.updateStatus(ACTIVE);
+        currentUser.updateProfileIcon(EProfileIcon.getRandom()); //프로필 아이콘 랜덤 뽑기
+        currentUser.updateDeletedAt(null);
+
+        //User savedUser = createUserPort.createUser(currentUser);
+        updateUserPort.updateUser(currentUser);
+        List<UserJourney> userJourneyList = UserJourney.initializeUserJourneyV2(currentUser);
+        createUserJourneyPort.createUserJourney(userJourneyList);
+        discordClient.sendAlarm(DiscordMessageDto.signUp(List.of(EmbedDto.signUp(currentUser.getName(), retrieveUserPort.countAllUsers(), currentUser.getId()))));
+
+        return UserCreateResponseDto.of(currentUser.getId(), currentUser.getName());
     }
 
     private Boolean isBeforeStart(User user) {
