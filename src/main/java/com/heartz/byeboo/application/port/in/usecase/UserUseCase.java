@@ -13,5 +13,6 @@ public interface UserUseCase {
     Void updateInitialUserJourney(UserJourneyUpdateCommand userJourneyUpdateCommand);
     UserCharacterResponseDto getCharacterDialogue(UserCharacterDialogueCommand userCharacterDialogueCommand);
     AlarmEnabledResponseDto updateAlarmPermission(AlarmPermissionCommand alarmPermissionCommand);
+    UserCreateResponseDto updateUser(UserCreateV2Command userCreateV2Command);
     
 }

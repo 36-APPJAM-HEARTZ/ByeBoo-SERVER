@@ -2,6 +2,7 @@ package com.heartz.byeboo.adapter.in.web.controller;
 
 import com.heartz.byeboo.adapter.in.web.dto.request.AdminLoginRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.UserCreateRequestDto;
+import com.heartz.byeboo.adapter.in.web.dto.request.UserCreateRequestV2Dto;
 import com.heartz.byeboo.adapter.in.web.dto.request.UserNameUpdateRequestDto;
 import com.heartz.byeboo.application.command.user.*;
 import com.heartz.byeboo.application.command.usercommonquest.CommonQuestListCommand;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class UserController {
     private final UserUseCase userUseCase;
     private final UserCommonQuestUseCase userCommonQuestUseCase;
@@ -51,12 +52,47 @@ public class UserController {
                     )
             }
     )
-    @PatchMapping("/users")
+    @PatchMapping("/v1/users")
     public BaseResponse<UserCreateResponseDto> updateUser(
             @UserId final Long userId,
             @RequestBody UserCreateRequestDto userCreateRequestDto
     ) {
         UserCreateCommand userCreateCommand = UserCreateCommand.of(userCreateRequestDto, userId);
+        return BaseResponse.success(userUseCase.updateUser(userCreateCommand));
+    }
+
+    @Operation(
+            summary = "온보딩 V2",
+            description = "온보딩에서 입력한 정보로 유저를 생성하기 위한 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "유저 생성 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "올바르지 않은 퀘스트 방식을 보냈을때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "유저 이름 길이가 2글자 이하일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "유저 이름 길이가 5글자 이상일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @PatchMapping("/v2/users")
+    public BaseResponse<UserCreateResponseDto> updateUser(
+            @UserId final Long userId,
+            @RequestBody UserCreateRequestV2Dto userCreateRequestDto
+    ) {
+        UserCreateV2Command userCreateCommand = UserCreateV2Command.of(userCreateRequestDto, userId);
         return BaseResponse.success(userUseCase.updateUser(userCreateCommand));
     }
 
@@ -78,7 +114,7 @@ public class UserController {
                     )
             }
     )
-    @GetMapping("/users")
+    @GetMapping("/v1/users")
     public BaseResponse<UserNameResponseDto> getUserName(
             @UserId final Long userId) {
         UserNameCommand userNameCommand = UserNameCommand.of(userId);
@@ -111,7 +147,7 @@ public class UserController {
                     )
             }
     )
-    @PatchMapping("/users/name")
+    @PatchMapping("/v1/users/name")
     public BaseResponse<UserNameResponseDto> updateUserName(
             @UserId final Long userId,
             @RequestBody UserNameUpdateRequestDto userNameUpdateRequestDto
@@ -142,7 +178,7 @@ public class UserController {
                     )
             }
     )
-    @GetMapping("/users/journey")
+    @GetMapping("/v1/users/journey")
     public BaseResponse<UserJourneyResponseDto> getUserJourney(
             @UserId final Long userId
     ) {
@@ -172,7 +208,7 @@ public class UserController {
                     )
             }
     )
-    @GetMapping("/users/count")
+    @GetMapping("/v1/users/count")
     public BaseResponse<HomeCountResponseDto> getCompletedCount(
             @UserId final Long userId
             ) {
@@ -202,7 +238,7 @@ public class UserController {
                     )
             }
     )
-    @PatchMapping("/users/journey/start")
+    @PatchMapping("/v1/users/journey/start")
     public BaseResponse<Void> updateInitialUserJourney(
             @UserId final Long userId
     ) {
@@ -232,7 +268,7 @@ public class UserController {
                     )
             }
     )
-    @GetMapping("/users/character")
+    @GetMapping("/v1/users/character")
     public BaseResponse<UserCharacterResponseDto> getCharacterDialogue(
             @UserId final Long userId
     ) {
@@ -258,7 +294,7 @@ public class UserController {
                     )
             }
     )
-    @PatchMapping("/users/alarm")
+    @PatchMapping("/v1/users/alarm")
     public BaseResponse<AlarmEnabledResponseDto> updateAlarmPermission(
             @UserId final Long userId
     ){
@@ -284,7 +320,7 @@ public class UserController {
                     )
             }
     )
-    @GetMapping("/users/me/common-quests")
+    @GetMapping("/v1/users/me/common-quests")
     public BaseResponse<MyCommonQuestListResponseDto> getMyCommonQuests(
             @UserId final Long userId,
             @RequestParam(value = "cursor", required = false) Long cursor,
