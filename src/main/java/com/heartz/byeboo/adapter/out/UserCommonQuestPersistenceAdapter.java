@@ -5,6 +5,7 @@ import com.heartz.byeboo.adapter.out.persistence.repository.UserCommonQuestRepos
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQuestProjection;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestInfoProjection;
 import com.heartz.byeboo.application.port.out.usercommonquest.CreateUserCommonQuestPort;
+import com.heartz.byeboo.application.port.out.usercommonquest.DeleteUserCommonQuestPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.RetrieveUserCommonQuestPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.UpdateUserCommonQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
@@ -25,7 +26,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestPort, RetrieveUserCommonQuestPort, UpdateUserCommonQuestPort {
+public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestPort, RetrieveUserCommonQuestPort, UpdateUserCommonQuestPort, DeleteUserCommonQuestPort {
 
     private final UserCommonQuestRepository userCommonQuestRepository;
 
@@ -101,5 +102,10 @@ public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestP
         UserCommonQuestEntity userCommonQuestEntity = UserCommonQuestMapper.toEntityForUpdate(userCommonQuest);
 
         userCommonQuestRepository.save(userCommonQuestEntity);
+    }
+
+    @Override
+    public void deleteAllByUserId(Long userId) {
+        userCommonQuestRepository.deleteAllByUserId(userId);
     }
 }

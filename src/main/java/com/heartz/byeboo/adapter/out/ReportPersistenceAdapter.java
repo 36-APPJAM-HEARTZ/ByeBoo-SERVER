@@ -3,6 +3,7 @@ package com.heartz.byeboo.adapter.out;
 import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestReportEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.UserCommonQuestReportRepository;
 import com.heartz.byeboo.application.port.out.report.CreateReportPort;
+import com.heartz.byeboo.application.port.out.report.DeleteReportPort;
 import com.heartz.byeboo.application.port.out.report.RetrieveReportPort;
 import com.heartz.byeboo.application.port.out.report.UpdateReportPort;
 import com.heartz.byeboo.core.exception.CustomException;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class ReportPersistenceAdapter implements CreateReportPort, RetrieveReportPort, UpdateReportPort {
+public class ReportPersistenceAdapter implements CreateReportPort, RetrieveReportPort, UpdateReportPort, DeleteReportPort {
 
     private final UserCommonQuestReportRepository userCommonQuestReportRepository;
 
@@ -41,5 +42,10 @@ public class ReportPersistenceAdapter implements CreateReportPort, RetrieveRepor
     public void updateReport(UserCommonQuestReport userCommonQuestReport) {
         UserCommonQuestReportEntity userCommonQuestReportEntity = UserCommonQuestReportMapper.toEntityForUpdate(userCommonQuestReport);
         userCommonQuestReportRepository.save(userCommonQuestReportEntity);
+    }
+
+    @Override
+    public void deleteAllByReportedUserId(Long userId) {
+        userCommonQuestReportRepository.deleteAllByReportedUserId(userId);
     }
 }

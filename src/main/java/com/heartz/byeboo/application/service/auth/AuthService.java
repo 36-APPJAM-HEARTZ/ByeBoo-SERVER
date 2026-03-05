@@ -9,11 +9,14 @@ import com.heartz.byeboo.application.port.in.dto.response.auth.UserReissueRespon
 import com.heartz.byeboo.application.port.in.dto.response.user.AdminLoginResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.OAuthUseCase;
 import com.heartz.byeboo.application.port.out.notificationtoken.DeleteNotificationTokenPort;
+import com.heartz.byeboo.application.port.out.report.DeleteReportPort;
 import com.heartz.byeboo.application.port.out.token.CreateTokenPort;
 import com.heartz.byeboo.application.port.out.token.DeleteTokenPort;
 import com.heartz.byeboo.application.port.out.token.RetrieveTokenPort;
 import com.heartz.byeboo.application.port.out.token.UpdateTokenPort;
 import com.heartz.byeboo.application.port.out.user.*;
+import com.heartz.byeboo.application.port.out.userblock.DeleteUserBlockPort;
+import com.heartz.byeboo.application.port.out.usercommonquest.DeleteUserCommonQuestPort;
 import com.heartz.byeboo.application.port.out.userquest.DeleteUserQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserErrorCode;
@@ -56,6 +59,9 @@ public class AuthService implements OAuthUseCase {
     private final DeleteUserQuestPort deleteUserQuestPort;
     private final DeleteUserJourneyPort deleteUserJourneyPort;
     private final DeleteNotificationTokenPort deleteNotificationTokenPort;
+    private final DeleteUserCommonQuestPort deleteUserCommonQuestPort;
+    private final DeleteUserBlockPort deleteUserBlockPort;
+    private final DeleteReportPort deleteReportPort;
 
 
     @Value("${admin.login.id}")
@@ -118,6 +124,10 @@ public class AuthService implements OAuthUseCase {
         deleteUserJourneyPort.deleteAllByUserId(findUser.getId());
         deleteUserPort.deleteUserById(findUser.getId());
         deleteNotificationTokenPort.deleteAllByUserId(findUser.getId());
+        deleteReportPort.deleteAllByReportedUserId(findUser.getId());
+        deleteUserCommonQuestPort.deleteAllByUserId(findUser.getId());
+        deleteUserBlockPort.deleteAllUserBlockByUserId(findUser.getId());
+
         //findUser.softDelete();
         //updateUserPort.updateUser(findUser);
         return null;

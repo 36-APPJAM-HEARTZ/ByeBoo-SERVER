@@ -46,4 +46,6 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
             "WHERE uq.userId = :userId and (:cursor is null or uq.id < :cursor)" +
             "order by uq.id desc")
     List<MyCommonQuestProjection> findMyQuestsByUserId(@Param("userId") Long userId, @Param("cursor") Long cursor, Limit limit);
+
+    void deleteAllByUserId(Long userId);
 }
