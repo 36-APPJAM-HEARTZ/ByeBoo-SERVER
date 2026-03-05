@@ -15,5 +15,7 @@ public interface UserBlockRepository extends JpaRepository<UserBlockEntity, Long
             "join UserEntity u on ub.blockedUserId = u.id " +
             "where ub.blockerUserId = :userId")
     List<UserBlockInfoProjection> getUserBlockProjection(@Param("userId") Long userId);
+
+    void deleteAllByBlockedUserIdOrBlockerUserId(Long blockedUserId, Long blockerUserId);
 }
 

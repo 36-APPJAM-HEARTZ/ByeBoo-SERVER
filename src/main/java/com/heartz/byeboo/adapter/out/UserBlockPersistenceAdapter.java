@@ -35,4 +35,8 @@ public class UserBlockPersistenceAdapter implements CreateUserBlockPort, Retriev
     public void deleteUserBlockById(Long blockId) {
         userBlockRepository.deleteById(blockId);
     }
+
+    @Override
+    public void deleteAllUserBlockByUserId(Long userId) {
+        userBlockRepository.deleteAllByBlockedUserIdOrBlockerUserId(userId, userId);    }
 }

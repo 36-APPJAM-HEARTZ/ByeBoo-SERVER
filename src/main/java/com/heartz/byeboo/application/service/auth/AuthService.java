@@ -14,6 +14,7 @@ import com.heartz.byeboo.application.port.out.token.DeleteTokenPort;
 import com.heartz.byeboo.application.port.out.token.RetrieveTokenPort;
 import com.heartz.byeboo.application.port.out.token.UpdateTokenPort;
 import com.heartz.byeboo.application.port.out.user.*;
+import com.heartz.byeboo.application.port.out.userblock.DeleteUserBlockPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.DeleteUserCommonQuestPort;
 import com.heartz.byeboo.application.port.out.userquest.DeleteUserQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
@@ -58,6 +59,7 @@ public class AuthService implements OAuthUseCase {
     private final DeleteUserJourneyPort deleteUserJourneyPort;
     private final DeleteNotificationTokenPort deleteNotificationTokenPort;
     private final DeleteUserCommonQuestPort deleteUserCommonQuestPort;
+    private final DeleteUserBlockPort deleteUserBlockPort;
 
 
     @Value("${admin.login.id}")
@@ -121,6 +123,8 @@ public class AuthService implements OAuthUseCase {
         deleteUserPort.deleteUserById(findUser.getId());
         deleteNotificationTokenPort.deleteAllByUserId(findUser.getId());
         deleteUserCommonQuestPort.deleteAllByUserId(findUser.getId());
+        deleteUserBlockPort.deleteAllUserBlockByUserId(findUser.getId());
+
         //findUser.softDelete();
         //updateUserPort.updateUser(findUser);
         return null;
