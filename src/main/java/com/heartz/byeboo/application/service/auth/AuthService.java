@@ -9,6 +9,7 @@ import com.heartz.byeboo.application.port.in.dto.response.auth.UserReissueRespon
 import com.heartz.byeboo.application.port.in.dto.response.user.AdminLoginResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.OAuthUseCase;
 import com.heartz.byeboo.application.port.out.notificationtoken.DeleteNotificationTokenPort;
+import com.heartz.byeboo.application.port.out.report.DeleteReportPort;
 import com.heartz.byeboo.application.port.out.token.CreateTokenPort;
 import com.heartz.byeboo.application.port.out.token.DeleteTokenPort;
 import com.heartz.byeboo.application.port.out.token.RetrieveTokenPort;
@@ -60,6 +61,7 @@ public class AuthService implements OAuthUseCase {
     private final DeleteNotificationTokenPort deleteNotificationTokenPort;
     private final DeleteUserCommonQuestPort deleteUserCommonQuestPort;
     private final DeleteUserBlockPort deleteUserBlockPort;
+    private final DeleteReportPort deleteReportPort;
 
 
     @Value("${admin.login.id}")
@@ -122,6 +124,7 @@ public class AuthService implements OAuthUseCase {
         deleteUserJourneyPort.deleteAllByUserId(findUser.getId());
         deleteUserPort.deleteUserById(findUser.getId());
         deleteNotificationTokenPort.deleteAllByUserId(findUser.getId());
+        deleteReportPort.deleteAllByReportedUserId(findUser.getId());
         deleteUserCommonQuestPort.deleteAllByUserId(findUser.getId());
         deleteUserBlockPort.deleteAllUserBlockByUserId(findUser.getId());
 
