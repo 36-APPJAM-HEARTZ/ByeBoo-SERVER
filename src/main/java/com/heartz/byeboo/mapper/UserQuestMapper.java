@@ -44,6 +44,7 @@ public class UserQuestMapper {
                 userQuestEntity.getAnswer(),
                 userQuestEntity.getImageKey(),
                 userQuestEntity.getQuestEmotionState(),
+                userQuestEntity.getAiAnswer(),
                 user,
                 quest,
                 userQuestEntity.getCreatedDate()
@@ -56,6 +57,7 @@ public class UserQuestMapper {
                 userQuestEntity.getAnswer(),
                 userQuestEntity.getImageKey(),
                 userQuestEntity.getQuestEmotionState(),
+                userQuestEntity.getAiAnswer(),
                 user,
                 quest,
                 userQuestEntity.getCreatedDate()
@@ -67,6 +69,7 @@ public class UserQuestMapper {
                 userQuestEntity.getId(),
                 userQuestEntity.getAnswer(),
                 userQuestEntity.getQuestEmotionState(),
+                userQuestEntity.getAiAnswer(),
                 user,
                 quest,
                 userQuestEntity.getCreatedDate()

@@ -24,6 +24,7 @@ public class UserQuest {
             String answer,
             UUID imageKey,
             EQuestEmotionState questEmotionState,
+            String aiAnswer,
             User user,
             Quest quest,
             LocalDateTime createdDate
@@ -36,6 +37,7 @@ public class UserQuest {
                 .user(user)
                 .quest(quest)
                 .createdDate(createdDate)
+                .aiAnswer(aiAnswer)
                 .build();
     }
 
@@ -43,6 +45,7 @@ public class UserQuest {
             Long id,
             String answer,
             EQuestEmotionState questEmotionState,
+            String aiAnswer,
             User user,
             Quest quest,
             LocalDateTime createdDate
@@ -51,6 +54,7 @@ public class UserQuest {
                 .id(id)
                 .answer(answer)
                 .questEmotionState(questEmotionState)
+                .aiAnswer(aiAnswer)
                 .user(user)
                 .quest(quest)
                 .createdDate(createdDate)
