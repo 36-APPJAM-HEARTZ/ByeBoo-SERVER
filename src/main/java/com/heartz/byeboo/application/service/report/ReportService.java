@@ -9,6 +9,8 @@ import com.heartz.byeboo.application.port.out.report.RetrieveReportPort;
 import com.heartz.byeboo.application.port.out.report.UpdateReportPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.RetrieveUserCommonQuestPort;
+import com.heartz.byeboo.core.exception.CustomException;
+import com.heartz.byeboo.domain.exception.ReportErrorCode;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserCommonQuest;
 import com.heartz.byeboo.domain.model.UserCommonQuestReport;
@@ -38,7 +40,7 @@ public class ReportService implements ReportUseCase {
     public Void reportCommonQuest(CommonQuestReportCreateCommand command) {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
         UserCommonQuest targetUserCommonQuest = retrieveUserCommonQuestPort.getUserCommonQuestById(command.getTargetId());
-
+        validateWriterMe(targetUserCommonQuest.getUser().getId(), findUser.getId());
         UserCommonQuestReport userCommonQuestReport = UserCommonQuestReportMapper.toPendingDomain(findUser, targetUserCommonQuest);
         UserCommonQuestReportEntity userCommonQuestReportEntity = createReportPort.createReport(userCommonQuestReport);
 
@@ -55,5 +57,11 @@ public class ReportService implements ReportUseCase {
 
         updateReportPort.updateReport(targetUserCommonQuestReport);
         return null;
+    }
+
+    private void validateWriterMe(Long writerId, Long reporterId){
+        if (writerId.equals(reporterId)){
+            throw new CustomException(ReportErrorCode.INVALID_WRITER_ID);
+        }
     }
 }
