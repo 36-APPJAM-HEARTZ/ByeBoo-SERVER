@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 public enum ReportErrorCode implements ErrorCode {
 
     REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "신고 내역을 찾을 수 없습니다."),
-    INVALID_REPORT_STATUS(HttpStatus.NOT_FOUND, "올바르지 않은 신고 상태입니다.");
+    INVALID_REPORT_STATUS(HttpStatus.BAD_REQUEST, "올바르지 않은 신고 상태입니다."),
+    INVALID_WRITER_ID(HttpStatus.BAD_REQUEST,"자기 자신은 신고할 수 없습니다.");
     private final HttpStatus status;
     private final String message;
 }
