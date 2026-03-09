@@ -10,6 +10,8 @@ import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.userblock.CreateUserBlockPort;
 import com.heartz.byeboo.application.port.out.userblock.DeleteUserBlockPort;
 import com.heartz.byeboo.application.port.out.userblock.RetrieveUserBlockPort;
+import com.heartz.byeboo.core.exception.CustomException;
+import com.heartz.byeboo.domain.exception.UserBlockErrorCode;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserBlock;
 import com.heartz.byeboo.mapper.UserBlockMapper;
@@ -30,6 +32,7 @@ public class UserBlockService implements UserBlockUseCase {
     @Override
     public Void block(UserBlockCommand command) {
         User blockerUser = retrieveUserPort.getUserById(command.getUserId());
+        validateBLockMe(command.getTargetUserId(), blockerUser.getId());
         User blockedUser = retrieveUserPort.getUserById(command.getTargetUserId());
         UserBlock userBlock = UserBlockMapper.usersToDomain(blockedUser, blockerUser);
         createUserBlockPort.createUserBlock(userBlock);
@@ -55,5 +58,11 @@ public class UserBlockService implements UserBlockUseCase {
         retrieveUserPort.getUserById(command.getUserId());
         deleteUserBlockPort.deleteUserBlockById(command.getBlockId());
         return null;
+    }
+
+    private void validateBLockMe(Long targetId, Long blockerId){
+        if (blockerId.equals(targetId)){
+            throw new CustomException(UserBlockErrorCode.INVALID_USER_BLOCK);
+        }
     }
 }
