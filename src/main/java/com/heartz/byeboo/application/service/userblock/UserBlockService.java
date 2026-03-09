@@ -62,7 +62,7 @@ public class UserBlockService implements UserBlockUseCase {
 
     private void validateBLockMe(Long targetId, Long blockerId){
         if (blockerId.equals(targetId)){
-            throw new CustomException(UserBlockErrorCode.INVALID_USER_BLOCK);
+            throw new CustomException(UserBlockErrorCode.INVALID_TARGET_ID);
         }
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum UserBlockErrorCode implements ErrorCode {
 
-    INVALID_USER_BLOCK(HttpStatus.BAD_REQUEST,"자기 자신은 차단할 수 없습니다.");
+    INVALID_TARGET_ID(HttpStatus.BAD_REQUEST,"자기 자신은 차단할 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;
