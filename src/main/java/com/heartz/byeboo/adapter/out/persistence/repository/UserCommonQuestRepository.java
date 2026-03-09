@@ -27,7 +27,7 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
     )
     long countByCreatedDateBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end, @Param("reportStatus") EReportStatus reportStatus, @Param("currentUserId") Long currentUserId);
 
-    @Query("select uq.id as answerId, uq.answer as content, uq.createdDate as writtenAt, u.profileIcon as profileIcon, u.name as writer " +
+    @Query("select uq.id as answerId, uq.answer as content, uq.createdDate as writtenAt, u.profileIcon as profileIcon, u.name as writer, u.id as writerId " +
             "from UserCommonQuestEntity uq join UserEntity u on uq.userId = u.id " +
             "where uq.createdDate >= :start and uq.createdDate <= :end " +
             "and (:cursor is null or uq.id < :cursor) " +

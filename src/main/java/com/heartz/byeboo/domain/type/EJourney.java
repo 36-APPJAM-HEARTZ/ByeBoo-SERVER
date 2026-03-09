@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum EJourney {
     FACE_EMOTION(
-            "이별 극복 여정",
+            "이별 극복",
             """
                        너무 힘든 시간을 보내고 있는 당신에게,
                        ‘이별 극복 여정’을 추천해요.
@@ -39,7 +39,7 @@ public enum EJourney {
                        마음도 조금씩 정리될 거예요."""
             ),
     PREPARE_REUNION(
-            "재회 준비 여정",
+            "재회 준비",
             """
                        X와 다시 시작하고 싶지만,
                        같은 아픔이 반복될까 두려운

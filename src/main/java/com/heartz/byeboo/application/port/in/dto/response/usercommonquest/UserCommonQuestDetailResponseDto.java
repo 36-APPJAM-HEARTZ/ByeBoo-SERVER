@@ -15,7 +15,8 @@ public record UserCommonQuestDetailResponseDto(
         String writer,
         String profileIcon,
         LocalDateTime writtenAt,
-        String content
+        String content,
+        Long writerId
 ) {
     public static UserCommonQuestDetailResponseDto of(UserCommonQuestInfoProjection userCommonQuestInfoProjection){
         return UserCommonQuestDetailResponseDto.builder()
@@ -24,6 +25,7 @@ public record UserCommonQuestDetailResponseDto(
                 .profileIcon(userCommonQuestInfoProjection.getProfileIcon().name())
                 .writtenAt(userCommonQuestInfoProjection.getWrittenAt())
                 .content(userCommonQuestInfoProjection.getContent())
+                .writerId(userCommonQuestInfoProjection.getWriterId())
                 .build();
     }
 }

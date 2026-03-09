@@ -10,4 +10,5 @@ public interface UserCommonQuestInfoProjection {
     EProfileIcon getProfileIcon();
     LocalDateTime getWrittenAt();
     String getContent();
+    Long getWriterId();
 }
