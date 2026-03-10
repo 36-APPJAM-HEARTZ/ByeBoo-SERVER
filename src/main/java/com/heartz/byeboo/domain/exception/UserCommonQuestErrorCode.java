@@ -14,7 +14,7 @@ public enum UserCommonQuestErrorCode implements ErrorCode {
     COMMON_QUEST_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 작성 완료 했습니다."),
     USER_COMMON_QUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "유저 공통 퀘스트가 존재하지 않습니다."),
     USER_COMMON_QUEST_NOT_FUTURE(HttpStatus.BAD_REQUEST, "오늘 날짜 이후의 날짜에 대해서는 조회할 수 없습니다."),
-    USER_COMMON_QUEST_BAD_WORDS(HttpStatus.BAD_REQUEST, "답변에 욕설을 포함하고 있습니다.")
+    USER_COMMON_QUEST_BAD_WORDS(HttpStatus.BAD_REQUEST, "공통 퀘스트 답변은 모두에게 공개되기 때문에 부적절한 단어가 포함된 답변은 등록할 수 없어요.")
     ;
 
     private final HttpStatus status;
