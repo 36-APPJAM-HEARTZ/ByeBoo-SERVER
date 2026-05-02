@@ -9,19 +9,37 @@ import com.heartz.byeboo.domain.model.UserCommonQuest;
 
 
 public class CommentMapper {
-    public static Comment commandToDomain(CommentCreateCommand command, User user, UserCommonQuest userCommonQuest) {
+    public static Comment commandToDomain(CommentCreateCommand command) {
         return Comment.builder()
                 .content(command.getContent())
-                .user(user)
-                .userCommonQuest(userCommonQuest)
+                .userId(command.getUserId())
+                .userCommonQuestId(command.getTargetId())
                 .build();
     }
 
     public static CommentEntity toEntity(Comment comment) {
         return CommentEntity.create(
                 comment.getContent(),
-                comment.getUser().getId(),
-                comment.getUserCommonQuest().getId()
+                comment.getUserId(),
+                comment.getUserCommonQuestId()
         );
+    }
+
+    public static Comment toDomain(CommentEntity commentEntity){
+        return Comment.of(
+                commentEntity.getId(),
+                commentEntity.getUserId(),
+                commentEntity.getUserCommonQuestId(),
+                commentEntity.getContent()
+        );
+    }
+
+    public static CommentEntity toEntityForUpdate(Comment comment) {
+        return CommentEntity.builder()
+                .id(comment.getId())
+                .userId(comment.getUserId())
+                .userCommonQuestId(comment.getUserCommonQuestId())
+                .content(comment.getContent())
+                .build();
     }
 }
