@@ -27,10 +27,11 @@ public class CommentEntity extends BaseEntity{
     private Long userCommonQuestId;
 
     @Builder
-    public CommentEntity(String content, Long userId, Long userCommonQuestId) {
+    public CommentEntity(String content, Long userId, Long userCommonQuestId, Long id) {
         this.userId = userId;
         this.content = content;
         this.userCommonQuestId = userCommonQuestId;
+        this.id = id;
     }
 
     public static CommentEntity create(String content, Long userId, Long userCommonQuestId) {

@@ -7,16 +7,20 @@ import lombok.Getter;
 @Builder
 public class Comment {
     private Long id;
-    private User user;
+    private Long userId;
     private String content;
-    private UserCommonQuest userCommonQuest;
+    private Long userCommonQuestId;
 
-    public static Comment of(Long id, User user, UserCommonQuest userCommonQuest, String content) {
+    public static Comment of(Long id, Long userId, Long userCommonQuestId, String content) {
         return Comment.builder()
                 .id(id)
-                .user(user)
-                .userCommonQuest(userCommonQuest)
+                .userId(userId)
+                .userCommonQuestId(userCommonQuestId)
                 .content(content)
                 .build();
+    }
+
+    public void updateContent(String content){
+        this.content = content;
     }
 }
