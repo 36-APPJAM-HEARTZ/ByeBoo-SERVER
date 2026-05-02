@@ -5,11 +5,12 @@ import com.heartz.byeboo.constants.QuestConstants;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserCommonQuestErrorCode;
 import com.heartz.byeboo.utils.TextUtil;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommonQuestUpdateCommand {
     private Long userId;
     private Long answerId;

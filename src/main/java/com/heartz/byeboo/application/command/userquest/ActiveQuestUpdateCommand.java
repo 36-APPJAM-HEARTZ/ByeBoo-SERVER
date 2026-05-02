@@ -5,13 +5,14 @@ import com.heartz.byeboo.constants.QuestConstants;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
 import com.heartz.byeboo.utils.TextUtil;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.UUID;
 
 @Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ActiveQuestUpdateCommand {
     private String answer;
     private UUID imageKey;
