@@ -1,12 +1,13 @@
 package com.heartz.byeboo.application.command.usercommonquest;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommonQuestListCommand {
     Long userId;
     LocalDate targetDate;

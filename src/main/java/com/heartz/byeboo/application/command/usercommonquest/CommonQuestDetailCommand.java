@@ -1,10 +1,11 @@
 package com.heartz.byeboo.application.command.usercommonquest;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommonQuestDetailCommand {
     private Long userId;
     private Long answerId;
