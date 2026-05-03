@@ -18,7 +18,7 @@ public class CommentMapper {
     }
 
     public static CommentEntity toEntity(Comment comment) {
-        return CommentEntity.create(
+        return CommentEntity.createCommentEntity(
                 comment.getContent(),
                 comment.getUserId(),
                 comment.getUserCommonQuestId()

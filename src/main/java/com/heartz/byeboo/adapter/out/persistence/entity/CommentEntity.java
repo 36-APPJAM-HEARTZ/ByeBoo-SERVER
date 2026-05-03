@@ -26,19 +26,42 @@ public class CommentEntity extends BaseEntity{
     @Column(name = "user_common_quest_id", nullable = false)
     private Long userCommonQuestId;
 
+    @Column(name = "parent_comment_id")
+    private Long parentCommentId;
+
     @Builder
-    public CommentEntity(String content, Long userId, Long userCommonQuestId, Long id) {
+    public CommentEntity(String content, Long userId, Long userCommonQuestId, Long id, Long parentCommentId) {
         this.userId = userId;
         this.content = content;
         this.userCommonQuestId = userCommonQuestId;
         this.id = id;
+        this.parentCommentId = parentCommentId;
     }
 
-    public static CommentEntity create(String content, Long userId, Long userCommonQuestId) {
+    public static CommentEntity createCommentEntity(
+            String content,
+            Long userId,
+            Long userCommonQuestId
+    ) {
         return CommentEntity.builder()
                 .content(content)
                 .userId(userId)
                 .userCommonQuestId(userCommonQuestId)
+                .parentCommentId(null)
+                .build();
+    }
+
+    public static CommentEntity createReplyEntity(
+            String content,
+            Long userId,
+            Long userCommonQuestId,
+            Long parentCommentId
+    ) {
+        return CommentEntity.builder()
+                .content(content)
+                .userId(userId)
+                .userCommonQuestId(userCommonQuestId)
+                .parentCommentId(parentCommentId)
                 .build();
     }
 
