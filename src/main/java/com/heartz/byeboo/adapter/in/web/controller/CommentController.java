@@ -3,6 +3,7 @@ package com.heartz.byeboo.adapter.in.web.controller;
 import com.heartz.byeboo.adapter.in.web.dto.request.CommentCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.CommentUpdateRequestDto;
 import com.heartz.byeboo.application.command.comment.CommentCreateCommand;
+import com.heartz.byeboo.application.command.comment.CommentDeleteCommand;
 import com.heartz.byeboo.application.command.comment.CommentUpdateCommand;
 import com.heartz.byeboo.application.port.in.usecase.CommentUseCase;
 import com.heartz.byeboo.core.annotation.UserId;
@@ -76,6 +77,34 @@ public class CommentController {
     ){
         CommentUpdateCommand command = CommentUpdateCommand.of(userId, commentUpdateRequestDto,commentId);
         return BaseResponse.success(commentUseCase.updateComment(command));
+    }
+
+    @Operation(
+            summary = "댓글 삭제",
+            description = "댓글 삭제하는 API 입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "댓글 삭제 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+
+    @DeleteMapping ("/{commentId}")
+    public BaseResponse<Void> deleteComment(
+            @UserId Long userId,
+            @PathVariable Long commentId
+    ){
+        CommentDeleteCommand command = CommentDeleteCommand.of(userId, commentId);
+        return BaseResponse.success(commentUseCase.deleteComment(command));
     }
 
 }
