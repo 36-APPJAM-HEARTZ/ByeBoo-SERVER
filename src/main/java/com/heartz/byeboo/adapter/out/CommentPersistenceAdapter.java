@@ -25,7 +25,13 @@ public class CommentPersistenceAdapter implements CreateCommentPort, RetrieveCom
 
     @Override
     public void createComment(Comment comment) {
-        CommentEntity commentEntity = CommentMapper.toEntity(comment);
+        CommentEntity commentEntity = CommentMapper.toCommentEntity(comment);
+        commentRepository.save(commentEntity);
+    }
+
+    @Override
+    public void createReply(Comment comment) {
+        CommentEntity commentEntity = CommentMapper.toReplyEntity(comment);
         commentRepository.save(commentEntity);
     }
 
