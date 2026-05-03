@@ -5,4 +5,5 @@ import com.heartz.byeboo.domain.model.Comment;
 
 public interface CreateCommentPort {
     void createComment(Comment comment);
+    void createReply(Comment comment);
 }

@@ -10,6 +10,7 @@ public class Comment {
     private Long userId;
     private String content;
     private Long userCommonQuestId;
+    private Long parentCommentId;
 
     public static Comment of(Long id, Long userId, Long userCommonQuestId, String content) {
         return Comment.builder()
