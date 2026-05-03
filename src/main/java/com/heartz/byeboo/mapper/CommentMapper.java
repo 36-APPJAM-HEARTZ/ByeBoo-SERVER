@@ -49,7 +49,8 @@ public class CommentMapper {
                 commentEntity.getId(),
                 commentEntity.getUserId(),
                 commentEntity.getUserCommonQuestId(),
-                commentEntity.getContent()
+                commentEntity.getContent(),
+                commentEntity.getParentCommentId()
         );
     }
 
@@ -58,6 +59,7 @@ public class CommentMapper {
                 .id(comment.getId())
                 .userId(comment.getUserId())
                 .userCommonQuestId(comment.getUserCommonQuestId())
+                .parentCommentId(comment.getParentCommentId())
                 .content(comment.getContent())
                 .build();
     }

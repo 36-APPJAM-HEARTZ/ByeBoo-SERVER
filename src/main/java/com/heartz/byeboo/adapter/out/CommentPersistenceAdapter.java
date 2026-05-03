@@ -64,4 +64,9 @@ public class CommentPersistenceAdapter implements CreateCommentPort, RetrieveCom
     public void deleteAllByUserCommonQuestId(Long userCommonQuestId) {
         commentRepository.deleteAllByUserCommonQuestId(userCommonQuestId);
     }
+
+    @Override
+    public void deleteAllByParentCommentId(Long parentCommentId) {
+        commentRepository.deleteAllByParentCommentId(parentCommentId);
+    }
 }

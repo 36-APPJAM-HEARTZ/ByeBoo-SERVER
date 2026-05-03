@@ -12,12 +12,13 @@ public class Comment {
     private Long userCommonQuestId;
     private Long parentCommentId;
 
-    public static Comment of(Long id, Long userId, Long userCommonQuestId, String content) {
+    public static Comment of(Long id, Long userId, Long userCommonQuestId, String content, Long parentCommentId) {
         return Comment.builder()
                 .id(id)
                 .userId(userId)
                 .userCommonQuestId(userCommonQuestId)
                 .content(content)
+                .parentCommentId(parentCommentId)
                 .build();
     }
 

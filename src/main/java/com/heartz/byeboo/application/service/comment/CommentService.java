@@ -54,9 +54,14 @@ public class CommentService implements CommentUseCase {
     @Override
     @Transactional
     public Void deleteComment(CommentDeleteCommand command) {
+        Comment deletedComment = retrieveCommentPort.getCommentByIdAndUserId(command.getCommentId(), command.getUserId());
         deleteCommentPort.deleteCommentById(command.getUserId(), command.getCommentId());
 
-        //TODO : 대댓글 삭제
+        //TODO : 댓글 삭제 정책 반영 예정
+        if (isReplyOrComment(deletedComment)){
+            deleteCommentPort.deleteAllByParentCommentId(deletedComment.getId());
+        }
+
         return  null;
     }
 
@@ -69,5 +74,12 @@ public class CommentService implements CommentUseCase {
 
         createCommentPort.createReply(comment);
         return null;
+    }
+
+    private boolean isReplyOrComment(Comment comment){
+        if (comment.getParentCommentId() == null){
+            return true;
+        }
+        return false;
     }
 }

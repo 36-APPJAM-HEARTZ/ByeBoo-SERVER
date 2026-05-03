@@ -53,12 +53,12 @@ public class CommentController {
     }
 
     @Operation(
-            summary = "댓글 수정",
-            description = "댓글 수정하는 API 입니다.",
+            summary = "댓글/답글 수정",
+            description = "댓글/답글 수정하는 API 입니다.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "댓글 수정 성공"
+                            description = "댓글/답글 수정 성공"
                     ),
                     @ApiResponse(
                             responseCode = "404",
@@ -82,12 +82,12 @@ public class CommentController {
     }
 
     @Operation(
-            summary = "댓글 삭제",
-            description = "댓글 삭제하는 API 입니다.",
+            summary = "댓글/답글 삭제",
+            description = "댓글/답글 삭제하는 API 입니다.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "댓글 삭제 성공"
+                            description = "댓글/답글 삭제 성공"
                     ),
                     @ApiResponse(
                             responseCode = "404",
