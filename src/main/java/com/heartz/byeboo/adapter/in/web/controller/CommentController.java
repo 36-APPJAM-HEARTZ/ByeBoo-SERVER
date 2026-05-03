@@ -1,10 +1,12 @@
 package com.heartz.byeboo.adapter.in.web.controller;
 
+import com.heartz.byeboo.adapter.in.web.dto.ReplyCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.CommentCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.CommentUpdateRequestDto;
 import com.heartz.byeboo.application.command.comment.CommentCreateCommand;
 import com.heartz.byeboo.application.command.comment.CommentDeleteCommand;
 import com.heartz.byeboo.application.command.comment.CommentUpdateCommand;
+import com.heartz.byeboo.application.command.comment.ReplyCreateCommand;
 import com.heartz.byeboo.application.port.in.usecase.CommentUseCase;
 import com.heartz.byeboo.core.annotation.UserId;
 import com.heartz.byeboo.core.common.BaseResponse;
@@ -43,7 +45,7 @@ public class CommentController {
 
     @PostMapping
     public BaseResponse<Void> createComment(
-            final CommentCreateRequestDto commentCreateRequestDto,
+            @RequestBody final CommentCreateRequestDto commentCreateRequestDto,
             @UserId Long userId
             ){
         CommentCreateCommand command = CommentCreateCommand.of(userId, commentCreateRequestDto);
@@ -71,7 +73,7 @@ public class CommentController {
 
     @PatchMapping ("/{commentId}")
     public BaseResponse<Void> updateComment(
-            final CommentUpdateRequestDto commentUpdateRequestDto,
+            @RequestBody final CommentUpdateRequestDto commentUpdateRequestDto,
             @UserId Long userId,
             @PathVariable Long commentId
     ){
@@ -105,6 +107,35 @@ public class CommentController {
     ){
         CommentDeleteCommand command = CommentDeleteCommand.of(userId, commentId);
         return BaseResponse.success(commentUseCase.deleteComment(command));
+    }
+
+    @Operation(
+            summary = "답글 작성",
+            description = "답글 작하는 API 입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "답글 작성 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+
+    @PostMapping ("/{commentId}/replies")
+    public BaseResponse<Void> createReply(
+            @UserId Long userId,
+            @PathVariable Long commentId,
+            @RequestBody final ReplyCreateRequestDto replyCreateRequestDto
+    ){
+        ReplyCreateCommand command = ReplyCreateCommand.of(userId, commentId, replyCreateRequestDto);
+        return BaseResponse.success(commentUseCase.createReply(command));
     }
 
 }
