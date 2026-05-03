@@ -5,6 +5,7 @@ import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommo
 import com.heartz.byeboo.application.command.usercommonquest.*;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.*;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
+import com.heartz.byeboo.application.port.out.comment.DeleteCommentPort;
 import com.heartz.byeboo.core.common.out.port.ProfanityCheckPort;
 import com.heartz.byeboo.application.port.out.commonquest.RetrieveCommonQuestPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
@@ -41,6 +42,7 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
     private final RetrieveUserCommonQuestPort retrieveUserCommonQuestPort;
     private final UpdateUserCommonQuestPort updateUserCommonQuestPort;
     private final ProfanityCheckPort profanityCheckPort;
+    private final DeleteCommentPort deleteCommentPort;
 
     @Override
     @Transactional
@@ -72,6 +74,8 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         User findUser = retrieveUserPort.getUserById(command.getUserId());
         retrieveUserCommonQuestPort.deleteByUserIdAndId(command.getAnswerId(), findUser);
 
+        deleteCommentPort.deleteAllByUserCommonQuestId(command.getAnswerId());
+        //TODO: 대댓글 삭제
         return null;
     }
 
