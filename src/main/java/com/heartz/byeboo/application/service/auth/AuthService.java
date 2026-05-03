@@ -8,6 +8,7 @@ import com.heartz.byeboo.application.port.in.dto.response.auth.UserLoginResponse
 import com.heartz.byeboo.application.port.in.dto.response.auth.UserReissueResponse;
 import com.heartz.byeboo.application.port.in.dto.response.user.AdminLoginResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.OAuthUseCase;
+import com.heartz.byeboo.application.port.out.comment.DeleteCommentPort;
 import com.heartz.byeboo.application.port.out.notificationtoken.DeleteNotificationTokenPort;
 import com.heartz.byeboo.application.port.out.report.DeleteReportPort;
 import com.heartz.byeboo.application.port.out.token.CreateTokenPort;
@@ -62,6 +63,7 @@ public class AuthService implements OAuthUseCase {
     private final DeleteUserCommonQuestPort deleteUserCommonQuestPort;
     private final DeleteUserBlockPort deleteUserBlockPort;
     private final DeleteReportPort deleteReportPort;
+    private final DeleteCommentPort deleteCommentPort;
 
 
     @Value("${admin.login.id}")
@@ -128,6 +130,8 @@ public class AuthService implements OAuthUseCase {
         deleteUserCommonQuestPort.deleteAllByUserId(findUser.getId());
         deleteUserBlockPort.deleteAllUserBlockByUserId(findUser.getId());
 
+        //TODO : 댓글, 대댓글 삭제
+        deleteCommentPort.deleteAllByUserId(findUser.getId());
         //findUser.softDelete();
         //updateUserPort.updateUser(findUser);
         return null;
