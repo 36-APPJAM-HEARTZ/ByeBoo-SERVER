@@ -6,6 +6,9 @@ import com.heartz.byeboo.application.command.usercommonquest.*;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.*;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
 import com.heartz.byeboo.application.port.out.comment.DeleteCommentPort;
+import com.heartz.byeboo.application.port.out.like.CreateLikePort;
+import com.heartz.byeboo.application.port.out.like.DeleteLikePort;
+import com.heartz.byeboo.application.port.out.like.RetrieveLikePort;
 import com.heartz.byeboo.core.common.out.port.ProfanityCheckPort;
 import com.heartz.byeboo.application.port.out.commonquest.RetrieveCommonQuestPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
@@ -15,8 +18,10 @@ import com.heartz.byeboo.application.port.out.usercommonquest.UpdateUserCommonQu
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserCommonQuestErrorCode;
 import com.heartz.byeboo.domain.model.CommonQuest;
+import com.heartz.byeboo.domain.model.Like;
 import com.heartz.byeboo.domain.model.User;
 import com.heartz.byeboo.domain.model.UserCommonQuest;
+import com.heartz.byeboo.mapper.LikeMapper;
 import com.heartz.byeboo.mapper.UserCommonQuestMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +48,9 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
     private final UpdateUserCommonQuestPort updateUserCommonQuestPort;
     private final ProfanityCheckPort profanityCheckPort;
     private final DeleteCommentPort deleteCommentPort;
+    private final CreateLikePort createLikePort;
+    private final RetrieveLikePort retrieveLikePort;
+    private final DeleteLikePort deleteLikePort;
 
     @Override
     @Transactional
@@ -161,6 +169,47 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
                 ).toList();
 
         return MyCommonQuestListResponseDto.from(hasNext, nextCursor, myCommonQuestResponseDtoList);
+    }
+
+    @Override
+    @Transactional
+    public LikeResponseDto like(LikeCreateCommand command) {
+        retrieveUserPort.getUserById(command.getUserId());
+
+        boolean alreadyLiked = retrieveLikePort.existsByUserIdAndUserCommonQuestId(
+                command.getUserId(),
+                command.getUserCommonQuestId()
+        );
+
+        boolean isLiked = toggleLike(command, alreadyLiked);
+
+        int likeCount = retrieveLikePort.countByUserCommonQuestId(
+                command.getUserCommonQuestId()
+        );
+
+        return new LikeResponseDto(likeCount, isLiked);
+    }
+
+    private boolean toggleLike(LikeCreateCommand command, boolean alreadyLiked) {
+        if (alreadyLiked) {
+            deleteLike(command);
+            return false;
+        }
+
+        createLike(command);
+        return true;
+    }
+
+    private void deleteLike(LikeCreateCommand command) {
+        deleteLikePort.deleteByUserIdAndUserCommonQuestId(
+                command.getUserId(),
+                command.getUserCommonQuestId()
+        );
+    }
+
+    private void createLike(LikeCreateCommand command) {
+        Like like = LikeMapper.commandToDomain(command);
+        createLikePort.createLike(like);
     }
 
     private void validateUserCanWriteCommonQuest(CommonQuest commonQuest){
