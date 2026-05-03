@@ -130,7 +130,7 @@ public class AuthService implements OAuthUseCase {
         deleteUserCommonQuestPort.deleteAllByUserId(findUser.getId());
         deleteUserBlockPort.deleteAllUserBlockByUserId(findUser.getId());
 
-        //TODO : 댓글, 대댓글 삭제
+        //TODO : 댓글 삭제 정책 반영 예정
         deleteCommentPort.deleteAllByUserId(findUser.getId());
         //findUser.softDelete();
         //updateUserPort.updateUser(findUser);
