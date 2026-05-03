@@ -3,6 +3,7 @@ package com.heartz.byeboo.adapter.in.web.controller;
 import com.heartz.byeboo.adapter.in.web.dto.request.CommonQuestCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.CommonQuestUpdateRequestDto;
 import com.heartz.byeboo.application.command.usercommonquest.*;
+import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.LikeResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
@@ -178,5 +179,32 @@ public class UserCommonQuestController {
     ){
         CommonQuestDetailCommand command = CommonQuestDetailCommand.from(userId, answerId);
         return BaseResponse.success(userCommonQuestUseCase.getDetailCommonQuest(command));
+    }
+
+    @Operation(
+            summary = "공통 퀘스트 공감",
+            description = "공통 퀘스트 공감하는 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "공통 퀘스트 공감 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @PostMapping("/{answerId}/likes")
+    public BaseResponse<LikeResponseDto> like(
+            @UserId final Long userId,
+            @PathVariable("answerId") final Long answerId
+    ){
+        LikeCreateCommand command = LikeCreateCommand.of(userId, answerId);
+        return BaseResponse.success(userCommonQuestUseCase.like(command));
     }
 }
