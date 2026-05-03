@@ -1,9 +1,11 @@
 package com.heartz.byeboo.application.service.comment;
 
 import com.heartz.byeboo.application.command.comment.CommentCreateCommand;
+import com.heartz.byeboo.application.command.comment.CommentDeleteCommand;
 import com.heartz.byeboo.application.command.comment.CommentUpdateCommand;
 import com.heartz.byeboo.application.port.in.usecase.CommentUseCase;
 import com.heartz.byeboo.application.port.out.comment.CreateCommentPort;
+import com.heartz.byeboo.application.port.out.comment.DeleteCommentPort;
 import com.heartz.byeboo.application.port.out.comment.RetrieveCommentPort;
 import com.heartz.byeboo.application.port.out.comment.UpdateCommentPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
@@ -24,6 +26,7 @@ public class CommentService implements CommentUseCase {
     private final RetrieveUserCommonQuestPort retrieveUserCommonQuestPort;
     private final RetrieveCommentPort retrieveCommentPort;
     private final UpdateCommentPort updateCommentPort;
+    private final DeleteCommentPort deleteCommentPort;
 
     @Override
     @Transactional
@@ -45,5 +48,14 @@ public class CommentService implements CommentUseCase {
         updateCommentPort.updateComment(comment);
 
         return null;
+    }
+
+    @Override
+    @Transactional
+    public Void deleteComment(CommentDeleteCommand command) {
+        deleteCommentPort.deleteCommentById(command.getUserId(), command.getCommentId());
+
+        //TODO : 대댓글 삭제
+        return  null;
     }
 }

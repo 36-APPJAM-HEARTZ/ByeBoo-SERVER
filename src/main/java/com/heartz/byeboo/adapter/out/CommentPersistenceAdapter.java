@@ -4,6 +4,7 @@ import com.heartz.byeboo.adapter.out.persistence.entity.CommentEntity;
 import com.heartz.byeboo.adapter.out.persistence.entity.CommonQuestEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.CommentRepository;
 import com.heartz.byeboo.application.port.out.comment.CreateCommentPort;
+import com.heartz.byeboo.application.port.out.comment.DeleteCommentPort;
 import com.heartz.byeboo.application.port.out.comment.RetrieveCommentPort;
 import com.heartz.byeboo.application.port.out.comment.UpdateCommentPort;
 import com.heartz.byeboo.core.exception.CustomException;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class CommentPersistenceAdapter implements CreateCommentPort, RetrieveCommentPort, UpdateCommentPort {
+public class CommentPersistenceAdapter implements CreateCommentPort, RetrieveCommentPort, UpdateCommentPort, DeleteCommentPort {
 
     private final CommentRepository commentRepository;
 
@@ -41,5 +42,20 @@ public class CommentPersistenceAdapter implements CreateCommentPort, RetrieveCom
         CommentEntity commentEntity = CommentMapper.toEntityForUpdate(comment);
 
         commentRepository.save(commentEntity);
+    }
+
+    @Override
+    public void deleteCommentById(Long userId, Long commentId) {
+        commentRepository.deleteByUserIdAndId(userId, commentId);
+    }
+
+    @Override
+    public void deleteAllByUserId(Long userId) {
+        commentRepository.deleteAllByUserId(userId);
+    }
+
+    @Override
+    public void deleteAllByUserCommonQuestId(Long userCommonQuestId) {
+        commentRepository.deleteAllByUserCommonQuestId(userCommonQuestId);
     }
 }
