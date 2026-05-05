@@ -1,12 +1,7 @@
 package com.heartz.byeboo.application.port.in.usecase;
 
 import com.heartz.byeboo.application.command.usercommonquest.*;
-import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.LikeResponseDto;
-import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.MyCommonQuestListResponseDto;
-import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestListResponseDto;
-import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestResponseDto;
-
-import java.util.List;
+import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.*;
 
 public interface UserCommonQuestUseCase {
     Void createCommonQuest(CommonQuestCreateCommand command);
@@ -16,4 +11,5 @@ public interface UserCommonQuestUseCase {
     UserCommonQuestResponseDto getDetailCommonQuest(CommonQuestDetailCommand command);
     MyCommonQuestListResponseDto getMyCommonQuest(MyCommonQuestCommand command);
     LikeResponseDto like(LikeCreateCommand command);
+    UserCommonQuestResponseV2Dto getDetailCommonQuestV2(CommonQuestDetailCommand command);
 }

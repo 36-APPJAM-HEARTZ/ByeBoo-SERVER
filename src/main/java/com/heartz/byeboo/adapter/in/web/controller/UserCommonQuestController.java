@@ -3,9 +3,7 @@ package com.heartz.byeboo.adapter.in.web.controller;
 import com.heartz.byeboo.adapter.in.web.dto.request.CommonQuestCreateRequestDto;
 import com.heartz.byeboo.adapter.in.web.dto.request.CommonQuestUpdateRequestDto;
 import com.heartz.byeboo.application.command.usercommonquest.*;
-import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.LikeResponseDto;
-import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestListResponseDto;
-import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.UserCommonQuestResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.*;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
 import com.heartz.byeboo.core.annotation.UserId;
 import com.heartz.byeboo.core.common.BaseResponse;
@@ -20,7 +18,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/common-quests")
+@RequestMapping("/api")
 @Tag(name = "Common Quest API", description = "공통 퀘스트 대한 API입니다.")
 public class UserCommonQuestController {
 
@@ -52,7 +50,7 @@ public class UserCommonQuestController {
                     )
             }
     )
-    @PostMapping("/{questId}")
+    @PostMapping("/v1/common-quests/{questId}")
     public BaseResponse<Void> createCommonQuest(
             @UserId final Long userId,
             @RequestBody final CommonQuestCreateRequestDto commonQuestCreateRequestDto,
@@ -80,7 +78,7 @@ public class UserCommonQuestController {
                     )
             }
     )
-    @DeleteMapping("/{answerId}")
+    @DeleteMapping("/v1/common-quests/{answerId}")
     public BaseResponse<Void> deleteCommonQuest(
             @UserId final Long userId,
             @PathVariable final Long answerId){
@@ -115,7 +113,7 @@ public class UserCommonQuestController {
                     )
             }
     )
-    @PatchMapping("/{answerId}")
+    @PatchMapping("/v1/common-quests/{answerId}")
     public BaseResponse<Void> updateCommonQuest(
             @UserId final Long userId,
             @RequestBody final CommonQuestUpdateRequestDto commonQuestUpdateRequestDto,
@@ -143,7 +141,7 @@ public class UserCommonQuestController {
                     )
             }
     )
-    @GetMapping
+    @GetMapping("/v1/common-quests")
     public BaseResponse<UserCommonQuestListResponseDto> getCommonQuest(
             @UserId final Long userId,
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
@@ -172,7 +170,7 @@ public class UserCommonQuestController {
                     )
             }
     )
-    @GetMapping("/{answerId}")
+    @GetMapping("/v1/common-quests/{answerId}")
     public BaseResponse<UserCommonQuestResponseDto> getDetailCommonQuest(
             @UserId final Long userId,
             @PathVariable("answerId") final Long answerId
@@ -199,12 +197,39 @@ public class UserCommonQuestController {
                     )
             }
     )
-    @PostMapping("/{answerId}/likes")
+    @PostMapping("/v1/common-quests/{answerId}/likes")
     public BaseResponse<LikeResponseDto> like(
             @UserId final Long userId,
             @PathVariable("answerId") final Long answerId
     ){
         LikeCreateCommand command = LikeCreateCommand.of(userId, answerId);
         return BaseResponse.success(userCommonQuestUseCase.like(command));
+    }
+
+    @Operation(
+            summary = "공통 퀘스트 상세 조회 V2",
+            description = "공통 퀘스트 상세 조회하는 API입니다.(V2)",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "공통 퀘스트 상세 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @GetMapping("/v2/common-quests/{answerId}")
+    public BaseResponse<UserCommonQuestResponseV2Dto> getDetailCommonQuestV2(
+            @UserId final Long userId,
+            @PathVariable("answerId") final Long answerId
+    ){
+        CommonQuestDetailCommand command = CommonQuestDetailCommand.from(userId, answerId);
+        return BaseResponse.success(userCommonQuestUseCase.getDetailCommonQuestV2(command));
     }
 }

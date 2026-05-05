@@ -2,6 +2,7 @@ package com.heartz.byeboo.adapter.out.persistence.repository;
 
 import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQuestProjection;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestDetailProjection;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestInfoProjection;
 import com.heartz.byeboo.domain.type.EReportStatus;
 import org.springframework.data.domain.Limit;
@@ -48,4 +49,11 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
     List<MyCommonQuestProjection> findMyQuestsByUserId(@Param("userId") Long userId, @Param("cursor") Long cursor, Limit limit);
 
     void deleteAllByUserId(Long userId);
+
+    @Query("SELECT uq.answer AS content, cq.question AS question, uq.createdDate as writtenAt, u.name as writer, u.profileIcon as profileIcon, u.id as writerId " +
+            "FROM UserCommonQuestEntity uq " +
+            "JOIN CommonQuestEntity cq ON uq.commonQuestId = cq.id " +
+            "JOIN UserEntity u ON uq.userId = u.id " +
+            "WHERE uq.id = :id")
+    UserCommonQuestDetailProjection findUserCommonQuestWithWriterById(Long id);
 }

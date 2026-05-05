@@ -1,6 +1,7 @@
 package com.heartz.byeboo.application.port.out.comment;
 
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommentProjection;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestCommentListProjection;
 import com.heartz.byeboo.domain.model.Comment;
 
 import java.util.List;
@@ -10,4 +11,5 @@ public interface RetrieveCommentPort {
     Comment getCommentById(Long commentId);
     List<UserCommentProjection> getCommentsByParentId(Long parentId);
     UserCommentProjection getCommentWithWriter(Long commentId);
+    List<UserCommonQuestCommentListProjection> getCommentsByUserCommonQuestId(Long userCommonQuestId);
 }
