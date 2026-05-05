@@ -3,6 +3,7 @@ package com.heartz.byeboo.adapter.out;
 import com.heartz.byeboo.adapter.out.persistence.entity.CommentEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.CommentRepository;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommentProjection;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestCommentListProjection;
 import com.heartz.byeboo.application.port.out.comment.CreateCommentPort;
 import com.heartz.byeboo.application.port.out.comment.DeleteCommentPort;
 import com.heartz.byeboo.application.port.out.comment.RetrieveCommentPort;
@@ -59,6 +60,11 @@ public class CommentPersistenceAdapter implements CreateCommentPort, RetrieveCom
     @Override
     public UserCommentProjection getCommentWithWriter(Long commentId) {
         return commentRepository.findCommentWithWriterByCommentId(commentId);
+    }
+
+    @Override
+    public List<UserCommonQuestCommentListProjection> getCommentsByUserCommonQuestId(Long userCommonQuestId) {
+        return commentRepository.findCommentWithWriterByUserCommonQuestId(userCommonQuestId);
     }
 
     @Override
