@@ -87,4 +87,11 @@ public class UserPersistenceAdapter implements CreateUserPort, RetrieveUserPort,
     public List<UserIdCurrentNumberProjection> findUsersWithExpiredQuest(LocalDateTime thresholdStart, LocalDateTime thresholdEnd) {
         return userRepository.findUsersWithExpiredQuest(thresholdStart, thresholdEnd);
     }
+
+    @Override
+    public void validateUserExists(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new CustomException(UserErrorCode.USER_NOT_FOUND);
+        }
+    }
 }
