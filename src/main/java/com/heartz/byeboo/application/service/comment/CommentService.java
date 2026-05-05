@@ -82,12 +82,12 @@ public class CommentService implements CommentUseCase {
         List<UserCommentProjection> replies = retrieveCommentPort.getCommentsByParentId(command.getCommentId());
 
         List<ReplyResponseDto> replyResponses = replies.stream()
-                .map(ReplyResponseDto::of)
+                .map(ReplyResponseDto::from)
                 .toList();
 
         return ReplyListResponseDto.of(
                 replyResponses.size(),
-                CommentResponseDto.of(parentComment),
+                CommentResponseDto.from(parentComment),
                 replyResponses
         );
     }

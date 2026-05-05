@@ -1,11 +1,11 @@
 package com.heartz.byeboo.application.service.usercommonquest;
 
-import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQuestProjection;
-import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestInfoProjection;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.*;
 import com.heartz.byeboo.application.command.usercommonquest.*;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.*;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
 import com.heartz.byeboo.application.port.out.comment.DeleteCommentPort;
+import com.heartz.byeboo.application.port.out.comment.RetrieveCommentPort;
 import com.heartz.byeboo.application.port.out.like.CreateLikePort;
 import com.heartz.byeboo.application.port.out.like.DeleteLikePort;
 import com.heartz.byeboo.application.port.out.like.RetrieveLikePort;
@@ -29,12 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Collections;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +48,7 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
     private final CreateLikePort createLikePort;
     private final RetrieveLikePort retrieveLikePort;
     private final DeleteLikePort deleteLikePort;
+    private final RetrieveCommentPort retrieveCommentPort;
 
     @Override
     @Transactional
@@ -188,6 +186,36 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         );
 
         return new LikeResponseDto(likeCount, isLiked);
+    }
+
+    @Override
+    public UserCommonQuestResponseV2Dto getDetailCommonQuestV2(CommonQuestDetailCommand command) {
+        retrieveUserPort.validateUserExists(command.getUserId());
+
+        UserCommonQuestDetailProjection detail =
+                retrieveUserCommonQuestPort.getUserCommonQuestWithWriter(command.getAnswerId());
+
+        int likeCount =
+                retrieveLikePort.countByUserCommonQuestId(command.getAnswerId());
+
+        boolean isLiked =
+                retrieveLikePort.existsByUserIdAndUserCommonQuestId(
+                        command.getUserId(),
+                        command.getAnswerId()
+                );
+
+        List<UserCommonQuestCommentListProjection> comments =
+                retrieveCommentPort.getCommentsByUserCommonQuestId(command.getAnswerId());
+
+        List<CommentResponseDto> commentResponses = comments.stream()
+                .map(CommentResponseDto::of)
+                .toList();
+
+        return UserCommonQuestResponseV2Dto.of(
+                detail.getQuestion(),
+                UserCommonQuestAnswerResponseDto.of(detail.getWriter(), detail.getProfileIcon().name(), detail.getWrittenAt(), detail.getContent(), detail.getWriterId(), likeCount, isLiked, commentResponses.size()),
+                commentResponses
+        );
     }
 
     private boolean toggleLike(LikeCreateCommand command, boolean alreadyLiked) {
