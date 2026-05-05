@@ -1,9 +1,10 @@
 package com.heartz.byeboo.application.service.comment;
 
-import com.heartz.byeboo.application.command.comment.CommentCreateCommand;
-import com.heartz.byeboo.application.command.comment.CommentDeleteCommand;
-import com.heartz.byeboo.application.command.comment.CommentUpdateCommand;
-import com.heartz.byeboo.application.command.comment.ReplyCreateCommand;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommentProjection;
+import com.heartz.byeboo.application.command.comment.*;
+import com.heartz.byeboo.application.port.in.dto.response.comment.CommentResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.comment.ReplyListResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.comment.ReplyResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.CommentUseCase;
 import com.heartz.byeboo.application.port.out.comment.CreateCommentPort;
 import com.heartz.byeboo.application.port.out.comment.DeleteCommentPort;
@@ -16,6 +17,8 @@ import com.heartz.byeboo.mapper.CommentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -32,7 +35,7 @@ public class CommentService implements CommentUseCase {
     @Override
     @Transactional
     public Void createComment(CommentCreateCommand command) {
-        retrieveUserPort.getUserById(command.getUserId());
+        retrieveUserPort.validateUserExists(command.getUserId());
         retrieveUserCommonQuestPort.getUserCommonQuestById(command.getTargetId());
         Comment comment = CommentMapper.commandToDomain(command);
 
@@ -69,5 +72,23 @@ public class CommentService implements CommentUseCase {
 
         createCommentPort.createReply(comment);
         return null;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ReplyListResponseDto getReply(ReplyListCommand command) {
+        retrieveUserPort.validateUserExists(command.getUserId());
+        UserCommentProjection parentComment = retrieveCommentPort.getCommentWithWriter(command.getCommentId());
+        List<UserCommentProjection> replies = retrieveCommentPort.getCommentsByParentId(command.getCommentId());
+
+        List<ReplyResponseDto> replyResponses = replies.stream()
+                .map(ReplyResponseDto::of)
+                .toList();
+
+        return ReplyListResponseDto.of(
+                replyResponses.size(),
+                CommentResponseDto.of(parentComment),
+                replyResponses
+        );
     }
 }
