@@ -12,7 +12,7 @@ public record ReplyResponseDto(
         String profileIcon,
         Long writerId
 ) {
-    public static ReplyResponseDto of(UserCommentProjection userCommentProjection){
+    public static ReplyResponseDto from(UserCommentProjection userCommentProjection){
         return new ReplyResponseDto(userCommentProjection.getContent(), userCommentProjection.getCommentId(), userCommentProjection.getWrittenAt(), userCommentProjection.getWriter(), userCommentProjection.getProfileIcon().name(), userCommentProjection.getWriterId());
     }
 }
