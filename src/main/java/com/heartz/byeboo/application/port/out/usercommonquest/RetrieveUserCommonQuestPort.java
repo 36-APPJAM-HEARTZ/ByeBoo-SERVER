@@ -1,6 +1,7 @@
 package com.heartz.byeboo.application.port.out.usercommonquest;
 
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQuestProjection;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestDetailProjection;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestInfoProjection;
 import com.heartz.byeboo.domain.model.CommonQuest;
 import com.heartz.byeboo.domain.model.User;
@@ -17,4 +18,5 @@ public interface RetrieveUserCommonQuestPort {
     long countByCreatedDateBetween(LocalDate targetDate, Long userId);
     UserCommonQuest getUserCommonQuestById(Long id);
     List<MyCommonQuestProjection> getMyCommonQuestsByUserId(User user, Long cursor, int limit);
+    UserCommonQuestDetailProjection getUserCommonQuestWithWriter(Long userCommonQuestId);
 }
