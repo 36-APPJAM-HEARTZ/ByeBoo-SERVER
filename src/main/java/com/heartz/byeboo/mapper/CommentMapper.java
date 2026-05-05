@@ -49,7 +49,9 @@ public class CommentMapper {
                 commentEntity.getId(),
                 commentEntity.getUserId(),
                 commentEntity.getUserCommonQuestId(),
-                commentEntity.getContent()
+                commentEntity.getContent(),
+                commentEntity.getCreatedDate(),
+                commentEntity.getModifiedDate()
         );
     }
 
