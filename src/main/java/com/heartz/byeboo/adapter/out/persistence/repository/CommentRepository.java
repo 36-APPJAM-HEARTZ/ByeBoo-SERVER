@@ -4,7 +4,9 @@ import com.heartz.byeboo.adapter.out.persistence.entity.CommentEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommentProjection;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestCommentListProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,4 +38,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
             "WHERE c.userCommonQuestId = :userCommonQuestId and c.parentCommentId IS NULL " +
             "ORDER BY c.createdDate ASC")
     List<UserCommonQuestCommentListProjection> findCommentWithWriterByUserCommonQuestId(Long userCommonQuestId);
+
+    @Query("delete from CommentEntity c where c.parentCommentId = :parentCommentId")
+    void deleteAllReplyByUserId(Long parentCommentId);
 }
