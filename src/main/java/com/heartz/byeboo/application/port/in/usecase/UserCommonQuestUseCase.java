@@ -12,4 +12,6 @@ public interface UserCommonQuestUseCase {
     MyCommonQuestListResponseDto getMyCommonQuest(MyCommonQuestCommand command);
     LikeResponseDto like(LikeCreateCommand command);
     UserCommonQuestResponseV2Dto getDetailCommonQuestV2(CommonQuestDetailCommand command);
+
+    UserCommonQuestListResponseV2Dto getListCommonQuestV2(CommonQuestListCommand command);
 }

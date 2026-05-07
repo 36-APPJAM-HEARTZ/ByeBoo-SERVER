@@ -232,4 +232,33 @@ public class UserCommonQuestController {
         CommonQuestDetailCommand command = CommonQuestDetailCommand.from(userId, answerId);
         return BaseResponse.success(userCommonQuestUseCase.getDetailCommonQuestV2(command));
     }
+
+    @Operation(
+            summary = "날짜별 공통 퀘스트 전체 조회 V2",
+            description = "날짜별 공통 퀘스트 전체 조회하는 API입니다.(V2)",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "공통 퀘스트 전체 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @GetMapping("/v2/common-quests")
+    public BaseResponse<UserCommonQuestListResponseV2Dto> getCommonQuestV2(
+            @UserId final Long userId,
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(value = "cursor", required = false) Long cursor,
+            @RequestParam(value = "limit", defaultValue = "10") int limit
+    ){
+        CommonQuestListCommand command = CommonQuestListCommand.from(userId, date, cursor, limit);
+        return BaseResponse.success(userCommonQuestUseCase.getListCommonQuestV2(command));
+    }
 }

@@ -4,6 +4,7 @@ import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQuestProjection;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestDetailProjection;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestInfoProjection;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestInfoV2Projection;
 import com.heartz.byeboo.domain.type.EReportStatus;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -56,4 +57,29 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
             "JOIN UserEntity u ON uq.userId = u.id " +
             "WHERE uq.id = :id")
     UserCommonQuestDetailProjection findUserCommonQuestWithWriterById(Long id);
+
+    @Query("select uq.id as answerId, uq.answer as content, uq.createdDate as writtenAt, u.profileIcon as profileIcon, u.name as writer, u.id as writerId, " +
+            "(SELECT COUNT(c.id)" +
+            "            FROM CommentEntity c" +
+            "            WHERE c.userCommonQuestId = uq.id and c.parentCommentId IS NULL" +
+            "        ) AS commentCount, " +
+            "(SELECT COUNT(l.id) " +
+            " FROM LikeEntity l " +
+            " WHERE l.userCommonQuestId = uq.id) AS likeCount, " +
+            "case when exists ( " +
+            "   select 1 from LikeEntity l2 " +
+            "   where l2.userCommonQuestId = uq.id " +
+            "     and l2.userId = :currentUserId " +
+            ") then true else false end as isLiked " +
+            "from UserCommonQuestEntity uq join UserEntity u on uq.userId = u.id " +
+            "where uq.createdDate >= :start and uq.createdDate <= :end " +
+            "and (:cursor is null or uq.id < :cursor) " +
+            "and not exists (select 1 from UserCommonQuestReportEntity r where r.userCommonQuestId = uq.id and r.reportStatus = :reportStatus) " +
+            "and not exists (select 1 from UserBlockEntity b " +
+            "                where (b.blockerUserId = :currentUserId and b.blockedUserId = uq.userId) " +
+            "                   or (b.blockerUserId = uq.userId and b.blockedUserId = :currentUserId)) " +
+            "order by uq.id desc")
+    List<UserCommonQuestInfoV2Projection> findByDateAndCursorV2(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
+                                                          @Param("cursor") Long cursor, @Param("reportStatus") EReportStatus reportStatus,
+                                                          @Param("currentUserId") Long currentUserId, Limit limit);
 }
