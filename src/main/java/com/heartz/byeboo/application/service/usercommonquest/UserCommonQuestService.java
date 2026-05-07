@@ -218,6 +218,42 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         );
     }
 
+    @Override
+    public UserCommonQuestListResponseV2Dto getListCommonQuestV2(CommonQuestListCommand command) {
+        validateNotFuture(command.getTargetDate());
+
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
+        CommonQuest findCommonQuest = retrieveCommonQuestPort.getCommonQuestByTargetDate(command.getTargetDate());
+
+        // 답변 여부 및 전체 카운트 확인
+        boolean isAnswered = isUserAlreadyAnswered(findUser, command.getTargetDate());
+        long totalCount = retrieveUserCommonQuestPort.countByCreatedDateBetween(command.getTargetDate(), findUser.getId());
+
+        //무한 스크롤 데이터 조회 (limit + 1)
+        int limitPlusOne = command.getLimit()+1;
+        List<UserCommonQuestInfoV2Projection> userCommonQuestInfoProjectionListPlusLimit = retrieveUserCommonQuestPort.getUserCommonQuestsByCreatedDateV2(command.getTargetDate(), command.getCursor(), limitPlusOne, findUser.getId());
+
+        //페이징 가공 (데이터 자르기 및 다음 커서 추출)
+        boolean hasNext = hasNextData(userCommonQuestInfoProjectionListPlusLimit.size(), limitPlusOne); // 11개를 가져왔다면 다음 페이지가 있음
+        List<UserCommonQuestInfoV2Projection> slicedQuestByDate = sliceUnderLimit(hasNext, userCommonQuestInfoProjectionListPlusLimit, command.getLimit());
+        Long nextCursor = getNextCursor(slicedQuestByDate, UserCommonQuestInfoV2Projection::getAnswerId);
+
+        //dto 변환
+        List<UserCommonQuestDetailResponseV2Dto> userCommonQuestDetailList = slicedQuestByDate.stream().map(
+                userCommonQuestInfoProjection -> UserCommonQuestDetailResponseV2Dto.of(userCommonQuestInfoProjection)
+        ).toList();
+
+        return UserCommonQuestListResponseV2Dto.from(
+                findCommonQuest.getQuestion(),
+                isAnswered,
+                totalCount,
+                userCommonQuestDetailList,
+                hasNext,
+                nextCursor,
+                findCommonQuest.getId()
+        );
+    }
+
     private boolean toggleLike(LikeCreateCommand command, boolean alreadyLiked) {
         if (alreadyLiked) {
             deleteLike(command);
