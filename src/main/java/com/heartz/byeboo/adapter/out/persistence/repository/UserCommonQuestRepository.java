@@ -22,7 +22,10 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
 
     @Query("select count(u) from UserCommonQuestEntity u " +
             "where u.createdDate >= :start and u.createdDate <= :end " +
-            "and not exists (select 1 from UserCommonQuestReportEntity r where r.userCommonQuestId = u.id and r.reportStatus = :reportStatus) " +
+            "and not exists (select 1 from ReportEntity r " +
+            "                where r.targetId = u.id " +
+            "                  and r.reportStatus = :reportStatus " +
+            "                  and r.reportTargetType = com.heartz.byeboo.domain.type.EReportTargetType.COMMON_QUEST) " +
             "and not exists (select 1 from UserBlockEntity b " +
             "                where (b.blockerUserId = :currentUserId and b.blockedUserId = u.userId) " +
             "                   or (b.blockerUserId = u.userId and b.blockedUserId = :currentUserId)) "
@@ -33,7 +36,10 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
             "from UserCommonQuestEntity uq join UserEntity u on uq.userId = u.id " +
             "where uq.createdDate >= :start and uq.createdDate <= :end " +
             "and (:cursor is null or uq.id < :cursor) " +
-            "and not exists (select 1 from UserCommonQuestReportEntity r where r.userCommonQuestId = uq.id and r.reportStatus = :reportStatus) " +
+            "and not exists (select 1 from ReportEntity r " +
+            "                where r.targetId = uq.id " +
+            "                  and r.reportStatus = :reportStatus " +
+            "                  and r.reportTargetType = com.heartz.byeboo.domain.type.EReportTargetType.COMMON_QUEST) " +
             "and not exists (select 1 from UserBlockEntity b " +
             "                where (b.blockerUserId = :currentUserId and b.blockedUserId = uq.userId) " +
             "                   or (b.blockerUserId = uq.userId and b.blockedUserId = :currentUserId)) " +
@@ -74,7 +80,10 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
             "from UserCommonQuestEntity uq join UserEntity u on uq.userId = u.id " +
             "where uq.createdDate >= :start and uq.createdDate <= :end " +
             "and (:cursor is null or uq.id < :cursor) " +
-            "and not exists (select 1 from UserCommonQuestReportEntity r where r.userCommonQuestId = uq.id and r.reportStatus = :reportStatus) " +
+            "and not exists (select 1 from ReportEntity r " +
+            "                where r.targetId = uq.id " +
+            "                  and r.reportStatus = :reportStatus " +
+            "                  and r.reportTargetType = com.heartz.byeboo.domain.type.EReportTargetType.COMMON_QUEST) " +
             "and not exists (select 1 from UserBlockEntity b " +
             "                where (b.blockerUserId = :currentUserId and b.blockedUserId = uq.userId) " +
             "                   or (b.blockerUserId = uq.userId and b.blockedUserId = :currentUserId)) " +
