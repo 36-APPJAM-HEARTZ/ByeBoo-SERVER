@@ -60,6 +60,7 @@ public class CommentService implements CommentUseCase {
         deleteCommentPort.deleteCommentById(command.getUserId(), command.getCommentId());
 
         //TODO : 대댓글 삭제
+        deleteCommentPort.deleteAllReplyByParentId(command.getCommentId());
         return  null;
     }
 

@@ -1,8 +1,8 @@
 package com.heartz.byeboo.application.port.out.report;
 
-import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestReportEntity;
-import com.heartz.byeboo.domain.model.UserCommonQuestReport;
+import com.heartz.byeboo.adapter.out.persistence.entity.ReportEntity;
+import com.heartz.byeboo.domain.model.Report;
 
 public interface CreateReportPort {
-    UserCommonQuestReportEntity createReport(UserCommonQuestReport userCommonQuestReport);
+    ReportEntity createReport(Report report);
 }
