@@ -50,7 +50,7 @@ public class ReportService implements ReportUseCase {
         ReportEntity reportEntity = createReportPort.createReport(report);
 
         //신고하면 디코 알림
-        discordClient.sendAlarm(DiscordMessageDto.report(List.of(EmbedDto.reportNotification(reportEntity.getId(), findUser.getId(), command.getTargetId(), targetUserCommonQuest.getAnswer()))));
+        discordClient.sendAlarm(DiscordMessageDto.report(List.of(EmbedDto.reportNotification(reportEntity.getId(), findUser.getId(), command.getTargetId(), targetUserCommonQuest.getAnswer(), reportEntity.getReportTargetType()))));
 
         return null;
     }
@@ -72,7 +72,7 @@ public class ReportService implements ReportUseCase {
         ReportEntity reportEntity = createReportPort.createReport(report);
 
         //신고하면 디코 알림
-        discordClient.sendAlarm(DiscordMessageDto.report(List.of(EmbedDto.reportNotification(reportEntity.getId(), command.getUserId(), command.getTargetId(), targetContent))));
+        discordClient.sendAlarm(DiscordMessageDto.report(List.of(EmbedDto.reportNotification(reportEntity.getId(), command.getUserId(), command.getTargetId(), targetContent, reportEntity.getReportTargetType()))));
 
         return null;
     }
