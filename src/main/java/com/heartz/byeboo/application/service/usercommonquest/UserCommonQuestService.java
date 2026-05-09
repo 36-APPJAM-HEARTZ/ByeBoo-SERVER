@@ -9,6 +9,7 @@ import com.heartz.byeboo.application.port.out.comment.RetrieveCommentPort;
 import com.heartz.byeboo.application.port.out.like.CreateLikePort;
 import com.heartz.byeboo.application.port.out.like.DeleteLikePort;
 import com.heartz.byeboo.application.port.out.like.RetrieveLikePort;
+import com.heartz.byeboo.application.port.out.notification.CreateNotificationPort;
 import com.heartz.byeboo.core.common.out.port.ProfanityCheckPort;
 import com.heartz.byeboo.application.port.out.commonquest.RetrieveCommonQuestPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
@@ -17,11 +18,10 @@ import com.heartz.byeboo.application.port.out.usercommonquest.RetrieveUserCommon
 import com.heartz.byeboo.application.port.out.usercommonquest.UpdateUserCommonQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.UserCommonQuestErrorCode;
-import com.heartz.byeboo.domain.model.CommonQuest;
-import com.heartz.byeboo.domain.model.Like;
-import com.heartz.byeboo.domain.model.User;
-import com.heartz.byeboo.domain.model.UserCommonQuest;
+import com.heartz.byeboo.domain.model.*;
+import com.heartz.byeboo.domain.type.ENotificationType;
 import com.heartz.byeboo.mapper.LikeMapper;
+import com.heartz.byeboo.mapper.NotificationMapper;
 import com.heartz.byeboo.mapper.UserCommonQuestMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +49,7 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
     private final RetrieveLikePort retrieveLikePort;
     private final DeleteLikePort deleteLikePort;
     private final RetrieveCommentPort retrieveCommentPort;
+    private final CreateNotificationPort createNotificationPort;
 
     @Override
     @Transactional
@@ -70,6 +71,7 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
 
         UserCommonQuest userCommonQuest = UserCommonQuestMapper.commandToDomain(command, findUser, findCommonQuest);
         createUserCommonQuestPort.createUserCommonQuest(userCommonQuest);
+
 
         return null;
     }
@@ -172,7 +174,8 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
     @Override
     @Transactional
     public LikeResponseDto like(LikeCreateCommand command) {
-        retrieveUserPort.getUserById(command.getUserId());
+        retrieveUserPort.validateUserExists(command.getUserId());
+        UserCommonQuest userCommonQuest = retrieveUserCommonQuestPort.getUserCommonQuestById(command.getUserCommonQuestId());
 
         boolean alreadyLiked = retrieveLikePort.existsByUserIdAndUserCommonQuestId(
                 command.getUserId(),
@@ -184,6 +187,9 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         int likeCount = retrieveLikePort.countByUserCommonQuestId(
                 command.getUserCommonQuestId()
         );
+
+        Notification notification = NotificationMapper.toDomain(userCommonQuest.getUser().getId(), command.getUserCommonQuestId(), ENotificationType.LIKE, command.getUserId());
+        createNotificationPort.create(notification);
 
         return new LikeResponseDto(likeCount, isLiked);
     }
