@@ -17,6 +17,7 @@ import com.heartz.byeboo.application.port.out.gcs.CreateObjectPort;
 import com.heartz.byeboo.application.port.out.gcs.DeleteObjectPort;
 import com.heartz.byeboo.application.port.out.gcs.RetrieveObjectPort;
 import com.heartz.byeboo.application.port.out.gcs.ValidateObjectPort;
+import com.heartz.byeboo.application.port.out.notification.CreateNotificationPort;
 import com.heartz.byeboo.application.port.out.notificationtoken.RetrieveNotificationTokenPort;
 import com.heartz.byeboo.application.port.out.quest.RetrieveQuestPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserJourneyPort;
@@ -30,13 +31,12 @@ import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.QuestErrorCode;
 import com.heartz.byeboo.domain.exception.UserJourneyErrorCode;
 import com.heartz.byeboo.domain.exception.UserQuestErrorCode;
-import com.heartz.byeboo.domain.model.Quest;
-import com.heartz.byeboo.domain.model.User;
-import com.heartz.byeboo.domain.model.UserJourney;
-import com.heartz.byeboo.domain.model.UserQuest;
+import com.heartz.byeboo.domain.model.*;
 import com.heartz.byeboo.domain.type.EJourneyStatus;
+import com.heartz.byeboo.domain.type.ENotificationType;
 import com.heartz.byeboo.domain.type.EQuestStyle;
 import com.heartz.byeboo.mapper.JourneyStyleMapper;
+import com.heartz.byeboo.mapper.NotificationMapper;
 import com.heartz.byeboo.mapper.UserQuestMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,6 +69,7 @@ public class UserQuestService implements UserQuestUseCase {
     private final UpdateUserQuestPort updateUserQuestPort;
     private final DeleteObjectPort deleteObjectPort;
     private final RestClient geminiRestClient;
+    private final CreateNotificationPort createNotificationPort;
 
     @Override
     @Transactional
@@ -201,18 +202,18 @@ public class UserQuestService implements UserQuestUseCase {
     @Transactional(readOnly = true)
     public void sendQuestNotifications() {
         LocalDateTime now = LocalDateTime.now();
-        //LocalDateTime thresholdEnd = now.minusMinutes(1);
         LocalDateTime thresholdEnd = now.minusHours(24);
         LocalDateTime thresholdStart = thresholdEnd.minusMinutes(1);
 
-        log.info("[Scheduler] Quest 알림 스케줄러 실행됨 - now={}, start={}, end={}", now, thresholdStart, thresholdEnd);
-
         List<UserIdCurrentNumberProjection> userIdCurrentNumberProjections = retrieveUserPort.findUsersWithExpiredQuest(thresholdStart, thresholdEnd);
-        log.info("[Scheduler] 만료된 퀘스트 유저 수: {}", userIdCurrentNumberProjections.size());
 
         for (UserIdCurrentNumberProjection projection: userIdCurrentNumberProjections) {
-            log.info("[Scheduler] 유저 처리: id={}, currentNumber={}",projection.getId(), projection.getCurrentNumber());
             if(projection.getCurrentNumber() != 31) {
+
+                //알림함에 퀘스트 오픈 알림 저장
+                Notification notification = NotificationMapper.toDomain(projection.getId(), projection.getCurrentNumber(), ENotificationType.QUEST_OPEN, null);
+                createNotificationPort.create(notification);
+
                 List<NotificationTokenEntity> tokens = retrieveNotificationTokenPort.findAllByUserId(projection.getId());
 
                 for (NotificationTokenEntity token : tokens) {
