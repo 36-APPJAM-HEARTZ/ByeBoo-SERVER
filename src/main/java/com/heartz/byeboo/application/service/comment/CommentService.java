@@ -10,10 +10,14 @@ import com.heartz.byeboo.application.port.out.comment.CreateCommentPort;
 import com.heartz.byeboo.application.port.out.comment.DeleteCommentPort;
 import com.heartz.byeboo.application.port.out.comment.RetrieveCommentPort;
 import com.heartz.byeboo.application.port.out.comment.UpdateCommentPort;
+import com.heartz.byeboo.application.port.out.notification.CreateNotificationPort;
+import com.heartz.byeboo.application.port.out.notification.RetrieveNotificationPort;
 import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
 import com.heartz.byeboo.application.port.out.usercommonquest.RetrieveUserCommonQuestPort;
 import com.heartz.byeboo.domain.model.*;
+import com.heartz.byeboo.domain.type.ENotificationType;
 import com.heartz.byeboo.mapper.CommentMapper;
+import com.heartz.byeboo.mapper.NotificationMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,16 +35,26 @@ public class CommentService implements CommentUseCase {
     private final RetrieveCommentPort retrieveCommentPort;
     private final UpdateCommentPort updateCommentPort;
     private final DeleteCommentPort deleteCommentPort;
+    private final RetrieveNotificationPort retrieveNotificationPort;
+    private final CreateNotificationPort createNotificationPort;
 
     @Override
     @Transactional
     public Void createComment(CommentCreateCommand command) {
         retrieveUserPort.validateUserExists(command.getUserId());
-        retrieveUserCommonQuestPort.getUserCommonQuestById(command.getTargetId());
+        UserCommonQuest userCommonQuest = retrieveUserCommonQuestPort.getUserCommonQuestById(command.getTargetId());
         Comment comment = CommentMapper.commandToDomain(command);
 
         createCommentPort.createComment(comment);
 
+        Notification notification = NotificationMapper.toDomain(
+                userCommonQuest.getUser().getId(),
+                command.getTargetId(),
+                ENotificationType.COMMENT,
+                comment.getUserId()
+        );
+
+        createNotificationPort.create(notification);
         return null;
     }
 
