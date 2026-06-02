@@ -21,4 +21,8 @@ public class NotificationMapper {
                 .build();
     }
 
+    public static NotificationEntity toEntityForUpdate(Notification notification){
+        return NotificationEn
+    }
+
 }
