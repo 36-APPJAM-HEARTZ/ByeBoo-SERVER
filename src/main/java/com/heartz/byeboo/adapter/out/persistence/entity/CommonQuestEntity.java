@@ -8,12 +8,7 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(
-        name = "common_quests",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uk_target_date", columnNames = "target_date")
-        }
-)
+@Table(name = "common_quests")
 public class CommonQuestEntity {
 
     @Id
@@ -24,19 +19,19 @@ public class CommonQuestEntity {
     @Column(name = "question", nullable = false)
     private String question;
 
-    @Column(name = "target_date", nullable = false)
-    private LocalDate targetDate;
+    @Column(nullable = false, unique = true)
+    private Integer sequence;
 
     @Builder
-    public CommonQuestEntity(String question, LocalDate targetDate) {
+    public CommonQuestEntity(String question, Integer sequence) {
         this.question = question;
-        this.targetDate = targetDate;
+        this.sequence = sequence;
     }
 
-    public static CommonQuestEntity create(String question, LocalDate targetDate) {
+    public static CommonQuestEntity create(String question, Integer sequence) {
         return CommonQuestEntity.builder()
                 .question(question)
-                .targetDate(targetDate)
+                .sequence(sequence)
                 .build();
     }
 }

@@ -13,13 +13,13 @@ import java.time.LocalDate;
 public class CommonQuest {
     private Long id;
     private String question;
-    private LocalDate targetDate;
+    private Integer sequence;
 
-    public static CommonQuest of(Long id, String question, LocalDate targetDate) {
+    public static CommonQuest of(Long id, String question, Integer sequence) {
         return CommonQuest.builder()
                 .id(id)
                 .question(question)
-                .targetDate(targetDate)
+                .sequence(sequence)
                 .build();
     }
 
