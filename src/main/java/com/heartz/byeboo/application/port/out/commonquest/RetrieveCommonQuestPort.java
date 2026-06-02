@@ -6,5 +6,5 @@ import java.time.LocalDate;
 
 public interface RetrieveCommonQuestPort {
     CommonQuest getCommonQuestById(Long commonQuestId);
-    CommonQuest getCommonQuestByTargetDate(LocalDate targetDate);
+    CommonQuest getCommonQuestBySequence(int sequence);
 }

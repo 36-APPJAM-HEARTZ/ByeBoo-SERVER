@@ -30,8 +30,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.function.Function;
+
+import static com.heartz.byeboo.constants.CommonQuestConstants.COMMON_QUEST_CYCLE_SIZE;
+import static com.heartz.byeboo.constants.CommonQuestConstants.COMMON_QUEST_START_DATE;
 
 @Service
 @RequiredArgsConstructor
@@ -110,25 +114,55 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         validateNotFuture(command.getTargetDate());
 
         User findUser = retrieveUserPort.getUserById(command.getUserId());
-        CommonQuest findCommonQuest = retrieveCommonQuestPort.getCommonQuestByTargetDate(command.getTargetDate());
+
+        LocalDate targetDate = command.getTargetDate();
+        int sequence = calculateCommonQuestSequence(targetDate);
+
+        CommonQuest findCommonQuest =
+                retrieveCommonQuestPort.getCommonQuestBySequence(sequence);
 
         // 답변 여부 및 전체 카운트 확인
         boolean isAnswered = isUserAlreadyAnswered(findUser, command.getTargetDate());
-        long totalCount = retrieveUserCommonQuestPort.countByCreatedDateBetween(command.getTargetDate(), findUser.getId());
 
-        //무한 스크롤 데이터 조회 (limit + 1)
-        int limitPlusOne = command.getLimit()+1;
-        List<UserCommonQuestInfoProjection> userCommonQuestInfoProjectionListPlusLimit = retrieveUserCommonQuestPort.getUserCommonQuestsByCreatedDate(command.getTargetDate(), command.getCursor(), limitPlusOne, findUser.getId());
+        long totalCount = retrieveUserCommonQuestPort.countByCreatedDateBetween(
+                targetDate,
+                findUser.getId()
+        );
 
-        //페이징 가공 (데이터 자르기 및 다음 커서 추출)
-        boolean hasNext = hasNextData(userCommonQuestInfoProjectionListPlusLimit.size(), limitPlusOne); // 11개를 가져왔다면 다음 페이지가 있음
-        List<UserCommonQuestInfoProjection> slicedQuestByDate = sliceUnderLimit(hasNext, userCommonQuestInfoProjectionListPlusLimit, command.getLimit());
-        Long nextCursor = getNextCursor(slicedQuestByDate, UserCommonQuestInfoProjection::getAnswerId);
+        // 무한 스크롤 데이터 조회 limit + 1
+        int limitPlusOne = command.getLimit() + 1;
 
-        //dto 변환
-        List<UserCommonQuestDetailResponseDto> userCommonQuestDetailList = slicedQuestByDate.stream().map(
-                userCommonQuestInfoProjection -> UserCommonQuestDetailResponseDto.of(userCommonQuestInfoProjection)
-        ).toList();
+        List<UserCommonQuestInfoProjection> userCommonQuestInfoProjectionListPlusLimit =
+                retrieveUserCommonQuestPort.getUserCommonQuestsByCreatedDate(
+                        targetDate,
+                        command.getCursor(),
+                        limitPlusOne,
+                        findUser.getId()
+                );
+
+        // 페이징 가공
+        boolean hasNext = hasNextData(
+                userCommonQuestInfoProjectionListPlusLimit.size(),
+                limitPlusOne
+        );
+
+        List<UserCommonQuestInfoProjection> slicedQuestByDate =
+                sliceUnderLimit(
+                        hasNext,
+                        userCommonQuestInfoProjectionListPlusLimit,
+                        command.getLimit()
+                );
+
+        Long nextCursor = getNextCursor(
+                slicedQuestByDate,
+                UserCommonQuestInfoProjection::getAnswerId
+        );
+
+        // dto 변환
+        List<UserCommonQuestDetailResponseDto> userCommonQuestDetailList =
+                slicedQuestByDate.stream()
+                        .map(UserCommonQuestDetailResponseDto::of)
+                        .toList();
 
         return UserCommonQuestListResponseDto.from(
                 findCommonQuest.getQuestion(),
@@ -225,29 +259,57 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserCommonQuestListResponseV2Dto getListCommonQuestV2(CommonQuestListCommand command) {
         validateNotFuture(command.getTargetDate());
 
         User findUser = retrieveUserPort.getUserById(command.getUserId());
-        CommonQuest findCommonQuest = retrieveCommonQuestPort.getCommonQuestByTargetDate(command.getTargetDate());
 
-        // 답변 여부 및 전체 카운트 확인
+        LocalDate targetDate = command.getTargetDate();
+
+        int sequence = calculateCommonQuestSequence(targetDate);
+
+        CommonQuest findCommonQuest =
+                retrieveCommonQuestPort.getCommonQuestBySequence(sequence);
+
         boolean isAnswered = isUserAlreadyAnswered(findUser, command.getTargetDate());
-        long totalCount = retrieveUserCommonQuestPort.countByCreatedDateBetween(command.getTargetDate(), findUser.getId());
 
-        //무한 스크롤 데이터 조회 (limit + 1)
-        int limitPlusOne = command.getLimit()+1;
-        List<UserCommonQuestInfoV2Projection> userCommonQuestInfoProjectionListPlusLimit = retrieveUserCommonQuestPort.getUserCommonQuestsByCreatedDateV2(command.getTargetDate(), command.getCursor(), limitPlusOne, findUser.getId());
+        long totalCount = retrieveUserCommonQuestPort.countByCreatedDateBetween(
+                targetDate,
+                findUser.getId()
+        );
 
-        //페이징 가공 (데이터 자르기 및 다음 커서 추출)
-        boolean hasNext = hasNextData(userCommonQuestInfoProjectionListPlusLimit.size(), limitPlusOne); // 11개를 가져왔다면 다음 페이지가 있음
-        List<UserCommonQuestInfoV2Projection> slicedQuestByDate = sliceUnderLimit(hasNext, userCommonQuestInfoProjectionListPlusLimit, command.getLimit());
-        Long nextCursor = getNextCursor(slicedQuestByDate, UserCommonQuestInfoV2Projection::getAnswerId);
+        int limitPlusOne = command.getLimit() + 1;
 
-        //dto 변환
-        List<UserCommonQuestDetailResponseV2Dto> userCommonQuestDetailList = slicedQuestByDate.stream().map(
-                userCommonQuestInfoProjection -> UserCommonQuestDetailResponseV2Dto.of(userCommonQuestInfoProjection)
-        ).toList();
+        List<UserCommonQuestInfoV2Projection> userCommonQuestInfoProjectionListPlusLimit =
+                retrieveUserCommonQuestPort.getUserCommonQuestsByCreatedDateV2(
+                        targetDate,
+                        command.getCursor(),
+                        limitPlusOne,
+                        findUser.getId()
+                );
+
+        boolean hasNext = hasNextData(
+                userCommonQuestInfoProjectionListPlusLimit.size(),
+                limitPlusOne
+        );
+
+        List<UserCommonQuestInfoV2Projection> slicedQuestByDate =
+                sliceUnderLimit(
+                        hasNext,
+                        userCommonQuestInfoProjectionListPlusLimit,
+                        command.getLimit()
+                );
+
+        Long nextCursor = getNextCursor(
+                slicedQuestByDate,
+                UserCommonQuestInfoV2Projection::getAnswerId
+        );
+
+        List<UserCommonQuestDetailResponseV2Dto> userCommonQuestDetailList =
+                slicedQuestByDate.stream()
+                        .map(UserCommonQuestDetailResponseV2Dto::of)
+                        .toList();
 
         return UserCommonQuestListResponseV2Dto.from(
                 findCommonQuest.getQuestion(),
@@ -282,12 +344,6 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         createLikePort.createLike(like);
     }
 
-    private void validateUserCanWriteCommonQuest(CommonQuest commonQuest){
-        if (!commonQuest.getTargetDate().isEqual(LocalDate.now())){
-            throw new CustomException(UserCommonQuestErrorCode.COMMON_QUEST_NOT_TODAY);
-        }
-    }
-
     private boolean hasNextData(int dataSize, int limitPlusOne){
         return dataSize == limitPlusOne;
     }
@@ -316,10 +372,38 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         }
     }
 
-    private void validateNotFuture(LocalDate targetDay){
-        if(targetDay.isAfter(LocalDate.now())){
-            throw new CustomException(UserCommonQuestErrorCode.USER_COMMON_QUEST_NOT_FUTURE);
+
+    private void validateUserCanWriteCommonQuest(CommonQuest commonQuest) {
+        int todaySequence = calculateTodayCommonQuestSequence();
+
+        if (!commonQuest.getSequence().equals(todaySequence)) {
+            throw new CustomException(UserCommonQuestErrorCode.COMMON_QUEST_NOT_TODAY);
         }
     }
 
+    private int calculateTodayCommonQuestSequence() {
+        long days = ChronoUnit.DAYS.between(COMMON_QUEST_START_DATE, LocalDate.now());
+
+        if (days < 0) {
+            throw new CustomException(UserCommonQuestErrorCode.COMMON_QUEST_NOT_TODAY);
+        }
+
+        return (int) (days % COMMON_QUEST_CYCLE_SIZE) + 1;
+    }
+
+    private int calculateCommonQuestSequence(LocalDate date) {
+        long days = ChronoUnit.DAYS.between(COMMON_QUEST_START_DATE, date);
+
+        if (days < 0) {
+            throw new CustomException(UserCommonQuestErrorCode.COMMON_QUEST_NOT_TODAY);
+        }
+
+        return (int) (days % COMMON_QUEST_CYCLE_SIZE) + 1;
+    }
+
+    private void validateNotFuture(LocalDate targetDay){
+        if (targetDay.isAfter(LocalDate.now())) {
+            throw new CustomException(UserCommonQuestErrorCode.USER_COMMON_QUEST_NOT_FUTURE);
+        }
+    }
 }
