@@ -5,6 +5,7 @@ import com.heartz.byeboo.adapter.out.persistence.repository.CommonQuestRepositor
 import com.heartz.byeboo.application.port.out.commonquest.RetrieveCommonQuestPort;
 import com.heartz.byeboo.core.exception.CustomException;
 import com.heartz.byeboo.domain.exception.CommonQuestErrorCode;
+import com.heartz.byeboo.domain.exception.UserCommonQuestErrorCode;
 import com.heartz.byeboo.domain.model.CommonQuest;
 import com.heartz.byeboo.mapper.CommonQuestMapper;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +28,12 @@ public class CommonQuestPersistenceAdapter implements RetrieveCommonQuestPort {
     }
 
     @Override
-    public CommonQuest getCommonQuestByTargetDate(LocalDate targetDate) {
-        CommonQuestEntity commonQuestEntity = commonQuestRepository.findByTargetDate(targetDate)
-                .orElseThrow(() -> new CustomException(CommonQuestErrorCode.COMMON_QUEST_NOT_FOUND));
+    public CommonQuest getCommonQuestBySequence(int sequence) {
+        CommonQuestEntity commonQuestEntity = commonQuestRepository.findBySequence(sequence)
+                .orElseThrow(() -> new CustomException(UserCommonQuestErrorCode.USER_COMMON_QUEST_NOT_FOUND));
 
         return CommonQuestMapper.toDomain(commonQuestEntity);
     }
+
+
 }
