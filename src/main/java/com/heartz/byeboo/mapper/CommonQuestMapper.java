@@ -8,7 +8,7 @@ public class CommonQuestMapper {
         return CommonQuest.of(
                 commonQuestEntity.getId(),
                 commonQuestEntity.getQuestion(),
-                commonQuestEntity.getTargetDate()
+                commonQuestEntity.getSequence()
         );
     }
 
