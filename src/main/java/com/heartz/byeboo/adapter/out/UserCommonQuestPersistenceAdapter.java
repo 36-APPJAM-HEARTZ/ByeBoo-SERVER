@@ -112,6 +112,11 @@ public class UserCommonQuestPersistenceAdapter implements CreateUserCommonQuestP
     }
 
     @Override
+    public List<MyCommonQuestV2Projection> getMyCommonQuestsByUserIdV2(User user, Long cursor, int limit) {
+        return userCommonQuestRepository.findMyQuestsByUserIdV2(user.getId(), cursor, Limit.of(limit));
+    }
+
+    @Override
     public void updateUserCommonQuest(UserCommonQuest userCommonQuest) {
         UserCommonQuestEntity userCommonQuestEntity = UserCommonQuestMapper.toEntityForUpdate(userCommonQuest);
 
