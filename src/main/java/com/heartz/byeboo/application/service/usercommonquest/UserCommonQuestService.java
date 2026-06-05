@@ -322,6 +322,24 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
         );
     }
 
+    @Override
+    public MyCommonQuestListResponseV2Dto getMyCommonQuestV2(MyCommonQuestCommand command) {
+        User findUser = retrieveUserPort.getUserById(command.getUserId());
+
+        int limitPlusOne = command.getLimit()+1;
+        List<MyCommonQuestV2Projection> myCommonQuestProjectionList = retrieveUserCommonQuestPort.getMyCommonQuestsByUserIdV2(findUser, command.getCursor(), limitPlusOne);
+
+        boolean hasNext = hasNextData(myCommonQuestProjectionList.size(), limitPlusOne); // 11개를 가져왔다면 다음 페이지가 있음
+        List<MyCommonQuestV2Projection> slicedQuestByDate = sliceUnderLimit(hasNext, myCommonQuestProjectionList, command.getLimit());
+        Long nextCursor = getNextCursor(slicedQuestByDate, MyCommonQuestV2Projection::getAnswerId);
+
+        List<MyCommonQuestResponseV2Dto> myCommonQuestResponseDtoList = slicedQuestByDate.stream().map(
+                myCommonQuestProjection -> MyCommonQuestResponseV2Dto.of(myCommonQuestProjection)
+        ).toList();
+
+        return MyCommonQuestListResponseV2Dto.from(hasNext, nextCursor, myCommonQuestResponseDtoList);
+    }
+
     private boolean toggleLike(LikeCreateCommand command, boolean alreadyLiked) {
         if (alreadyLiked) {
             deleteLike(command);

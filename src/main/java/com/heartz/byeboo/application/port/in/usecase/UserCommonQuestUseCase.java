@@ -14,4 +14,6 @@ public interface UserCommonQuestUseCase {
     UserCommonQuestResponseV2Dto getDetailCommonQuestV2(CommonQuestDetailCommand command);
 
     UserCommonQuestListResponseV2Dto getListCommonQuestV2(CommonQuestListCommand command);
+    MyCommonQuestListResponseV2Dto getMyCommonQuestV2(MyCommonQuestCommand command);
+
 }
