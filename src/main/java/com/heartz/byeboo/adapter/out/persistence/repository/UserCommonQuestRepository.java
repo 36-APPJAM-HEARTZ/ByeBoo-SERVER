@@ -1,10 +1,7 @@
 package com.heartz.byeboo.adapter.out.persistence.repository;
 
 import com.heartz.byeboo.adapter.out.persistence.entity.UserCommonQuestEntity;
-import com.heartz.byeboo.adapter.out.persistence.repository.projection.MyCommonQuestProjection;
-import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestDetailProjection;
-import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestInfoProjection;
-import com.heartz.byeboo.adapter.out.persistence.repository.projection.UserCommonQuestInfoV2Projection;
+import com.heartz.byeboo.adapter.out.persistence.repository.projection.*;
 import com.heartz.byeboo.domain.type.EReportStatus;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -91,4 +88,23 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
     List<UserCommonQuestInfoV2Projection> findByDateAndCursorV2(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
                                                           @Param("cursor") Long cursor, @Param("reportStatus") EReportStatus reportStatus,
                                                           @Param("currentUserId") Long currentUserId, Limit limit);
+
+    @Query("SELECT uq.id AS answerId, uq.answer AS content, cq.question AS question, uq.createdDate AS writtenAt, " +
+            "(SELECT COUNT(c.id) " +
+            " FROM CommentEntity c " +
+            " WHERE c.userCommonQuestId = uq.id " +
+            " AND c.parentCommentId IS NULL) AS commentCount, " +
+            "(SELECT COUNT(l.id) " +
+            " FROM LikeEntity l " +
+            " WHERE l.userCommonQuestId = uq.id) AS likeCount, " +
+            "CASE WHEN EXISTS ( " +
+            " SELECT 1 " +
+            " FROM LikeEntity l2 " +
+            " WHERE l2.userCommonQuestId = uq.id " +
+            " AND l2.userId = :userId " +
+            ") THEN true ELSE false END AS isLiked " +
+            "FROM UserCommonQuestEntity uq JOIN CommonQuestEntity cq ON uq.commonQuestId = cq.id " +
+            "WHERE uq.userId = :userId AND (:cursor IS NULL OR uq.id < :cursor) " +
+            "ORDER BY uq.id DESC")
+    List<MyCommonQuestV2Projection> findMyQuestsByUserIdV2(@Param("userId") Long userId, @Param("cursor") Long cursor, Limit limit);
 }

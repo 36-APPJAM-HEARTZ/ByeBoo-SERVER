@@ -9,6 +9,7 @@ import com.heartz.byeboo.application.command.usercommonquest.CommonQuestListComm
 import com.heartz.byeboo.application.command.usercommonquest.MyCommonQuestCommand;
 import com.heartz.byeboo.application.command.userquest.CompletedCountCommand;
 import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.MyCommonQuestListResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.usercommonquest.MyCommonQuestListResponseV2Dto;
 import com.heartz.byeboo.application.port.in.usecase.UserCommonQuestUseCase;
 import com.heartz.byeboo.application.port.in.usecase.UserUseCase;
 import com.heartz.byeboo.application.port.in.dto.response.user.*;
@@ -327,5 +328,32 @@ public class UserController {
             @RequestParam(value = "limit", defaultValue = "10") int limit) {
         MyCommonQuestCommand command = MyCommonQuestCommand.from(userId, cursor, limit);
         return BaseResponse.success(userCommonQuestUseCase.getMyCommonQuest(command));
+    }
+
+    @Operation(
+            summary = "공통퀘스트 내 답변 조회 V2",
+            description = "공통퀘스트 내 답변 조회하기 위한 API입니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "공통퀘스트 내 답변 조회 성공"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 유저일때"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 에러"
+                    )
+            }
+    )
+    @GetMapping("/v2/users/me/common-quests")
+    public BaseResponse<MyCommonQuestListResponseV2Dto> getMyCommonQuestsV2(
+            @UserId final Long userId,
+            @RequestParam(value = "cursor", required = false) Long cursor,
+            @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        MyCommonQuestCommand command = MyCommonQuestCommand.from(userId, cursor, limit);
+        return BaseResponse.success(userCommonQuestUseCase.getMyCommonQuestV2(command));
     }
 }
