@@ -30,6 +30,7 @@ public class NotificationPersistenceAdapter implements RetrieveNotificationPort,
     @Override
     public Notification findByIdAndUserId(Long userId, Long notificationId) {
         NotificationEntity notificationEntity = notificationRepository.findByUserIdAndId(userId, notificationId);
+        return NotificationMapper.entityToDomain(notificationEntity);
     }
 
     @Override

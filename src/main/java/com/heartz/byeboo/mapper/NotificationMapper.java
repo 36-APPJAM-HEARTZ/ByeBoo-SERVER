@@ -21,8 +21,20 @@ public class NotificationMapper {
                 .build();
     }
 
+    public static Notification entityToDomain(NotificationEntity notificationEntity) {
+        return Notification.builder()
+                .userId(notificationEntity.getUserId())
+                .id(notificationEntity.getId())
+                .isRead(notificationEntity.isRead())
+                .landingUrl(notificationEntity.getLandingUrl())
+                .targetId(notificationEntity.getTargetId())
+                .notificationType(notificationEntity.getNotificationType())
+                .senderUserId(notificationEntity.getSenderUserId())
+                .build();
+    }
+
     public static NotificationEntity toEntityForUpdate(Notification notification){
-        return NotificationEn
+        return NotificationEntity.from(notification);
     }
 
 }
