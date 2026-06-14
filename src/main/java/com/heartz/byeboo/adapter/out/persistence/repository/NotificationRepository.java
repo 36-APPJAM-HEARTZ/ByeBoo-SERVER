@@ -17,4 +17,5 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
             "order by n.createdDate desc")
     List<NotificationProjection> findAllByUserId(Long userId);
     void deleteByCreatedDateBefore(LocalDateTime threshold);
+    NotificationEntity findByUserIdAndId(Long userId, Long id);
 }
