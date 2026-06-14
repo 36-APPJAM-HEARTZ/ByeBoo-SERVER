@@ -4,4 +4,5 @@ import com.heartz.byeboo.domain.model.Notification;
 
 public interface UpdateNotificationPort {
     void updateIsRead(Notification notification);
+    void updateAllIsReadByUserId(Long userId);
 }
