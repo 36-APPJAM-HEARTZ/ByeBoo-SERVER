@@ -4,6 +4,7 @@ import com.heartz.byeboo.adapter.out.persistence.repository.projection.Notificat
 import com.heartz.byeboo.application.command.notification.NotificationUpdateCommand;
 import com.heartz.byeboo.application.port.in.dto.response.notification.NotificationListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.notification.NotificationResponseDto;
+import com.heartz.byeboo.application.port.in.dto.response.notification.NotificationUnreadStatusResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.NotificationUseCase;
 import com.heartz.byeboo.application.port.out.notification.DeleteNotificationPort;
 import com.heartz.byeboo.application.port.out.notification.RetrieveNotificationPort;
@@ -67,7 +68,7 @@ public class NotificationService implements NotificationUseCase {
         deleteNotificationPort.deleteByCreatedDateBefore(threshold);
     }
 
-    @Override()
+    @Override
     @Transactional
     public Void readNotification(NotificationUpdateCommand command) {
         retrieveUserPort.validateUserExists(command.userId());
@@ -80,6 +81,24 @@ public class NotificationService implements NotificationUseCase {
         notification.read();
         updateNotificationPort.updateIsRead(notification);
         return null;
+    }
+
+    @Override
+    @Transactional
+    public Void readAllNotification(Long userId) {
+        retrieveUserPort.validateUserExists(userId);
+        updateNotificationPort.updateAllIsReadByUserId(userId);
+
+        return null;
+    }
+
+    @Override
+    public NotificationUnreadStatusResponseDto getUnreadStatus(Long userId) {
+        retrieveUserPort.validateUserExists(userId);
+        boolean hasUnread = retrieveNotificationPort.existsUnreadByUserId(userId);
+
+        return NotificationUnreadStatusResponseDto.of(hasUnread);
+
     }
 
 
