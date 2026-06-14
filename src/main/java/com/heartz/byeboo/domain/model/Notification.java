@@ -26,4 +26,8 @@ public class Notification {
                 .senderUserId(senderUserId)
                 .build();
     }
+
+    public void read(){
+        this.isRead = true;
+    }
 }

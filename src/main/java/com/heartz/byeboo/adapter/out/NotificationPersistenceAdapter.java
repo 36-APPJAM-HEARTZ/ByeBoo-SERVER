@@ -6,6 +6,7 @@ import com.heartz.byeboo.adapter.out.persistence.repository.projection.Notificat
 import com.heartz.byeboo.application.port.out.notification.CreateNotificationPort;
 import com.heartz.byeboo.application.port.out.notification.DeleteNotificationPort;
 import com.heartz.byeboo.application.port.out.notification.RetrieveNotificationPort;
+import com.heartz.byeboo.application.port.out.notification.UpdateNotificationPort;
 import com.heartz.byeboo.domain.model.Notification;
 import com.heartz.byeboo.mapper.NotificationMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class NotificationPersistenceAdapter implements RetrieveNotificationPort, CreateNotificationPort, DeleteNotificationPort {
+public class NotificationPersistenceAdapter implements RetrieveNotificationPort, CreateNotificationPort, DeleteNotificationPort, UpdateNotificationPort {
 
     private final NotificationRepository notificationRepository;
 
@@ -24,6 +25,12 @@ public class NotificationPersistenceAdapter implements RetrieveNotificationPort,
     public List<NotificationProjection> getNotificationByUserId(Long userId) {
         return notificationRepository.findAllByUserId(userId);
 
+    }
+
+    @Override
+    public Notification findByIdAndUserId(Long userId, Long notificationId) {
+        NotificationEntity notificationEntity = notificationRepository.findByUserIdAndId(userId, notificationId);
+        return NotificationMapper.entityToDomain(notificationEntity);
     }
 
     @Override
@@ -35,5 +42,11 @@ public class NotificationPersistenceAdapter implements RetrieveNotificationPort,
     @Override
     public void deleteByCreatedDateBefore(LocalDateTime threshold) {
         notificationRepository.deleteByCreatedDateBefore(threshold);
+    }
+
+    @Override
+    public void updateIsRead(Notification notification) {
+        NotificationEntity notificationEntity = NotificationMapper.toEntityForUpdate(notification);
+        notificationRepository.save(notificationEntity);
     }
 }

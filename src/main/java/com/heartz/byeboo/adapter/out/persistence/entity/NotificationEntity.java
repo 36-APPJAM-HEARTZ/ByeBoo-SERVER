@@ -1,5 +1,6 @@
 package com.heartz.byeboo.adapter.out.persistence.entity;
 
+import com.heartz.byeboo.domain.model.Notification;
 import com.heartz.byeboo.domain.type.ENotificationType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -38,11 +39,11 @@ public class NotificationEntity extends BaseEntity{
     private Long senderUserId;
 
     @Builder
-    public NotificationEntity(Long id, String landingUrl, Long targetId, ENotificationType notificationType, Long userId, Long senderUserId) {
+    public NotificationEntity(Long id, String landingUrl, Long targetId, ENotificationType notificationType, Long userId, Long senderUserId, boolean isRead) {
         this.userId = userId;
         this.id = id;
         this.landingUrl = landingUrl;
-        this.isRead = false;
+        this.isRead = isRead;
         this.targetId = targetId;
         this.notificationType = notificationType;
         this.senderUserId = senderUserId;
@@ -55,6 +56,19 @@ public class NotificationEntity extends BaseEntity{
                 .targetId(targetId)
                 .notificationType(notificationType)
                 .senderUserId(senderUserId)
+                .isRead(false)
+                .build();
+    }
+
+    public static NotificationEntity from(Notification notification) {
+        return NotificationEntity.builder()
+                .landingUrl(notification.getLandingUrl())
+                .userId(notification.getUserId())
+                .targetId(notification.getTargetId())
+                .notificationType(notification.getNotificationType())
+                .senderUserId(notification.getSenderUserId())
+                .id(notification.getId())
+                .isRead(notification.isRead())
                 .build();
     }
 }

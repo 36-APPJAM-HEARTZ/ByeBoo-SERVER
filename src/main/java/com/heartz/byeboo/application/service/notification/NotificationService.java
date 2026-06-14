@@ -1,11 +1,15 @@
 package com.heartz.byeboo.application.service.notification;
 
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.NotificationProjection;
+import com.heartz.byeboo.application.command.notification.NotificationUpdateCommand;
 import com.heartz.byeboo.application.port.in.dto.response.notification.NotificationListResponseDto;
 import com.heartz.byeboo.application.port.in.dto.response.notification.NotificationResponseDto;
 import com.heartz.byeboo.application.port.in.usecase.NotificationUseCase;
 import com.heartz.byeboo.application.port.out.notification.DeleteNotificationPort;
 import com.heartz.byeboo.application.port.out.notification.RetrieveNotificationPort;
+import com.heartz.byeboo.application.port.out.notification.UpdateNotificationPort;
+import com.heartz.byeboo.application.port.out.user.RetrieveUserPort;
+import com.heartz.byeboo.domain.model.Notification;
 import com.heartz.byeboo.domain.type.ENotificationType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,8 @@ public class NotificationService implements NotificationUseCase {
 
     private final RetrieveNotificationPort retrieveNotificationPort;
     private final DeleteNotificationPort deleteNotificationPort;
+    private final RetrieveUserPort retrieveUserPort;
+    private final UpdateNotificationPort updateNotificationPort;
 
     @Override
     @Transactional(readOnly = true)
@@ -59,6 +65,21 @@ public class NotificationService implements NotificationUseCase {
     public void cleanUpOldNotification() {
         LocalDateTime threshold = LocalDateTime.now().minusDays(30);
         deleteNotificationPort.deleteByCreatedDateBefore(threshold);
+    }
+
+    @Override()
+    @Transactional
+    public Void readNotification(NotificationUpdateCommand command) {
+        retrieveUserPort.validateUserExists(command.userId());
+        Notification notification = retrieveNotificationPort.findByIdAndUserId(command.userId(), command.notificationId());
+
+        if(notification.isRead()){
+            return null;
+        }
+
+        notification.read();
+        updateNotificationPort.updateIsRead(notification);
+        return null;
     }
 
 
