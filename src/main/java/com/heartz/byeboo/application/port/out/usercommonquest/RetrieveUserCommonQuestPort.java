@@ -18,4 +18,5 @@ public interface RetrieveUserCommonQuestPort {
     List<MyCommonQuestProjection> getMyCommonQuestsByUserId(User user, Long cursor, int limit);
     UserCommonQuestDetailProjection getUserCommonQuestWithWriter(Long userCommonQuestId);
     List<UserCommonQuestInfoV2Projection> getUserCommonQuestsByCreatedDateV2(LocalDate targetDate, Long cursor, int limit, Long userId);
+    List<MyCommonQuestV2Projection> getMyCommonQuestsByUserIdV2(User user, Long cursor, int limit);
 }

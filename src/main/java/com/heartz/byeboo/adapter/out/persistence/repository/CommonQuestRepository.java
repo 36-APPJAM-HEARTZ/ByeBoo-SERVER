@@ -8,5 +8,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public interface CommonQuestRepository extends JpaRepository<CommonQuestEntity, Long> {
-    Optional<CommonQuestEntity> findByTargetDate(LocalDate targetDate);
+    Optional<CommonQuestEntity> findBySequence(Integer sequence);
+
 }
