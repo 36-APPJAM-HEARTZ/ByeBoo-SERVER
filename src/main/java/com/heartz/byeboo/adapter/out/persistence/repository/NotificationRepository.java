@@ -4,6 +4,7 @@ import com.heartz.byeboo.adapter.out.persistence.entity.NotificationEntity;
 import com.heartz.byeboo.adapter.out.persistence.repository.projection.NotificationProjection;
 import com.heartz.byeboo.domain.type.ENotificationType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
@@ -18,4 +19,10 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
     List<NotificationProjection> findAllByUserId(Long userId);
     void deleteByCreatedDateBefore(LocalDateTime threshold);
     NotificationEntity findByUserIdAndId(Long userId, Long id);
+
+    @Modifying
+    @Query("UPDATE NotificationEntity n SET n.isRead = true WHERE n.userId = :userId AND n.isRead = false")
+    void updateAllIsReadByUserId(Long userId);
+
+    boolean existsByUserIdAndIsReadFalse(Long userId);
 }
