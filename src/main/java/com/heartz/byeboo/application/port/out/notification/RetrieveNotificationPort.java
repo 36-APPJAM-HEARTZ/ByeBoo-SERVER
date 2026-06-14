@@ -8,4 +8,5 @@ import java.util.List;
 public interface RetrieveNotificationPort {
     List<NotificationProjection> getNotificationByUserId(Long userId);
     Notification findByIdAndUserId(Long userId, Long notificationId);
+    boolean existsUnreadByUserId(Long userId);
 }
