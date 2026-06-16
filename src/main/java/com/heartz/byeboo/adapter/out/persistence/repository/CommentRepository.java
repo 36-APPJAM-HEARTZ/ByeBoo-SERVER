@@ -39,6 +39,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
             "ORDER BY c.createdDate ASC")
     List<UserCommonQuestCommentListProjection> findCommentWithWriterByUserCommonQuestId(Long userCommonQuestId);
 
+    @Modifying
     @Query("delete from CommentEntity c where c.parentCommentId = :parentCommentId")
     void deleteAllReplyByUserId(Long parentCommentId);
 }
