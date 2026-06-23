@@ -16,7 +16,7 @@ public class Comment {
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-    public static Comment of(Long id, Long userId, Long userCommonQuestId, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public static Comment of(Long id, Long userId, Long userCommonQuestId, String content, LocalDateTime createdDate, LocalDateTime modifiedDate, Long parentCommentId) {
         return Comment.builder()
                 .id(id)
                 .userId(userId)
@@ -24,6 +24,7 @@ public class Comment {
                 .content(content)
                 .createdDate(createdDate)
                 .modifiedDate(modifiedDate)
+                .parentCommentId(parentCommentId)
                 .build();
     }
 
