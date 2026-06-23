@@ -35,7 +35,6 @@ public class CommentService implements CommentUseCase {
     private final RetrieveCommentPort retrieveCommentPort;
     private final UpdateCommentPort updateCommentPort;
     private final DeleteCommentPort deleteCommentPort;
-    private final RetrieveNotificationPort retrieveNotificationPort;
     private final CreateNotificationPort createNotificationPort;
 
     @Override
