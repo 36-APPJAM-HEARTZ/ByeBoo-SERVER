@@ -62,10 +62,14 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
     UserCommonQuestDetailProjection findUserCommonQuestWithWriterById(Long id);
 
     @Query("select uq.id as answerId, uq.answer as content, uq.createdDate as writtenAt, u.profileIcon as profileIcon, u.name as writer, u.id as writerId, " +
-            "(SELECT COUNT(c.id)" +
-            "            FROM CommentEntity c" +
-            "            WHERE c.userCommonQuestId = uq.id and c.parentCommentId IS NULL" +
-            "        ) AS commentCount, " +
+            "(SELECT COUNT(c.id) " +
+            " FROM CommentEntity c " +
+            " WHERE c.userCommonQuestId = uq.id " +
+            " AND c.parentCommentId IS NULL " +
+            " AND NOT EXISTS (SELECT 1 FROM UserBlockEntity b2 " +
+            "                 WHERE (b2.blockerUserId = :currentUserId AND b2.blockedUserId = c.userId) " +
+            "                    OR (b2.blockerUserId = c.userId AND b2.blockedUserId = :currentUserId)) " +
+            ") AS commentCount, " +
             "(SELECT COUNT(l.id) " +
             " FROM LikeEntity l " +
             " WHERE l.userCommonQuestId = uq.id) AS likeCount, " +
@@ -85,15 +89,24 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
             "                where (b.blockerUserId = :currentUserId and b.blockedUserId = uq.userId) " +
             "                   or (b.blockerUserId = uq.userId and b.blockedUserId = :currentUserId)) " +
             "order by uq.id desc")
-    List<UserCommonQuestInfoV2Projection> findByDateAndCursorV2(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
-                                                          @Param("cursor") Long cursor, @Param("reportStatus") EReportStatus reportStatus,
-                                                          @Param("currentUserId") Long currentUserId, Limit limit);
+    List<UserCommonQuestInfoV2Projection> findByDateAndCursorV2(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("cursor") Long cursor,
+            @Param("reportStatus") EReportStatus reportStatus,
+            @Param("currentUserId") Long currentUserId,
+            Limit limit
+    );
 
     @Query("SELECT uq.id AS answerId, uq.answer AS content, cq.question AS question, uq.createdDate AS writtenAt, " +
             "(SELECT COUNT(c.id) " +
             " FROM CommentEntity c " +
             " WHERE c.userCommonQuestId = uq.id " +
-            " AND c.parentCommentId IS NULL) AS commentCount, " +
+            " AND c.parentCommentId IS NULL " +
+            " AND NOT EXISTS (SELECT 1 FROM UserBlockEntity b2 " +
+            "                 WHERE (b2.blockerUserId = :userId AND b2.blockedUserId = c.userId) " +
+            "                    OR (b2.blockerUserId = c.userId AND b2.blockedUserId = :userId)) " +
+            ") AS commentCount, " +
             "(SELECT COUNT(l.id) " +
             " FROM LikeEntity l " +
             " WHERE l.userCommonQuestId = uq.id) AS likeCount, " +
@@ -106,5 +119,9 @@ public interface UserCommonQuestRepository extends JpaRepository<UserCommonQuest
             "FROM UserCommonQuestEntity uq JOIN CommonQuestEntity cq ON uq.commonQuestId = cq.id " +
             "WHERE uq.userId = :userId AND (:cursor IS NULL OR uq.id < :cursor) " +
             "ORDER BY uq.id DESC")
-    List<MyCommonQuestV2Projection> findMyQuestsByUserIdV2(@Param("userId") Long userId, @Param("cursor") Long cursor, Limit limit);
+    List<MyCommonQuestV2Projection> findMyQuestsByUserIdV2(
+            @Param("userId") Long userId,
+            @Param("cursor") Long cursor,
+            Limit limit
+    );
 }

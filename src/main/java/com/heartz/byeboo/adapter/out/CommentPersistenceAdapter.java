@@ -53,18 +53,18 @@ public class CommentPersistenceAdapter implements CreateCommentPort, RetrieveCom
     }
 
     @Override
-    public List<UserCommentProjection> getCommentsByParentId(Long parentId) {
-        return commentRepository.findRepliesWithWriterByParentId(parentId);
+    public List<UserCommentProjection> getCommentsByParentId(Long parentId, Long userId) {
+        return commentRepository.findRepliesWithWriterByParentId(parentId, userId);
     }
 
     @Override
-    public UserCommentProjection getCommentWithWriter(Long commentId) {
-        return commentRepository.findCommentWithWriterByCommentId(commentId);
+    public UserCommentProjection getCommentWithWriter(Long commentId, Long userId) {
+        return commentRepository.findCommentWithWriterByCommentId(commentId, userId);
     }
 
     @Override
-    public List<UserCommonQuestCommentListProjection> getCommentsByUserCommonQuestId(Long userCommonQuestId) {
-        return commentRepository.findCommentWithWriterByUserCommonQuestId(userCommonQuestId);
+    public List<UserCommonQuestCommentListProjection> getCommentsByUserCommonQuestId(Long userCommonQuestId, Long userId) {
+        return commentRepository.findCommentWithWriterByUserCommonQuestId(userCommonQuestId, userId);
     }
 
     @Override

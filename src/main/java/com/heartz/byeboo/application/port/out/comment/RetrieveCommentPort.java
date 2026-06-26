@@ -9,7 +9,7 @@ import java.util.List;
 public interface RetrieveCommentPort {
     Comment getCommentByIdAndUserId(Long commentId, Long userId);
     Comment getCommentById(Long commentId);
-    List<UserCommentProjection> getCommentsByParentId(Long parentId);
-    UserCommentProjection getCommentWithWriter(Long commentId);
-    List<UserCommonQuestCommentListProjection> getCommentsByUserCommonQuestId(Long userCommonQuestId);
+    List<UserCommentProjection> getCommentsByParentId(Long parentId, Long userId);
+    UserCommentProjection getCommentWithWriter(Long commentId, Long userId);
+    List<UserCommonQuestCommentListProjection> getCommentsByUserCommonQuestId(Long userCommonQuestId, Long userId);
 }
