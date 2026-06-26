@@ -245,7 +245,7 @@ public class UserCommonQuestService implements UserCommonQuestUseCase {
                 );
 
         List<UserCommonQuestCommentListProjection> comments =
-                retrieveCommentPort.getCommentsByUserCommonQuestId(command.getAnswerId());
+                retrieveCommentPort.getCommentsByUserCommonQuestId(command.getAnswerId(), command.getUserId());
 
         List<CommentResponseDto> commentResponses = comments.stream()
                 .map(CommentResponseDto::of)
