@@ -92,8 +92,8 @@ public class CommentService implements CommentUseCase {
     @Transactional(readOnly = true)
     public ReplyListResponseDto getReply(ReplyListCommand command) {
         retrieveUserPort.validateUserExists(command.getUserId());
-        UserCommentProjection parentComment = retrieveCommentPort.getCommentWithWriter(command.getCommentId());
-        List<UserCommentProjection> replies = retrieveCommentPort.getCommentsByParentId(command.getCommentId());
+        UserCommentProjection parentComment = retrieveCommentPort.getCommentWithWriter(command.getCommentId(), command.getUserId());
+        List<UserCommentProjection> replies = retrieveCommentPort.getCommentsByParentId(command.getCommentId(), command.getUserId());
 
         List<ReplyResponseDto> replyResponses = replies.stream()
                 .map(ReplyResponseDto::from)
