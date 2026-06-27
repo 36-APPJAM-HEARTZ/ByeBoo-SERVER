@@ -199,7 +199,7 @@ public class UserQuestService implements UserQuestUseCase {
         }
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void sendQuestNotifications() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime thresholdEnd = now.minusHours(24);
