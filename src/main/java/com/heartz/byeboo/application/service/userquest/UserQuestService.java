@@ -205,23 +205,46 @@ public class UserQuestService implements UserQuestUseCase {
         LocalDateTime thresholdEnd = now.minusHours(24);
         LocalDateTime thresholdStart = thresholdEnd.minusMinutes(1);
 
-        List<UserIdCurrentNumberProjection> userIdCurrentNumberProjections = retrieveUserPort.findUsersWithExpiredQuest(thresholdStart, thresholdEnd);
+        log.info("now={}", now);
+        log.info("thresholdStart={}", thresholdStart);
+        log.info("thresholdEnd={}", thresholdEnd);
 
-        for (UserIdCurrentNumberProjection projection: userIdCurrentNumberProjections) {
-            if(projection.getCurrentNumber() != 31) {
+        List<UserIdCurrentNumberProjection> userIdCurrentNumberProjections =
+                retrieveUserPort.findUsersWithExpiredQuest(thresholdStart, thresholdEnd);
 
-                //알림함에 퀘스트 오픈 알림 저장
-                Notification notification = NotificationMapper.toDomain(projection.getId(), projection.getCurrentNumber(), ENotificationType.QUEST_OPEN, null);
-                createNotificationPort.create(notification);
+        log.info("조회된 만료 퀘스트 유저 수={}", userIdCurrentNumberProjections.size());
 
-                List<NotificationTokenEntity> tokens = retrieveNotificationTokenPort.findAllByUserId(projection.getId());
+        for (UserIdCurrentNumberProjection projection : userIdCurrentNumberProjections) {
+            log.info("대상 userId={}, currentNumber={}, alarmEnabled={}",
+                    projection.getId(),
+                    projection.getCurrentNumber(),
+                    projection.getAlarmEnabled());
 
-                for (NotificationTokenEntity token : tokens) {
-                    try {
-                        fCMNotificationPersistenceAdapter.sendMessage(token.getNotificationToken());
-                    } catch (Exception e) {
-                        log.info("FCM 전송 실패: token={}", token.getNotificationToken(), e);
-                    }
+            Notification notification = NotificationMapper.toDomain(
+                    projection.getId(),
+                    projection.getCurrentNumber(),
+                    ENotificationType.QUEST_OPEN,
+                    null
+            );
+
+            // 알림함 저장은 알림 설정과 관계없이 무조건
+            createNotificationPort.create(notification);
+            log.info("알림함 저장 완료 userId={}", projection.getId());
+
+            // 여기부터는 FCM 전송만 알림 설정 체크
+            if (!projection.getAlarmEnabled()) {
+                log.info("FCM 미전송: 알림 설정 OFF userId={}", projection.getId());
+                continue;
+            }
+
+            List<NotificationTokenEntity> tokens =
+                    retrieveNotificationTokenPort.findAllByUserId(projection.getId());
+
+            for (NotificationTokenEntity token : tokens) {
+                try {
+                    fCMNotificationPersistenceAdapter.sendMessage(token.getNotificationToken());
+                } catch (Exception e) {
+                    log.info("FCM 전송 실패: token={}", token.getNotificationToken(), e);
                 }
             }
         }

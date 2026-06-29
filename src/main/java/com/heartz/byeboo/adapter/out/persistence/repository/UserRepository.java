@@ -14,12 +14,22 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findByPlatformAndSerialId(EPlatform platform, String serialId);
 
     @Query("""
-    SELECT u
+    SELECT u.id AS id,
+           u.currentNumber AS currentNumber,
+           u.alarmEnabled AS alarmEnabled
     FROM UserEntity u
     JOIN UserQuestEntity q
       ON u.id = q.userId
-     AND q.questId = (u.currentNumber - 1)
-    WHERE u.alarmEnabled = true
+     AND q.questId =
+        CASE
+            WHEN u.journey = com.heartz.byeboo.domain.type.EJourney.FACE_EMOTION
+                THEN u.currentNumber - 1
+            WHEN u.journey = com.heartz.byeboo.domain.type.EJourney.PROCESS_EMOTION
+                THEN u.currentNumber + 29
+            WHEN u.journey = com.heartz.byeboo.domain.type.EJourney.PREPARE_REUNION
+                THEN u.currentNumber + 59
+        END
+    WHERE u.currentNumber BETWEEN 2 AND 30
       AND q.createdDate BETWEEN :thresholdStart AND :thresholdEnd
 """)
     List<UserIdCurrentNumberProjection> findUsersWithExpiredQuest(
