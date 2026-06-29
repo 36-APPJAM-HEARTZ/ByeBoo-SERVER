@@ -214,30 +214,37 @@ public class UserQuestService implements UserQuestUseCase {
 
         log.info("조회된 만료 퀘스트 유저 수={}", userIdCurrentNumberProjections.size());
 
-        for (UserIdCurrentNumberProjection projection: userIdCurrentNumberProjections) {
-            log.info("대상 userId={}, currentNumber={}",
-                    projection.getId(), projection.getCurrentNumber());
+        for (UserIdCurrentNumberProjection projection : userIdCurrentNumberProjections) {
+            log.info("대상 userId={}, currentNumber={}, alarmEnabled={}",
+                    projection.getId(),
+                    projection.getCurrentNumber(),
+                    projection.getAlarmEnabled());
 
-            if(projection.getCurrentNumber() != 31) {
-                Notification notification = NotificationMapper.toDomain(
-                        projection.getId(),
-                        projection.getCurrentNumber(),
-                        ENotificationType.QUEST_OPEN,
-                        null
-                );
+            Notification notification = NotificationMapper.toDomain(
+                    projection.getId(),
+                    projection.getCurrentNumber(),
+                    ENotificationType.QUEST_OPEN,
+                    null
+            );
 
-                createNotificationPort.create(notification);
-                log.info("알림함 저장 완료 userId={}", projection.getId());
+            // 알림함 저장은 알림 설정과 관계없이 무조건
+            createNotificationPort.create(notification);
+            log.info("알림함 저장 완료 userId={}", projection.getId());
 
-                List<NotificationTokenEntity> tokens =
-                        retrieveNotificationTokenPort.findAllByUserId(projection.getId());
+            // 여기부터는 FCM 전송만 알림 설정 체크
+            if (!projection.getAlarmEnabled()) {
+                log.info("FCM 미전송: 알림 설정 OFF userId={}", projection.getId());
+                continue;
+            }
 
-                for (NotificationTokenEntity token : tokens) {
-                    try {
-                        fCMNotificationPersistenceAdapter.sendMessage(token.getNotificationToken());
-                    } catch (Exception e) {
-                        log.info("FCM 전송 실패: token={}", token.getNotificationToken(), e);
-                    }
+            List<NotificationTokenEntity> tokens =
+                    retrieveNotificationTokenPort.findAllByUserId(projection.getId());
+
+            for (NotificationTokenEntity token : tokens) {
+                try {
+                    fCMNotificationPersistenceAdapter.sendMessage(token.getNotificationToken());
+                } catch (Exception e) {
+                    log.info("FCM 전송 실패: token={}", token.getNotificationToken(), e);
                 }
             }
         }
