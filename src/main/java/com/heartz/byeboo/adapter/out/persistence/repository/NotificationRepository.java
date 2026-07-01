@@ -12,10 +12,16 @@ import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<NotificationEntity, Long> {
 
-    @Query("SELECT n.id AS notificationId, n.notificationType AS type, u.name AS senderNickname, n.targetId as targetId, n.landingUrl AS landingUrl, n.isRead AS isRead, n.createdDate as createdAt " +
-            "FROM NotificationEntity n JOIN UserEntity u ON n.senderUserId = u.id " +
+    @Query("SELECT n.id AS notificationId, " +
+            "n.notificationType AS type, " +
+            "u.name AS senderNickname, " +
+            "n.targetId AS targetId, " +
+            "n.landingUrl AS landingUrl, " +
+            "n.isRead AS isRead, " +
+            "n.createdDate AS createdAt " +
+            "FROM NotificationEntity n LEFT JOIN UserEntity u ON n.senderUserId = u.id " +
             "WHERE n.userId = :userId " +
-            "order by n.createdDate desc")
+            "ORDER BY n.createdDate DESC")
     List<NotificationProjection> findAllByUserId(Long userId);
     void deleteByCreatedDateBefore(LocalDateTime threshold);
     NotificationEntity findByUserIdAndId(Long userId, Long id);
