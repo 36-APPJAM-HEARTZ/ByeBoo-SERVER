@@ -80,7 +80,8 @@ public class CommentService implements CommentUseCase {
     @Override
     @Transactional
     public Void createReply(ReplyCreateCommand command) {
-        Comment parentComment = retrieveCommentPort.getCommentByIdAndUserId(command.getCommentId(), command.getUserId());
+        retrieveUserPort.validateUserExists(command.getUserId());
+        Comment parentComment = retrieveCommentPort.getCommentById(command.getCommentId());
 
         Comment comment = CommentMapper.replyToDomain(command, parentComment.getUserCommonQuestId());
 
